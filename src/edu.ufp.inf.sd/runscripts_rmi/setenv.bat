@@ -12,10 +12,10 @@
 
 @REM ======================== CHANGE BELOW ACCORDING YOUR PROJECT and PC SETTINGS ========================
 @REM ==== PC STUFF ====
-@Set USERNAME=rui
+@Set USERNAME=Bruno
 
 @Set WORKDRIVE=C
-@Set JDK=%WORKDRIVE%:\Programas\Java\jdk1.8.0_60
+@Set JDK=%WORKDRIVE%:\Programas\Java\jdk-15.0.2
 @REM These vars will be used to check the output folder (whereto classes are generated)
 @SET NETBEANS=NetBeans
 @SET INTELLIJ=IntelliJ
@@ -23,10 +23,10 @@
 @REM Set CURRENT_IDE=%NETBEANS%
 
 @REM ==== JAVA NAMING STUFF ====
-@Set JAVAPROJ_NAME=SD
+@Set JAVAPROJ_NAME=Projeto_SD
 @set JAVAPROJ=%WORKDRIVE%:\\Users\\%USERNAME%\\IdeaProjects\\%JAVAPROJ_NAME%
-@Set PACKAGE=project
-@Set PACKAGE_PREFIX=edu.ufp.inf.sd
+@Set PACKAGE=Projeto_SD
+@Set PACKAGE_PREFIX=edu.ufp.inf.sd.rmi
 @Set PACKAGE_PREFIX_FOLDERS=edu/ufp/inf/sd
 @Set SERVICE_NAME_ON_REGISTRY=JobShopService
 @Set CLIENT_CLASS_PREFIX=JobShop
