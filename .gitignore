@@ -1,2 +1,4 @@
 **/src/edu.ufp.inf.sd/runscripts_rmi/
 **/src/edu.ufp.inf.sd/runscripts_rmq/
+*.sh
+*.bat
