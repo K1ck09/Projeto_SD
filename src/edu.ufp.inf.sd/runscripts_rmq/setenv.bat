@@ -12,10 +12,10 @@
 
 @REM ======================== CHANGE BELOW ACCORDING YOUR PROJECT and PC SETTINGS ========================
 @REM ==== PC STUFF ====
-@Set USERNAME=rui
+@Set USERNAME=Bruno
 
 @Set WORKDRIVE=C
-@Set JDK=%WORKDRIVE%:\Programas\Java\jdk1.8.0_60
+@Set JDK=%WORKDRIVE%:\Programas\Java\jdk-15.0.2
 @Set NETBEANS=NetBeans
 @Set INTELLIJ=IntelliJ
 @Set CURRENT_IDE=%INTELLIJ%
@@ -26,8 +26,8 @@
 @set JAVAPROJ=%WORKDRIVE%:\\Users\\%USERNAME%\\IdeaProjects\\%JAVAPROJ_NAME%
 @Set RABBITMQ_SERVICES_FOLDER=edu/ufp/inf/sd
 @Set RABBITMQ_SERVICES_PACKAGE=edu.ufp.inf.sd
-@Set PACKAGE=project
-@Set QUEUE_NAME_PREFIX=project
+@Set PACKAGE=Projeto_SD
+@Set QUEUE_NAME_PREFIX=projeto_sd
 @Set EXCHANGE_NAME_PREFIX=NA
 @Set PRODUCER_CLASS_PREFIX=Producer
 @Set CONSUMER_CLASS_PREFIX=Consumer

@@ -26,7 +26,7 @@
 @Set JAVAPROJ_NAME=Projeto_SD
 @set JAVAPROJ=%WORKDRIVE%:\\Users\\%USERNAME%\\IdeaProjects\\%JAVAPROJ_NAME%
 @Set PACKAGE=Projeto_SD
-@Set PACKAGE_PREFIX=edu.ufp.inf.sd.rmi
+@Set PACKAGE_PREFIX=edu.ufp.inf.sd
 @Set PACKAGE_PREFIX_FOLDERS=edu/ufp/inf/sd
 @Set SERVICE_NAME_ON_REGISTRY=JobShopService
 @Set CLIENT_CLASS_PREFIX=JobShop
