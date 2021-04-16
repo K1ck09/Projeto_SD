@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class TabuSearchJSSP {
 
-    private static final String PACKAGE_DIR = "edu/ufp/inf/sd/project/util/tabusearch/jssp_ts/";
+    private static final String PACKAGE_DIR = "edu/ufp/inf/sd/util/tabusearch/jssp_ts/";
     private static final String SCRIPT_NAME = PACKAGE_DIR + "main_ts.py";
     private final String jsspInstance;
 

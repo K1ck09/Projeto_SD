@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 public class GeneticAlgorithmJSSP {
 
-    private static final String PACKAGE_DIR = "edu/ufp/inf/sd/project/util/geneticalgorithm/jssp_ga/";
+    private static final String PACKAGE_DIR = "edu/ufp/inf/sd/util/geneticalgorithm/jssp_ga/";
     private static final String SCRIPT_NAME = PACKAGE_DIR + "main_ga.py";
     private final String jsspInstance;
     private final String queue;
