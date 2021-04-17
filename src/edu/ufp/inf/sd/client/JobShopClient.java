@@ -1,6 +1,10 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobShopRI;
+<<<<<<< HEAD
+=======
+import edu.ufp.inf.sd.server.UserFactoryImpl;
+>>>>>>> parent of 2dfdddf (.)
 import edu.ufp.inf.sd.server.UserFactoryRI;
 import edu.ufp.inf.sd.server.UserSessionRI;
 import edu.ufp.inf.sd.util.geneticalgorithm.CrossoverStrategies;
@@ -32,6 +36,7 @@ import java.util.logging.Logger;
  */
 public class JobShopClient {
 
+
     /**
      * Context for connecting a RMI client MAIL_TO_ADDR a RMI Servant
      */
@@ -39,6 +44,7 @@ public class JobShopClient {
     /**
      * Remote interface that will hold the Servant proxy
      */
+<<<<<<< HEAD
 
     public UserFactoryRI userFactoryRI;
 
@@ -46,6 +52,11 @@ public class JobShopClient {
 
     private JobShopRI jobShopRI;
 
+=======
+    public UserFactoryRI userFactoryRI;
+
+    public UserSessionRI userSessionRI;
+>>>>>>> parent of 2dfdddf (.)
 
     public JobShopClient() {
         try {
@@ -79,7 +90,7 @@ public class JobShopClient {
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
-        return jobShopRI;
+        return userFactoryRI;
     }
     
    /* private void playService() {

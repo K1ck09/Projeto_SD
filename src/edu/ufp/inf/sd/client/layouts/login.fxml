@@ -8,32 +8,24 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="267.0" prefWidth="424.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.LoginController">
-   <top>
-        <AnchorPane prefHeight="305.0" prefWidth="376.0" BorderPane.alignment="CENTER">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="340.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.LoginController">
+    <center>
+        <AnchorPane prefHeight="300.0" prefWidth="589.0" BorderPane.alignment="CENTER">
             <children>
-                <Label layoutX="92.0" layoutY="14.0" prefHeight="57.0" prefWidth="273.0" style="-fx-font-style: italic; -fx-font-family: sans-serif;" text="Welcome to Jobs Manager" textAlignment="CENTER">
+                <Label alignment="CENTER" layoutX="98.0" layoutY="43.0" prefHeight="57.0" prefWidth="265.0" text="Enter Your Account" textAlignment="CENTER">
                     <font>
-                        <Font size="22.0" />
+                        <Font size="26.0" />
                     </font>
                 </Label>
-                <Label layoutX="95.0" layoutY="86.0" prefHeight="30.0" prefWidth="100.0" text="Username:" textAlignment="CENTER">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <Label layoutX="95.0" layoutY="138.0" prefHeight="26.0" prefWidth="101.0" text="Password:">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <TextField fx:id="usernameLogin" layoutX="181.0" layoutY="89.0" />
-                <PasswordField fx:id="passwordLogin" layoutX="181.0" layoutY="139.0" />
-                <Label fx:id="wrongUsername" layoutX="104.0" layoutY="116.0" prefHeight="17.0" prefWidth="183.0" textFill="#fc0000" />
-                <Label fx:id="wrongPassword" layoutX="104.0" layoutY="164.0" prefHeight="17.0" prefWidth="194.0" textFill="RED" />
-                <Button fx:id="btnLogin" layoutX="252.0" layoutY="181.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="25.0" prefWidth="82.0" text="Login" />
-                <Label fx:id="clickHere" layoutX="95.0" layoutY="181.0" onMouseClicked="#createAccount" text="Don't have an account yet?&#10;Click here." textFill="#3c5ac9" />
+                <TextField fx:id="usernameLogin" layoutX="154.0" layoutY="134.0" promptText="Enter Login" />
+                <PasswordField fx:id="passwordLogin" layoutX="154.0" layoutY="168.0" promptText="Enter Password" />
+                <Button fx:id="btnLogin" layoutX="154.0" layoutY="219.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="34.0" prefWidth="151.0" text="Login" />
+                <Label fx:id="clickHere" layoutX="147.0" layoutY="300.0" onMouseClicked="#createAccount" prefHeight="26.0" prefWidth="173.0" text="Don't have an account yet? Click here." textFill="#3c5ac9">
+               <font>
+                  <Font size="10.0" />
+               </font></Label>
+                <Label fx:id="missingData" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="100.0" prefHeight="18.0" prefWidth="435.0" textAlignment="CENTER" textFill="#fc0000" />
             </children>
         </AnchorPane>
-   </top>
+    </center>
 </BorderPane>
