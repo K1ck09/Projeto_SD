@@ -1,24 +1,14 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobShopRI;
-<<<<<<< HEAD
-=======
-import edu.ufp.inf.sd.server.UserFactoryImpl;
->>>>>>> parent of 2dfdddf (.)
 import edu.ufp.inf.sd.server.UserFactoryRI;
 import edu.ufp.inf.sd.server.UserSessionRI;
-import edu.ufp.inf.sd.util.geneticalgorithm.CrossoverStrategies;
-import edu.ufp.inf.sd.util.geneticalgorithm.GeneticAlgorithmJSSP;
-import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 import edu.ufp.inf.sd.util.rmisetup.SetupContextRMI;
 
-import java.awt.desktop.AppForegroundListener;
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -44,7 +34,6 @@ public class JobShopClient {
     /**
      * Remote interface that will hold the Servant proxy
      */
-<<<<<<< HEAD
 
     public UserFactoryRI userFactoryRI;
 
@@ -52,11 +41,6 @@ public class JobShopClient {
 
     private JobShopRI jobShopRI;
 
-=======
-    public UserFactoryRI userFactoryRI;
-
-    public UserSessionRI userSessionRI;
->>>>>>> parent of 2dfdddf (.)
 
     public JobShopClient() {
         try {
@@ -90,7 +74,7 @@ public class JobShopClient {
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
-        return userFactoryRI;
+        return jobShopRI;
     }
     
    /* private void playService() {
