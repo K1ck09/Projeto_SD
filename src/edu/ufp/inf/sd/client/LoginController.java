@@ -1,5 +1,6 @@
 package edu.ufp.inf.sd.client;
 
+import edu.ufp.inf.sd.server.UserSessionRI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,7 +16,6 @@ import java.sql.SQLOutput;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-    public LoginController(){}
     @FXML
     private Button btnLogin;
     @FXML
@@ -23,11 +23,9 @@ public class LoginController implements Initializable {
     @FXML
     private PasswordField passwordLogin;
     @FXML
-    private Label wrongUsername;
-    @FXML
-    private Label wrongPassword;
-    @FXML
     private Label clickHere;
+    @FXML
+    public Label missingData;
 
     private JobShopClient client;
 
@@ -37,19 +35,34 @@ public class LoginController implements Initializable {
     }
 
     public void userLogin(ActionEvent actionEvent) throws IOException {
-
+        checkLogin();
     }
     private void clientConnection(){
         this.client = new JobShopClient();
         this.client.lookupService();
-        System.out.println("CHEGUEI AQUI");
     }
 
-    private void checkLogin(){
+    private void checkLogin() throws IOException {
+        String username = usernameLogin.getText();
+        String password = passwordLogin.getText();
 
+        if(!username.isEmpty() && !password.isEmpty()){
+            UserSessionRI sessionRI= this.client.userFactoryRI.login(username,password);
+            if(sessionRI!=null){
+                this.client.userSessionRI = sessionRI;
+                LoadGUIClient m= new LoadGUIClient();
+                m.changeScene("layouts/menu.fxml");
+            }else{
+                missingData.setText("Login didn't succeeded. Username doesn't exist or password doesn't match.");
+            }
+        }else{
+            missingData.setText("Please insert you username and password");
+        }
     }
 
-    public void createAccount(MouseEvent mouseEvent) {
+    public void createAccount(MouseEvent mouseEvent) throws IOException {
+        LoadGUIClient m = new LoadGUIClient();
+        m.changeScene("layouts/register.fxml");
     }
 
 }

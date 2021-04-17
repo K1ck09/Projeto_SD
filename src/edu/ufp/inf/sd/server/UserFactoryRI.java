@@ -1,7 +1,9 @@
 package edu.ufp.inf.sd.server;
 
-public interface UserFactoryRI {
-    boolean register (String username,String password);
-    UserSessionRI login (String username,String password);
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
+public interface UserFactoryRI extends Remote {
+    boolean register (String username,String password)throws RemoteException;
+    UserSessionRI login (String username,String password)throws RemoteException;
 }
