@@ -16,8 +16,12 @@ public class LoadGUIClient extends Application {
 
     @Override
 <<<<<<< HEAD
+<<<<<<< HEAD
     public void start(Stage primaryStage) throws IOException {
         stage=primaryStage;
+=======
+    public void start(Stage primaryStage) throws Exception {
+>>>>>>> parent of 611ff4e (Login/Register frontend working)
 =======
     public void start(Stage primaryStage) throws Exception {
 >>>>>>> parent of 611ff4e (Login/Register frontend working)
@@ -28,10 +32,13 @@ public class LoadGUIClient extends Application {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public void changeScene(String fxml)throws IOException{
         Parent pane = FXMLLoader.load(getClass().getResource(fxml));
         stage.getScene().setRoot(pane);
     }
+=======
+>>>>>>> parent of 611ff4e (Login/Register frontend working)
 =======
 >>>>>>> parent of 611ff4e (Login/Register frontend working)
 

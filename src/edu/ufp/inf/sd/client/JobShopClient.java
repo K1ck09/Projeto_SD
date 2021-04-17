@@ -38,9 +38,13 @@ public class JobShopClient {
      * Remote interface that will hold the Servant proxy
      */
 <<<<<<< HEAD
+<<<<<<< HEAD
     public UserFactoryRI userFactoryRI;
 
     public UserSessionRI userSessionRI;
+=======
+    private JobShopRI jobShopRI;
+>>>>>>> parent of 611ff4e (Login/Register frontend working)
 =======
     private JobShopRI jobShopRI;
 >>>>>>> parent of 611ff4e (Login/Register frontend working)
