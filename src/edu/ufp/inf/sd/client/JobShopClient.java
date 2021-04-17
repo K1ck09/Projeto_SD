@@ -15,6 +15,7 @@ import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
+import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -40,23 +41,10 @@ public class JobShopClient {
     /**
      * Remote interface that will hold the Servant proxy
      */
-    private JobShopRI jobShopRI;
     public UserFactoryRI userFactoryRI;
+
     public UserSessionRI userSessionRI;
 
-//    public static void main(String[] args) {
-//        if (args != null && args.length < 2) {
-//            System.err.println("usage: java [options] edu.ufp.sd.inf.rmi._01_helloworld.server.HelloWorldClient <rmi_registry_ip> <rmi_registry_port> <service_name>");
-//            System.exit(-1);
-//        } else {
-//            //1. ============ Setup client RMI context ============
-//            JobShopClient hwc=new JobShopClient(args);
-//            //2. ============ Lookup service ============
-//            hwc.lookupService();
-//            //3. ============ Play with service ============
-//            hwc.playService();
-//        }
-//    }
     public JobShopClient() {
         try {
             //List ans set args
@@ -78,10 +66,10 @@ public class JobShopClient {
             if (registry != null) {
                 //Get service url (including servicename)
                 String serviceUrl = contextRMI.getServicesUrl(0);
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "going MAIL_TO_ADDR lookup service @ {0}", serviceUrl);
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "going to lookup service @ {0}", serviceUrl);
                 
                 //============ Get proxy MAIL_TO_ADDR HelloWorld service ============
-                jobShopRI = (JobShopRI) registry.lookup(serviceUrl);
+                userFactoryRI = (UserFactoryRI) registry.lookup(serviceUrl);
             } else {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "registry not bound (check IPs). :(");
                 //registry = LocateRegistry.createRegistry(1099);
@@ -92,7 +80,7 @@ public class JobShopClient {
         return userFactoryRI;
     }
     
-    private void playService() {
+   /* private void playService() {
         try {
             //============ Call TS remote service ============
             String jsspInstancePath = "edu/ufp/inf/sd/data/la01.txt";
@@ -115,5 +103,19 @@ public class JobShopClient {
         } catch (RemoteException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
+
+    //    public static void main(String[] args) {
+//        if (args != null && args.length < 2) {
+//            System.err.println("usage: java [options] edu.ufp.sd.inf.rmi._01_helloworld.server.HelloWorldClient <rmi_registry_ip> <rmi_registry_port> <service_name>");
+//            System.exit(-1);
+//        } else {
+//            //1. ============ Setup client RMI context ============
+//            JobShopClient hwc=new JobShopClient(args);
+//            //2. ============ Lookup service ============
+//            hwc.lookupService();
+//            //3. ============ Play with service ============
+//            hwc.playService();
+//        }
+//    }
 }

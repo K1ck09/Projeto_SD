@@ -17,7 +17,7 @@ public class LoadGUIClient extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        this.stage=primaryStage;
+        stage=primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("layouts/login.fxml"));
         primaryStage.setTitle("Job Shop Scheduling");
         primaryStage.setScene(new Scene(root, 460, 340));
@@ -26,7 +26,7 @@ public class LoadGUIClient extends Application {
 
     public void changeScene(String fxml)throws IOException{
         Parent pane = FXMLLoader.load(getClass().getResource(fxml));
-        this.stage.getScene().setRoot(pane);
+        stage.getScene().setRoot(pane);
     }
 
 }
