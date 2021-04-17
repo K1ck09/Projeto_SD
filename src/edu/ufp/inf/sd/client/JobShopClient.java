@@ -1,6 +1,8 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobShopRI;
+import edu.ufp.inf.sd.server.UserFactoryRI;
+import edu.ufp.inf.sd.server.UserSessionRI;
 import edu.ufp.inf.sd.util.geneticalgorithm.CrossoverStrategies;
 import edu.ufp.inf.sd.util.geneticalgorithm.GeneticAlgorithmJSSP;
 import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
@@ -37,17 +39,13 @@ public class JobShopClient {
     /**
      * Remote interface that will hold the Servant proxy
      */
-<<<<<<< HEAD
-<<<<<<< HEAD
+
     public UserFactoryRI userFactoryRI;
 
     public UserSessionRI userSessionRI;
-=======
+
     private JobShopRI jobShopRI;
->>>>>>> parent of 611ff4e (Login/Register frontend working)
-=======
-    private JobShopRI jobShopRI;
->>>>>>> parent of 611ff4e (Login/Register frontend working)
+
 
     public JobShopClient() {
         try {
@@ -73,7 +71,7 @@ public class JobShopClient {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "going to lookup service @ {0}", serviceUrl);
                 
                 //============ Get proxy MAIL_TO_ADDR HelloWorld service ============
-                userFactoryRI = (UserFactoryRI) registry.lookup(serviceUrl);
+                jobShopRI = (JobShopRI) registry.lookup(serviceUrl);
             } else {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "registry not bound (check IPs). :(");
                 //registry = LocateRegistry.createRegistry(1099);
