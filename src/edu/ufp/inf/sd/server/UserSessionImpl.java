@@ -2,7 +2,6 @@ package edu.ufp.inf.sd.server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
 
 public class UserSessionImpl extends UnicastRemoteObject implements UserSessionRI {
     UserFactoryImpl userFactory;
@@ -15,6 +14,11 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
     public String getUsername() throws RemoteException{
         return user.getUsername();
+    }
+
+    @Override
+    public JobShopRI createJob(String username, String name) throws RemoteException {
+        return new JobShopImpl();
     }
 
     /*@Override
@@ -32,10 +36,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         return null;
     }
 
-    @Override
-    public void createJob(String username, String name) {
 
-    }
 
     @Override
     public void pauseJob() {
