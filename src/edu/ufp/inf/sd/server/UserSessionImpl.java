@@ -13,6 +13,10 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         this.userFactory=userFactory;
     }
 
+    public String getUsername() throws RemoteException{
+        return user.getUsername();
+    }
+
     /*@Override
     public void logout() {
 

@@ -3,12 +3,17 @@ package edu.ufp.inf.sd.client;
 import edu.ufp.inf.sd.server.UserSessionRI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
@@ -35,7 +40,7 @@ public class LoginController implements Initializable {
     }
 
     public void userLogin(ActionEvent actionEvent) throws IOException {
-        checkLogin();
+        checkLogin(actionEvent);
     }
 
     private void clientConnection() {
@@ -43,7 +48,7 @@ public class LoginController implements Initializable {
         this.client.lookupService();
     }
 
-    private void checkLogin() throws IOException {
+    private void checkLogin(ActionEvent actionEvent) throws IOException {
         String username = usernameLogin.getText();
         String password = passwordLogin.getText();
 
@@ -51,8 +56,14 @@ public class LoginController implements Initializable {
             UserSessionRI sessionRI = this.client.userFactoryRI.login(username, password);
             if (sessionRI != null) {
                 this.client.userSessionRI = sessionRI;
-                LoadGUIClient m = new LoadGUIClient();
-                m.changeScene("layouts/menu.fxml");
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
+                Parent menuParent = loader.load();
+                Scene menuScene = new Scene(menuParent);
+                Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+                MenuController controller = loader.getController();
+                controller.client=this.client;
+                app_stage.setScene(menuScene);
+                app_stage.show();
             } else {
                 missingData.setText("Login didn't succeeded. " +
                         "Username doesn't exist or password doesn't match.");
