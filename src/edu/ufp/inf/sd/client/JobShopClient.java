@@ -5,13 +5,14 @@ import edu.ufp.inf.sd.util.geneticalgorithm.CrossoverStrategies;
 import edu.ufp.inf.sd.util.geneticalgorithm.GeneticAlgorithmJSSP;
 import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 import edu.ufp.inf.sd.util.rmisetup.SetupContextRMI;
+
+import java.awt.desktop.AppForegroundListener;
 import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 /**
  * <p>
  * Title: Projecto SD</p>
