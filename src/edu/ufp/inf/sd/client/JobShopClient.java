@@ -7,6 +7,7 @@ import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 import edu.ufp.inf.sd.util.rmisetup.SetupContextRMI;
 
 import java.awt.desktop.AppForegroundListener;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -31,33 +32,31 @@ public class JobShopClient {
     /**
      * Context for connecting a RMI client MAIL_TO_ADDR a RMI Servant
      */
-    private SetupContextRMI contextRMI;
+    private transient SetupContextRMI contextRMI;
     /**
      * Remote interface that will hold the Servant proxy
      */
     private JobShopRI jobShopRI;
 
-    public static void main(String[] args) {
-        if (args != null && args.length < 2) {
-            System.err.println("usage: java [options] edu.ufp.sd.inf.rmi._01_helloworld.server.HelloWorldClient <rmi_registry_ip> <rmi_registry_port> <service_name>");
-            System.exit(-1);
-        } else {
-            //1. ============ Setup client RMI context ============
-            JobShopClient hwc=new JobShopClient(args);
-            //2. ============ Lookup service ============
-            hwc.lookupService();
-            //3. ============ Play with service ============
-            hwc.playService();
-        }
-    }
-
-    public JobShopClient(String args[]) {
+//    public static void main(String[] args) {
+//        if (args != null && args.length < 2) {
+//            System.err.println("usage: java [options] edu.ufp.sd.inf.rmi._01_helloworld.server.HelloWorldClient <rmi_registry_ip> <rmi_registry_port> <service_name>");
+//            System.exit(-1);
+//        } else {
+//            //1. ============ Setup client RMI context ============
+//            JobShopClient hwc=new JobShopClient(args);
+//            //2. ============ Lookup service ============
+//            hwc.lookupService();
+//            //3. ============ Play with service ============
+//            hwc.playService();
+//        }
+//    }
+    public JobShopClient() {
         try {
             //List ans set args
-            SetupContextRMI.printArgs(this.getClass().getName(), args);
-            String registryIP = args[0];
-            String registryPort = args[1];
-            String serviceName = args[2];
+            String registryIP = "localhost";
+            String registryPort = "4100";
+            String serviceName = "JobShopService";
             //Create a context for RMI setup
             contextRMI = new SetupContextRMI(this.getClass(), registryIP, registryPort, new String[]{serviceName});
         } catch (RemoteException e) {
@@ -65,7 +64,7 @@ public class JobShopClient {
         }
     }
 
-    private Remote lookupService() {
+    public Remote lookupService() {
         try {
             //Get proxy MAIL_TO_ADDR rmiregistry
             Registry registry = contextRMI.getRegistry();

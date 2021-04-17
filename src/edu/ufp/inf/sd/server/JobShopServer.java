@@ -66,6 +66,9 @@ public class JobShopServer {
             String registryIP = args[0];
             String registryPort = args[1];
             String serviceName = args[2];
+            System.out.println(registryIP);
+            System.out.println(registryPort);
+            System.out.println(serviceName);
             //============ Create a context for RMI setup ============
             contextRMI = new SetupContextRMI(this.getClass(), registryIP, registryPort, new String[]{serviceName});
         } catch (RemoteException e) {
@@ -84,7 +87,7 @@ public class JobShopServer {
 
                 //Get service url (including servicename)
                 String serviceUrl = contextRMI.getServicesUrl(0);
-                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "going MAIL_TO_ADDR rebind service @ {0}", serviceUrl);
+               // Logger.getLogger(this.getClass().getName()).log(Level.INFO, "going MAIL_TO_ADDR rebind service @ {0}", serviceUrl);
 
                 //============ Rebind servant ============
                 //Naming.bind(serviceUrl, helloWorldRI);
@@ -102,7 +105,7 @@ public class JobShopServer {
 
     private static void loadProperties() throws IOException {
 
-        Logger.getLogger(Thread.currentThread().getName()).log(Level.INFO, "goig MAIL_TO_ADDR load props...");
+        //Logger.getLogger(Thread.currentThread().getName()).log(Level.INFO, "goig MAIL_TO_ADDR load props...");
         // create and load default properties
         Properties defaultProps = new Properties();
         FileInputStream in = new FileInputStream("defaultproperties.txt");
