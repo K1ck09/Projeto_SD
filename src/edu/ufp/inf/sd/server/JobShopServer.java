@@ -34,7 +34,7 @@ public class JobShopServer {
     /**
      * Remote interface that will hold reference MAIL_TO_ADDR the Servant impl
      */
-    private JobShopRI jobShopRI;
+    private UserFactoryRI userFactoryRI;
 
     public static void main(String[] args) {
         if (args != null && args.length < 3) {
@@ -59,7 +59,7 @@ public class JobShopServer {
      * 
      * @param args 
      */
-    public JobShopServer(String args[]) {
+    public JobShopServer(String[] args) {
         try {
             //============ List and Set args ============
             SetupContextRMI.printArgs(this.getClass().getName(), args);
@@ -83,7 +83,7 @@ public class JobShopServer {
             //Bind service on rmiregistry and wait for calls
             if (registry != null) {
                 //============ Create Servant ============
-                jobShopRI = new JobShopImpl();
+                userFactoryRI = new UserFactoryImpl();
 
                 //Get service url (including servicename)
                 String serviceUrl = contextRMI.getServicesUrl(0);
@@ -91,7 +91,7 @@ public class JobShopServer {
 
                 //============ Rebind servant ============
                 //Naming.bind(serviceUrl, helloWorldRI);
-                registry.rebind(serviceUrl, jobShopRI);
+                registry.rebind(serviceUrl, userFactoryRI);
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "service bound and running. :)");
             } else {
                 //System.out.println("HelloWorldServer - Constructor(): create registry on port 1099");

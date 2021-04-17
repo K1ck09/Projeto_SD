@@ -66,7 +66,7 @@ public class JobShopClient {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "going to lookup service @ {0}", serviceUrl);
                 
                 //============ Get proxy MAIL_TO_ADDR HelloWorld service ============
-                jobShopRI = (JobShopRI) registry.lookup(serviceUrl);
+                userFactoryRI = (UserFactoryRI) registry.lookup(serviceUrl);
             } else {
                 Logger.getLogger(this.getClass().getName()).log(Level.INFO, "registry not bound (check IPs). :(");
                 //registry = LocateRegistry.createRegistry(1099);
@@ -74,7 +74,7 @@ public class JobShopClient {
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
-        return jobShopRI;
+        return userFactoryRI;
     }
     
    /* private void playService() {
