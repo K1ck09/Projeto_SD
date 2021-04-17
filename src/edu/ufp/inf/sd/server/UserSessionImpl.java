@@ -1,12 +1,19 @@
 package edu.ufp.inf.sd.server;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
-public class UserSessionImpl implements UserSessionRI {
-    public UserSessionImpl(UserFactoryImpl userFactory, User user) {
+public class UserSessionImpl extends UnicastRemoteObject implements UserSessionRI {
+    UserFactoryImpl userFactory;
+    User user;
+    public UserSessionImpl(UserFactoryImpl userFactory, User user) throws RemoteException {
+        super();
+        this.user=user;
+        this.userFactory=userFactory;
     }
 
-    @Override
+    /*@Override
     public void logout() {
 
     }
@@ -54,5 +61,5 @@ public class UserSessionImpl implements UserSessionRI {
     @Override
     public boolean associateUserWorker(String username, WorkerRI worker) {
         return false;
-    }
+    }*/
 }
