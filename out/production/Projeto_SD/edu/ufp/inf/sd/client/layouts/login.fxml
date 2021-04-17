@@ -17,14 +17,22 @@
                         <Font size="26.0" />
                     </font>
                 </Label>
-                <TextField fx:id="usernameLogin" layoutX="154.0" layoutY="134.0" promptText="Enter Login" />
-                <PasswordField fx:id="passwordLogin" layoutX="154.0" layoutY="168.0" promptText="Enter Password" />
-                <Button fx:id="btnLogin" layoutX="154.0" layoutY="219.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="34.0" prefWidth="151.0" text="Login" />
-                <Label fx:id="clickHere" layoutX="147.0" layoutY="300.0" onMouseClicked="#createAccount" prefHeight="26.0" prefWidth="173.0" text="Don't have an account yet? Click here." textFill="#3c5ac9">
-               <font>
-                  <Font size="10.0" />
-               </font></Label>
-                <Label fx:id="missingData" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="100.0" prefHeight="18.0" prefWidth="435.0" textAlignment="CENTER" textFill="#fc0000" />
+                <Label layoutX="114.0" layoutY="139.0" prefHeight="30.0" prefWidth="100.0" text="Username:" textAlignment="CENTER">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Label>
+                <Label layoutX="114.0" layoutY="191.0" prefHeight="26.0" prefWidth="101.0" text="Password:">
+                    <font>
+                        <Font size="17.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="usernameLogin" layoutX="200.0" layoutY="142.0" />
+                <PasswordField fx:id="passwordLogin" layoutX="200.0" layoutY="192.0" />
+                <Label fx:id="wrongUsername" layoutX="123.0" layoutY="169.0" prefHeight="17.0" prefWidth="183.0" textFill="#fc0000" />
+                <Label fx:id="wrongPassword" layoutX="123.0" layoutY="217.0" prefHeight="17.0" prefWidth="194.0" textFill="RED" />
+                <Button fx:id="btnLogin" layoutX="285.0" layoutY="256.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="19.0" prefWidth="64.0" text="Login" />
+                <Label fx:id="clickHere" layoutX="112.0" layoutY="251.0" onMouseClicked="#createAccount" text="Don't have an account yet?&#10;Click here." textFill="#3c5ac9" />
             </children>
         </AnchorPane>
     </center>
