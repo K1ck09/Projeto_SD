@@ -37,7 +37,8 @@ public class LoginController implements Initializable {
     public void userLogin(ActionEvent actionEvent) throws IOException {
         checkLogin();
     }
-    private void clientConnection(){
+
+    private void clientConnection() {
         this.client = new JobShopClient();
         this.client.lookupService();
     }
@@ -46,16 +47,17 @@ public class LoginController implements Initializable {
         String username = usernameLogin.getText();
         String password = passwordLogin.getText();
 
-        if(!username.isEmpty() && !password.isEmpty()){
-            UserSessionRI sessionRI= this.client.userFactoryRI.login(username,password);
-            if(sessionRI!=null){
+        if (!username.isEmpty() && !password.isEmpty()) {
+            UserSessionRI sessionRI = this.client.userFactoryRI.login(username, password);
+            if (sessionRI != null) {
                 this.client.userSessionRI = sessionRI;
-                LoadGUIClient m= new LoadGUIClient();
+                LoadGUIClient m = new LoadGUIClient();
                 m.changeScene("layouts/menu.fxml");
-            }else{
-                missingData.setText("Login didn't succeeded. Username doesn't exist or password doesn't match.");
+            } else {
+                missingData.setText("Login didn't succeeded. " +
+                        "Username doesn't exist or password doesn't match.");
             }
-        }else{
+        } else {
             missingData.setText("Please insert you username and password");
         }
     }

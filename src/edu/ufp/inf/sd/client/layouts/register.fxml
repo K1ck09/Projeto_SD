@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="340.0" prefWidth="460.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.RegisterController">
-   <center>
+    <center>
         <AnchorPane prefHeight="300.0" prefWidth="589.0" BorderPane.alignment="CENTER">
             <children>
                 <Label alignment="CENTER" layoutX="152.0" layoutY="39.0" prefHeight="57.0" prefWidth="156.0" text="Register form" textAlignment="CENTER">
@@ -20,11 +20,10 @@
                 <TextField fx:id="usernameRegister" layoutX="157.0" layoutY="125.0" promptText="Enter Username" />
                 <PasswordField fx:id="passwordRegister" layoutX="157.0" layoutY="165.0" promptText="Enter Password" />
                 <Button fx:id="btnRegister" layoutX="154.0" layoutY="258.0" mnemonicParsing="false" onAction="#userRegister" prefHeight="34.0" prefWidth="160.0" text="Register" />
-                <Label fx:id="missingData" layoutX="139.0" layoutY="96.0" prefHeight="17.0" prefWidth="183.0" textFill="#fc0000" />
-            <PasswordField fx:id="confirmPasswordRegister" layoutX="157.0" layoutY="205.0" promptText="Confirm Password" />
-            <TextField layoutX="156.0" layoutY="125.0" />
-            <Button fx:id="btnBack" mnemonicParsing="false" onAction="#returnLogin" prefHeight="25.0" prefWidth="77.0" text="&lt;-  Back" />
+                <Label fx:id="missingData" alignment="CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="86.0" prefHeight="38.0" prefWidth="452.0" textAlignment="CENTER" textFill="#fc0000" />
+                <PasswordField fx:id="confirmPasswordRegister" layoutX="157.0" layoutY="205.0" promptText="Confirm Password" />
+                <Button fx:id="btnBack" mnemonicParsing="false" onAction="#returnLogin" prefHeight="25.0" prefWidth="77.0" text="&lt;-  Back" />
             </children>
         </AnchorPane>
-   </center>
+    </center>
 </BorderPane>
