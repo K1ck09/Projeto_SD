@@ -11,6 +11,7 @@ import java.io.IOException;
 public class LoadGUIClient extends Application {
 
     private static Stage stage;
+
     public static void main(String[] args) {
         launch(args);
     }

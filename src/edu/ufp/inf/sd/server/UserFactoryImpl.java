@@ -17,7 +17,7 @@ public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryR
     }
 
     @Override
-    public boolean register(String username, String password) {
+    public boolean register(String username, String password) throws RemoteException {
         if (!db.existsUser(username, password)) {
             db.registerUser(username, password);
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Register user : {0}", new Object[]{username, password});
@@ -28,7 +28,7 @@ public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryR
     }
 
     @Override
-    public UserSessionRI login(String username, String password) {
+    public UserSessionRI login(String username, String password) throws RemoteException{
         User user = new User(username, password);
         if (db.existsUser(username, password)) {
             if (!this.sessions.containsKey(username)) {

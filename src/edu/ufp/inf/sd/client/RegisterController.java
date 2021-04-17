@@ -1,6 +1,5 @@
 package edu.ufp.inf.sd.client;
 
-import edu.ufp.inf.sd.server.UserSessionRI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

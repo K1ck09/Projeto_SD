@@ -8,6 +8,8 @@ public class DBMockup {
 
     public DBMockup() {
         users = new ArrayList<>();
+        User user = new User("a","a");
+        users.add(user);
     }
 
     public boolean existsUser(String u, String p) {
