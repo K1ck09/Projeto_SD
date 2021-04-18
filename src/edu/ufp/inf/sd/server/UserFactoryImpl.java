@@ -29,13 +29,13 @@ public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryR
 
     @Override
     public UserSessionRI login(String username, String password) throws RemoteException{
-        User user = new User(username, password);
         if (db.existsUser(username, password)) {
+            User user=db.getUser(username);
             if (!this.sessions.containsKey(username)) {
                 this.sessions.put(username, user);
             }
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Sessions Sent");
-            return new UserSessionImpl(this, user);
+            return new UserSessionImpl(this, user, db);
         }
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-User not found");
         return null;

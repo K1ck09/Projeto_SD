@@ -61,7 +61,7 @@ public class LoginController implements Initializable {
                 Scene menuScene = new Scene(menuParent);
                 Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
                 MenuController controller = loader.getController();
-                controller.client=this.client;
+                controller.MenuControllerInit(this.client);
                 app_stage.setScene(menuScene);
                 app_stage.show();
             } else {

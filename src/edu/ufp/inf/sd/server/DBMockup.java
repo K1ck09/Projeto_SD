@@ -1,6 +1,8 @@
 package edu.ufp.inf.sd.server;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DBMockup {
 
@@ -8,7 +10,8 @@ public class DBMockup {
 
     public DBMockup() {
         users = new ArrayList<>();
-        User user = new User("a","a");
+        User user = new User("a","a",10);
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Register user : {0}", new Object[]{user.getCredits()});
         users.add(user);
     }
 
@@ -25,5 +28,14 @@ public class DBMockup {
         if (!existsUser(u, p)) {
             users.add(new User(u, p));
         }
+    }
+
+    public User getUser(String username) {
+        for (User usr : this.users) {
+            if (usr.getUsername().compareTo(username) == 0) {
+                return usr;
+            }
+        }
+        return null;
     }
 }

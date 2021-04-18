@@ -2,18 +2,34 @@ package edu.ufp.inf.sd.server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserSessionImpl extends UnicastRemoteObject implements UserSessionRI {
     UserFactoryImpl userFactory;
     User user;
-    public UserSessionImpl(UserFactoryImpl userFactory, User user) throws RemoteException {
+    DBMockup db;
+    public UserSessionImpl(UserFactoryImpl userFactory, User user, DBMockup db) throws RemoteException {
         super();
         this.user=user;
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Register user : {0}", new Object[]{user.getCredits()});
         this.userFactory=userFactory;
+        this.db=db;
     }
 
     public String getUsername() throws RemoteException{
         return user.getUsername();
+    }
+
+    @Override
+    public String getCredits() throws RemoteException {
+        return String.valueOf(user.getCredits());
+    }
+
+    @Override
+    public void setCredtis(int credits) throws RemoteException{
+        user.setCredits(credits);
+
     }
 
     @Override

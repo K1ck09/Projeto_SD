@@ -14,5 +14,7 @@ public interface UserSessionRI extends Remote {
     void deleteWorker(String username,String name,WorkerRI worker);
     boolean associateUserWorker(String username,WorkerRI worker);*/
    JobShopRI createJob(String username, String name) throws RemoteException;
-    public String getUsername() throws RemoteException;
+   String getUsername() throws RemoteException;
+   String getCredits() throws RemoteException;
+    void setCredtis(int credits)throws RemoteException;
 }

@@ -1,0 +1,6 @@
+.bgc {
+    -fx-background-color:
+            radial-gradient(
+             radius 100%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%);
+}
+
