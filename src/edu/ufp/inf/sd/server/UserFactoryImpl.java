@@ -35,9 +35,15 @@ public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryR
                 this.sessions.put(username, user);
             }
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Sessions Sent");
-            return new UserSessionImpl(this, user, db);
+            return new UserSessionImpl(this, user);
         }
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-User not found");
         return null;
+    }
+
+    @Override
+    public void remove(String username) throws RemoteException{
+        sessions.remove(username);
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-logged out");
     }
 }

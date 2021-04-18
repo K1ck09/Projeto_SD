@@ -56,14 +56,7 @@ public class LoginController implements Initializable {
             UserSessionRI sessionRI = this.client.userFactoryRI.login(username, password);
             if (sessionRI != null) {
                 this.client.userSessionRI = sessionRI;
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
-                Parent menuParent = loader.load();
-                Scene menuScene = new Scene(menuParent);
-                Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                MenuController controller = loader.getController();
-                controller.MenuControllerInit(this.client);
-                app_stage.setScene(menuScene);
-                app_stage.show();
+                changeToMenuScene(actionEvent);
             } else {
                 missingData.setText("Login didn't succeeded. " +
                         "Username doesn't exist or password doesn't match.");
@@ -76,6 +69,19 @@ public class LoginController implements Initializable {
     public void createAccount(MouseEvent mouseEvent) throws IOException {
         LoadGUIClient m = new LoadGUIClient();
         m.changeScene("layouts/register.fxml");
+    }
+
+    private void changeToMenuScene(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
+        Parent menuParent = loader.load();
+        Scene menuScene = new Scene(menuParent);
+        Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        MenuController controller = loader.getController();
+        controller.MenuControllerInit(this.client);
+        app_stage.setScene(menuScene);
+        app_stage.setHeight(615.0);
+        app_stage.setWidth(925.0);
+        app_stage.show();
     }
 
 }

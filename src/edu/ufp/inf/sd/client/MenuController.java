@@ -5,7 +5,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,5 +35,14 @@ public class MenuController {
         Logger.getLogger(this.getClass().getName()).log(Level.INFO,
                 "[TS] Makespan for {0} = {1}",
                 new Object[]{jsspInstancePath,String.valueOf(makespan)});
+    }
+
+    public void handlerMenuHome(MouseEvent mouseEvent) {
+    }
+
+    public void handlerLogout(MouseEvent mouseEvent) throws IOException {
+        this.client.userSessionRI.logout();
+        LoadGUIClient m= new LoadGUIClient();
+        m.changeScene("layouts/login.fxml");
     }
 }

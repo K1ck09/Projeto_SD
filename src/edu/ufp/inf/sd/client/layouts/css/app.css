@@ -15,6 +15,9 @@
     -fx-text-fill: #242d35;
     -fx-font-size: 14px;
 }
+#btnLogout{
+    -fx-padding: 0;
+}
 
 .menuBar{
     -fx-background-color:

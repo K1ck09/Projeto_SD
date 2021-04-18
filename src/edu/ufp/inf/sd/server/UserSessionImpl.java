@@ -8,13 +8,12 @@ import java.util.logging.Logger;
 public class UserSessionImpl extends UnicastRemoteObject implements UserSessionRI {
     UserFactoryImpl userFactory;
     User user;
-    DBMockup db;
-    public UserSessionImpl(UserFactoryImpl userFactory, User user, DBMockup db) throws RemoteException {
+
+    public UserSessionImpl(UserFactoryImpl userFactory, User user) throws RemoteException {
         super();
         this.user=user;
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Register user : {0}", new Object[]{user.getCredits()});
         this.userFactory=userFactory;
-        this.db=db;
     }
 
     public String getUsername() throws RemoteException{
@@ -30,6 +29,11 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     public void setCredtis(int credits) throws RemoteException{
         user.setCredits(credits);
 
+    }
+
+    @Override
+    public void logout() throws RemoteException {
+        this.userFactory.remove(this.user.getUsername());
     }
 
     @Override
