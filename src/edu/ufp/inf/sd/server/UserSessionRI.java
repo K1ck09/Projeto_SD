@@ -17,6 +17,4 @@ public interface UserSessionRI extends Remote {
    String getUsername() throws RemoteException;
    String getCredits() throws RemoteException;
     void setCredtis(int credits)throws RemoteException;
-
-    void logout() throws RemoteException;
 }

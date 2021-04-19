@@ -28,11 +28,6 @@ public class LoadGUIClient extends Application {
     public void changeScene(String fxml)throws IOException{
         Parent pane = FXMLLoader.load(getClass().getResource(fxml));
         stage.getScene().setRoot(pane);
-        if(fxml.compareTo("layouts/login.fxml")==0){
-            pane.resize(460.0,340.0);
-            stage.setHeight(340.0);
-            stage.setWidth(460.0);
-        }
     }
 
 }
