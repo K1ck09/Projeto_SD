@@ -13,14 +13,16 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+
 import javafx.scene.control.TextField;
+
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,17 +55,18 @@ public class MenuController {
         createJobStrategy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                if(!item.containsKey(stratTypes.get(t1.intValue()))){
+                if (!item.containsKey(stratTypes.get(t1.intValue()))) {
                     item.put("strat", stratTypes.get(t1.intValue()));
-                }else if(item.containsKey(stratTypes.get(t1.intValue())) && item.get("strat").compareTo(stratTypes.get(t1.intValue()))!=0 ){
+                } else if (item.containsKey(stratTypes.get(t1.intValue())) && item.get("strat").compareTo(stratTypes.get(t1.intValue())) != 0) {
                     item.replace("strat", stratTypes.get(t1.intValue()));
+
                 }
-                printHashMap(item);
             }
         });
-
-        // client.userSessionRI.setCredtis(10);
     }
+
+
+
 
     public void handlerCreateTask(ActionEvent actionEvent) throws RemoteException {
         item.put("job",createJobName.getText());
@@ -76,6 +79,7 @@ public class MenuController {
                 new Object[]{jsspInstancePath,String.valueOf(makespan)});
 
     }
+
 
     public void handlerMenuHome(MouseEvent mouseEvent) {
     }
@@ -133,18 +137,9 @@ public class MenuController {
         table.getChildren().add(node);
     }
 
-    public void handlerChoiceBox(MouseEvent mouseEvent) {
-        //reateJobStrategy.getItems().addAll("item1", "item2", "item3");
-    }
 
     public void handlerExit(MouseEvent mouseEvent) {
         Platform.exit();
         System.exit(0);
-    }
-
-    public void printHashMap(HashMap<String,String> hashMap){
-        for(String value: hashMap.values()){
-            System.out.println("value: "+value);
-        }
     }
 }
