@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.UserSessionRI;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -79,9 +80,13 @@ public class LoginController implements Initializable {
         MenuController controller = loader.getController();
         controller.MenuControllerInit(this.client);
         app_stage.setScene(menuScene);
-        app_stage.setHeight(615.0);
-        app_stage.setWidth(925.0);
+        app_stage.setHeight(630.0);
+        app_stage.setWidth(926.0);
         app_stage.show();
     }
 
+    public void handlerExit(MouseEvent mouseEvent) {
+        Platform.exit();
+        System.exit(0);
+    }
 }

@@ -1,4 +1,4 @@
-package edu.ufp.inf.sd.server;
+package edu.ufp.inf.sd.client;
 
 public interface WorkerRI {
     void resumeWorker();

@@ -3,18 +3,25 @@
             radial-gradient(
              radius 100%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%);
 }
-
+/*MENU BAR*/
 .lion {
     -fx-background-color:
             rgba(0,0,0,0.08),
             linear-gradient(#9a9a9a, #909090),
             linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%);
     -fx-background-insets: 0 0 -1 0,0,1;
-    -fx-background-radius: 5,5,4;
     -fx-padding: 3 30 3 30;
     -fx-text-fill: #242d35;
     -fx-font-size: 14px;
 }
+
+.lion:hover{
+    -fx-background-color:
+            rgba(0,0,0,0.08),
+            linear-gradient(#9a9a9a, #909090),
+            linear-gradient(ececec 0%, #e4e4e4 50%, #dddddd 51%, #e5e5e5 100%);
+}
+
 #btnLogout{
     -fx-padding: 0;
 }
@@ -25,7 +32,7 @@
             linear-gradient(#9a9a9a, #909090),
             linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%);
 }
-
+/*BUTTONS*/
 .green {
     -fx-background-color:
             linear-gradient(#f0ff35, #a9ff00),
@@ -34,6 +41,12 @@
     -fx-background-insets: 0, 1;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
     -fx-text-fill: #395306;
+}
+.green:hover{
+    -fx-background-color:
+            linear-gradient(#a7b327, #78ae00),
+            radial-gradient(center 50% -40%, radius 200%, #96bf2d 45%, #5e8d00 50%);
+
 }
 
 .bevel-grey {
@@ -56,12 +69,24 @@
     -fx-text-fill: black;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 3, 0.0 , 0 , 1 );
 }
+
+.glass-grey:hover {
+    -fx-background-color:
+            #b9baba,
+            linear-gradient(#bfbfbf 50%, #eaeaea 100%),
+            radial-gradient(center 50% -40%, radius 200%, #d0d0d0 45%, rgba(230, 230, 230, 0) 50%);
+}
 .round-red {
     -fx-background-color: linear-gradient(#ff5400, #be1d00);
     -fx-background-radius: 0;
     -fx-background-insets: 0;
     -fx-text-fill: white;
 }
+
+.round-red:hover{
+    -fx-background-color: linear-gradient(#db4600, #9b1b00);
+}
+
 .windows7-default {
     -fx-background-color:
             #3c7fb1,
@@ -81,4 +106,31 @@
     -fx-background-radius: 3, 2, 1;
     -fx-padding: 3 30 3 30;
     -fx-text-fill: black;
+}
+/*TABLE*/
+
+.tableButton {
+    -fx-background-color:
+            rgba(0,0,0,0.08),
+            linear-gradient(#9a9a9a, #909090),
+            linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%);
+    -fx-background-insets: 0 0 -1 0,0,1;
+
+    -fx-border-color: linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%);
+    -fx-text-fill: #242d35;
+    -fx-font-size: 14px;
+}
+
+
+.tableBar{
+    -fx-background-color:
+            rgba(0,0,0,0.08),
+            linear-gradient(#9a9a9a, #909090),
+            linear-gradient(white 0%, #f3f3f3 50%, #ececec 51%, #f2f2f2 100%);
+}
+
+.labelState{
+    -fx-border-color: #2A73FF;
+    -fx-border-radius: 20;
+    -fx-background-color: transparent;
 }

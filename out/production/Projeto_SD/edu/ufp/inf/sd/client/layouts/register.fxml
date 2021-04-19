@@ -10,19 +10,28 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="340.0" prefWidth="460.0" styleClass="bgc" stylesheets="@css/app.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.RegisterController">
    <top>
-        <AnchorPane prefHeight="342.0" prefWidth="465.0" BorderPane.alignment="CENTER">
+        <AnchorPane prefHeight="300.0" prefWidth="589.0" BorderPane.alignment="CENTER">
             <children>
-                <Label alignment="CENTER" layoutX="152.0" layoutY="39.0" prefHeight="57.0" prefWidth="156.0" text="Register form" textAlignment="CENTER" textFill="WHITE">
+                <Label alignment="CENTER" layoutX="98.0" layoutY="43.0" prefHeight="57.0" prefWidth="265.0" text="Register form" textAlignment="CENTER" textFill="WHITE">
                     <font>
                         <Font size="26.0" />
                     </font>
                 </Label>
-                <TextField fx:id="usernameRegister" layoutX="157.0" layoutY="125.0" promptText="Enter Username" />
-                <PasswordField fx:id="passwordRegister" layoutX="157.0" layoutY="165.0" promptText="Enter Password" />
-                <Button fx:id="btnRegister" layoutX="154.0" layoutY="258.0" mnemonicParsing="false" onAction="#userRegister" prefHeight="34.0" prefWidth="160.0" styleClass="glass-grey" stylesheets="@css/app.css" text="Register" />
+                <TextField fx:id="usernameRegister" layoutX="154.0" layoutY="134.0" promptText="Enter Username" />
+                <PasswordField fx:id="passwordRegister" layoutX="154.0" layoutY="168.0" promptText="Enter Password" />
+                <Button fx:id="btnRegister" layoutX="154.0" layoutY="248.0" mnemonicParsing="false" onAction="#userRegister" prefHeight="34.0" prefWidth="151.0" styleClass="glass-grey" stylesheets="@css/app.css" text="Register" />
                 <Label fx:id="missingData" alignment="CENTER" contentDisplay="CENTER" layoutX="3.0" layoutY="86.0" prefHeight="38.0" prefWidth="452.0" textAlignment="CENTER" textFill="#fc0000" />
-                <PasswordField fx:id="confirmPasswordRegister" layoutX="157.0" layoutY="205.0" promptText="Confirm Password" />
-                <Button fx:id="btnBack" layoutY="-1.0" mnemonicParsing="false" onAction="#returnLogin" prefHeight="31.0" prefWidth="73.0" styleClass="round-red" stylesheets="@css/app.css" text="&lt;-  Back" />
+                <PasswordField fx:id="confirmPasswordRegister" layoutX="154.0" layoutY="202.0" promptText="Confirm Password" />
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#returnLogin" prefHeight="32.0" prefWidth="36.0" scaleX="1.2" style="-fx-text-fill: linear-gradient(#ff5400, #be1d00);" text="Back" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="418.0" onMouseClicked="#handlerExit" prefHeight="32.0" prefWidth="36.0" scaleX="1.2" style="-fx-text-fill: linear-gradient(#ff5400, #be1d00);" text="Exit" textFill="WHITE">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
             </children>
         </AnchorPane>
    </top>
