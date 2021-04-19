@@ -33,6 +33,11 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
+    public void logout() {
+
+    }
+
+    @Override
     public JobShopRI createJob(String username, String name) throws RemoteException {
         return new JobShopImpl();
     }

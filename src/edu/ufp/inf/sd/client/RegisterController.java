@@ -55,7 +55,7 @@ public class RegisterController {
         }
     }
 
-    public void returnLogin(ActionEvent actionEvent) throws IOException {
+    public void returnLogin(MouseEvent actionEvent) throws IOException {
         missingData.setStyle("-fx-text-fill: #fc0000; -fx-font-size: 12px;");
         LoadGUIClient m = new LoadGUIClient();
         m.changeScene("layouts/login.fxml");
