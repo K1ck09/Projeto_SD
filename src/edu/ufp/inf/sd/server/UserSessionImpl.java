@@ -33,7 +33,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public void logout() {
+    public void logout()throws RemoteException {
 
     }
 

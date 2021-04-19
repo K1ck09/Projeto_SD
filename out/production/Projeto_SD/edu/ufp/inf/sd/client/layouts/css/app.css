@@ -41,7 +41,6 @@
     -fx-text-fill: #242d35;
     -fx-font-size: 14px;
 }
-<<<<<<< HEAD
 
 .lion:hover{
     -fx-background-color:
@@ -63,8 +62,6 @@
 #btnLogout{
     -fx-padding: 0;
 }
-=======
->>>>>>> parent of 226393c (Logout and GUI bugs fixed)
 
 .menuBar{
     -fx-background-color:
