@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,9 +53,12 @@ public class MenuController {
             createJobStrategy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
                 @Override
                 public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                    System.out.println(stratTypes.get(t1.intValue()));
-//                    If no Start in hashmap put value orther wise substitute
-//                    item.put("strat", String.valueOf(observableValue));
+                    if(!item.containsKey(stratTypes.get(t1.intValue()))){
+                        item.put("strat", stratTypes.get(t1.intValue()));
+                    }else if(item.containsKey(stratTypes.get(t1.intValue())) && item.get("strat").compareTo(stratTypes.get(t1.intValue()))!=0 ){
+                        item.replace("strat", stratTypes.get(t1.intValue()));
+                    }
+                    printHashMap(item);
                 }
             });
 
@@ -136,5 +140,11 @@ public class MenuController {
     public void handlerExit(MouseEvent mouseEvent) {
         Platform.exit();
         System.exit(0);
+    }
+
+    public void printHashMap(HashMap<String,String> hashMap){
+        for(String value: hashMap.values()){
+            System.out.println("value: "+value);
+        }
     }
 }
