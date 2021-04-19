@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.UserSessionRI;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -84,4 +85,8 @@ public class LoginController implements Initializable {
         app_stage.show();
     }
 
+    public void handlerExit(MouseEvent mouseEvent) {
+        Platform.exit();
+        System.exit(0);
+    }
 }

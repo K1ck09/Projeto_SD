@@ -1,11 +1,13 @@
 package edu.ufp.inf.sd.client;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -78,5 +80,10 @@ public class RegisterController {
         System.out.println(hasLetter);
         System.out.println(hasNumber);
         return hasLetter && hasNumber;
+    }
+
+    public void handlerExit(MouseEvent mouseEvent) {
+        Platform.exit();
+        System.exit(0);
     }
 }

@@ -11,107 +11,150 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" styleClass="bgc" stylesheets="@css/app.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.MenuController">
-    <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="925.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
-        <Label fx:id="menuHome" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="lion" stylesheets="@css/app.css" text="Home" textAlignment="CENTER">
+<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="631.0" prefWidth="925.0" styleClass="bgc" stylesheets="@css/app.css"
+      xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="edu.ufp.inf.sd.client.MenuController">
+    <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="925.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar"
+          stylesheets="@css/app.css">
+        <Label fx:id="menuHome" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome"
+               prefHeight="51.0" prefWidth="105.0" styleClass="lion" stylesheets="@css/app.css" text="Home"
+               textAlignment="CENTER">
             <font>
-                <Font size="14.0" />
+                <Font size="14.0"/>
             </font>
         </Label>
-        <Label prefHeight="51.0" prefWidth="105.0" />
-        <Label prefHeight="51.0" prefWidth="105.0" />
-        <Label prefHeight="51.0" prefWidth="105.0" />
-        <Label prefHeight="51.0" prefWidth="105.0" />
-        <Label fx:id="menuUsername" prefHeight="31.0" prefWidth="121.0" />
-        <Label fx:id="menuCredits" prefHeight="31.0" prefWidth="110.0" />
-        <Label id="btnLogout" fx:id="menuLogout" alignment="CENTER" onMouseClicked="#handlerLogout" prefHeight="31.0" prefWidth="92.0" styleClass="lion" stylesheets="@css/app.css" text="Logout">
+        <Label prefHeight="51.0" prefWidth="105.0"/>
+        <Label prefHeight="51.0" prefWidth="105.0"/>
+        <Label prefHeight="51.0" prefWidth="105.0"/>
+        <Label prefHeight="51.0" prefWidth="105.0"/>
+        <Label fx:id="menuUsername" prefHeight="31.0" prefWidth="121.0"/>
+        <Label fx:id="menuCredits" prefHeight="31.0" prefWidth="110.0"/>
+        <Label id="btnLogout" fx:id="menuLogout" alignment="CENTER" onMouseClicked="#handlerLogout" prefHeight="31.0"
+               prefWidth="92.0" styleClass="lion" stylesheets="@css/app.css" text="Logout">
             <HBox.margin>
-                <Insets />
-            </HBox.margin></Label>
-        <Label id="btnMenuExit" fx:id="btnMenuExit" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerExit" prefHeight="31.0" prefWidth="78.0" style="-fx-padding: 0;" styleClass="lion" stylesheets="@css/app.css" text="Exit" textAlignment="CENTER">
+                <Insets/>
+            </HBox.margin>
+        </Label>
+        <Label id="btnMenuExit" fx:id="btnMenuExit" alignment="CENTER" contentDisplay="CENTER"
+               onMouseClicked="#handlerExit" prefHeight="31.0" prefWidth="78.0" style="-fx-padding: 0;"
+               styleClass="lion" stylesheets="@css/app.css" text="Exit" textAlignment="CENTER">
             <HBox.margin>
-                <Insets />
+                <Insets/>
             </HBox.margin>
             <font>
-                <Font size="14.0" />
-            </font></Label>
+                <Font size="14.0"/>
+            </font>
+        </Label>
     </HBox>
-    <HBox layoutX="15.0" layoutY="146.0" prefHeight="42.0" prefWidth="592.0" style="-fx-background-radius: 5,5,4;" styleClass="tableBar" stylesheets="@css/app.css">
+    <HBox layoutX="15.0" layoutY="146.0" prefHeight="42.0" prefWidth="592.0" style="-fx-background-radius: 5,5,4;"
+          styleClass="tableBar" stylesheets="@css/app.css">
         <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Job" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0"
+                   prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Job"
+                   textAlignment="CENTER">
                 <font>
-                    <Font size="14.0" />
+                    <Font size="14.0"/>
                 </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Owner" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0"
+                   prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Owner"
+                   textAlignment="CENTER">
                 <font>
-                    <Font size="14.0" />
+                    <Font size="14.0"/>
                 </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Strategy" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0"
+                   prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Strategy"
+                   textAlignment="CENTER">
                 <font>
-                    <Font size="14.0" />
+                    <Font size="14.0"/>
                 </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Reward" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0"
+                   prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Reward"
+                   textAlignment="CENTER">
                 <font>
-                    <Font size="14.0" />
+                    <Font size="14.0"/>
                 </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Workers" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0"
+                   prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="Workers"
+                   textAlignment="CENTER">
                 <font>
-                    <Font size="14.0" />
+                    <Font size="14.0"/>
                 </font>
             </Label>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="State" textAlignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0"
+                   prefWidth="105.0" styleClass="tableButton" stylesheets="@css/app.css" text="State"
+                   textAlignment="CENTER">
                 <font>
-                    <Font size="14.0" />
+                    <Font size="14.0"/>
                 </font>
             </Label>
         </children>
     </HBox>
-    <Button fx:id="btnCreateTask" layoutX="566.0" layoutY="71.0" mnemonicParsing="false" onAction="#handlerCreateTask" prefHeight="25.0" prefWidth="113.0" styleClass="green" stylesheets="@css/app.css" text="New Job" />
-    <TextField fx:id="createJobName" layoutX="15.0" layoutY="71.0" promptText="Enter Job Name" />
-    <TextField fx:id="createJobReward" layoutX="196.0" layoutY="71.0" promptText="Enter Job Reward" />
-    <ChoiceBox fx:id="createJobStrategy" layoutX="381.0" layoutY="71.0" onMouseClicked="#handlerChoiceBox" prefWidth="150.0" styleClass="menuBar" stylesheets="@css/app.css" />
-    <Label fx:id="displayTotalJobs1" alignment="CENTER" contentDisplay="CENTER" layoutX="634.0" layoutY="146.0" prefHeight="42.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="My Jobs Information" textAlignment="CENTER" textFill="WHITE">
+    <Button fx:id="btnCreateTask" layoutX="566.0" layoutY="71.0" mnemonicParsing="false" onAction="#handlerCreateTask"
+            prefHeight="25.0" prefWidth="113.0" styleClass="green" stylesheets="@css/app.css" text="New Job"/>
+    <TextField fx:id="createJobName" layoutX="15.0" layoutY="71.0" promptText="Enter Job Name"/>
+    <TextField fx:id="createJobReward" layoutX="196.0" layoutY="71.0" promptText="Enter Job Reward"/>
+    <ChoiceBox fx:id="createJobStrategy" layoutX="381.0" layoutY="71.0" onMouseClicked="#handlerChoiceBox"
+               prefWidth="150.0" styleClass="menuBar" stylesheets="@css/app.css"/>
+    <Label fx:id="displayTotalJobs1" alignment="CENTER" contentDisplay="CENTER" layoutX="634.0" layoutY="146.0"
+           prefHeight="42.0" prefWidth="270.0" style="-fx-font-weight: bold;" text="My Jobs Information"
+           textAlignment="CENTER" textFill="WHITE">
         <font>
-            <Font size="18.0" />
+            <Font size="18.0"/>
         </font>
     </Label>
-    <Label fx:id="displayTotalJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="725.0" layoutY="188.0" prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER" textFill="#4ca2ff">
+    <Label fx:id="displayTotalJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="725.0" layoutY="188.0"
+           prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER"
+           textFill="#4ca2ff">
         <font>
-            <Font size="26.0" />
+            <Font size="26.0"/>
         </font>
     </Label>
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="739.0" layoutY="237.0" prefHeight="17.0" prefWidth="63.0" text="Total Jobs" textAlignment="CENTER" textFill="WHITE" />
-    <Label fx:id="displayAtiveWorkers" alignment="CENTER" contentDisplay="CENTER" layoutX="724.0" layoutY="534.0" prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER" textFill="#fff14d">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="739.0" layoutY="237.0" prefHeight="17.0" prefWidth="63.0"
+           text="Total Jobs" textAlignment="CENTER" textFill="WHITE"/>
+    <Label fx:id="displayAtiveWorkers" alignment="CENTER" contentDisplay="CENTER" layoutX="724.0" layoutY="534.0"
+           prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER"
+           textFill="#fff14d">
         <font>
-            <Font size="26.0" />
+            <Font size="26.0"/>
         </font>
     </Label>
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="706.0" layoutY="576.0" prefHeight="17.0" prefWidth="130.0" text="Total Active Workers" textAlignment="CENTER" textFill="WHITE" />
-    <Label fx:id="displayFinishJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="726.0" layoutY="281.0" prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER" textFill="#ff4f4f">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="706.0" layoutY="576.0" prefHeight="17.0"
+           prefWidth="130.0" text="Total Active Workers" textAlignment="CENTER" textFill="WHITE"/>
+    <Label fx:id="displayFinishJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="726.0" layoutY="281.0"
+           prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER"
+           textFill="#ff4f4f">
         <font>
-            <Font size="26.0" />
+            <Font size="26.0"/>
         </font>
     </Label>
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="728.0" layoutY="323.0" prefHeight="17.0" prefWidth="86.0" text="Finish Jobs" textAlignment="CENTER" textFill="WHITE" />
-    <Label fx:id="displayPausedJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="726.0" layoutY="363.0" prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER" textFill="#ffb34d">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="728.0" layoutY="323.0" prefHeight="17.0" prefWidth="86.0"
+           text="Finish Jobs" textAlignment="CENTER" textFill="WHITE"/>
+    <Label fx:id="displayPausedJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="726.0" layoutY="363.0"
+           prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER"
+           textFill="#ffb34d">
         <font>
-            <Font size="26.0" />
+            <Font size="26.0"/>
         </font>
     </Label>
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="728.0" layoutY="405.0" prefHeight="17.0" prefWidth="86.0" text="Paused Jobs" textAlignment="CENTER" textFill="WHITE" />
-    <Label fx:id="displayOnGoingJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="726.0" layoutY="445.0" prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER" textFill="#54ff4f">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="728.0" layoutY="405.0" prefHeight="17.0" prefWidth="86.0"
+           text="Paused Jobs" textAlignment="CENTER" textFill="WHITE"/>
+    <Label fx:id="displayOnGoingJobs" alignment="CENTER" contentDisplay="CENTER" layoutX="726.0" layoutY="445.0"
+           prefHeight="42.0" prefWidth="90.0" style="-fx-font-weight: bold;" text="100" textAlignment="CENTER"
+           textFill="#54ff4f">
         <font>
-            <Font size="26.0" />
+            <Font size="26.0"/>
         </font>
     </Label>
-    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="728.0" layoutY="487.0" prefHeight="17.0" prefWidth="86.0" text="OnGoing Jobs" textAlignment="CENTER" textFill="WHITE" />
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="728.0" layoutY="487.0" prefHeight="17.0" prefWidth="86.0"
+           text="OnGoing Jobs" textAlignment="CENTER" textFill="WHITE"/>
     <ScrollPane layoutX="15.0" layoutY="198.0" prefHeight="404.0" prefWidth="592.0">
         <content>
-            <VBox fx:id="table" prefHeight="404.0" prefWidth="591.0" />
+            <VBox fx:id="table" prefHeight="404.0" prefWidth="591.0"/>
         </content>
     </ScrollPane>
 </Pane>
