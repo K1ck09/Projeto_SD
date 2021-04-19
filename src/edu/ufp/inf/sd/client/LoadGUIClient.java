@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -22,7 +21,6 @@ public class LoadGUIClient extends Application {
         stage=primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("layouts/login.fxml"));
         primaryStage.setTitle("Job Shop Scheduling");
-        primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(new Scene(root, 460, 340));
         primaryStage.show();
     }

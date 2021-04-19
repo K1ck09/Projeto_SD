@@ -17,7 +17,7 @@
                         <Font size="26.0" />
                     </font>
                 </Label>
-                <TextField fx:id="usernameLogin" layoutX="154.0" layoutY="134.0" promptText="Enter Username" />
+                <TextField fx:id="usernameLogin" layoutX="154.0" layoutY="134.0" promptText="Enter Login" />
                 <PasswordField fx:id="passwordLogin" layoutX="154.0" layoutY="168.0" promptText="Enter Password" />
                 <Button fx:id="btnLogin" layoutX="154.0" layoutY="219.0" mnemonicParsing="false" onAction="#userLogin" prefHeight="34.0" prefWidth="151.0" styleClass="glass-grey" stylesheets="@css/app.css" text="Login" />
                 <Label fx:id="clickHere" layoutX="147.0" layoutY="300.0" onMouseClicked="#createAccount" prefHeight="26.0" prefWidth="173.0" text="Don't have an account yet? Click here." textFill="#8cfbff">
@@ -26,11 +26,14 @@
                     </font>
                 </Label>
                 <Label fx:id="missingData" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="100.0" prefHeight="18.0" prefWidth="435.0" textAlignment="CENTER" textFill="#fc0000" />
+<<<<<<< HEAD
             <Label id="btnLoginExit" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" layoutX="418.0" onMouseClicked="#handlerExit" prefHeight="32.0" prefWidth="36.0" scaleX="1.2" text="Exit" textAlignment="CENTER" textFill="#dd1a00">
                <font>
                   <Font size="14.0" />
                </font>
             </Label>
+=======
+>>>>>>> parent of 82a666e (Gui Changes Menu Starting)
             </children>
         </AnchorPane>
     </center>

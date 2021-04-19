@@ -1,13 +1,11 @@
 package edu.ufp.inf.sd.client;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -55,7 +53,7 @@ public class RegisterController {
         }
     }
 
-    public void returnLogin(MouseEvent actionEvent) throws IOException {
+    public void returnLogin(ActionEvent actionEvent) throws IOException {
         missingData.setStyle("-fx-text-fill: #fc0000; -fx-font-size: 12px;");
         LoadGUIClient m = new LoadGUIClient();
         m.changeScene("layouts/login.fxml");
@@ -80,10 +78,5 @@ public class RegisterController {
         System.out.println(hasLetter);
         System.out.println(hasNumber);
         return hasLetter && hasNumber;
-    }
-
-    public void handlerExit(MouseEvent mouseEvent) {
-        Platform.exit();
-        System.exit(0);
     }
 }
