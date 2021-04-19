@@ -3,6 +3,33 @@
             radial-gradient(
                     radius 100%, rgb(90, 92, 106) 0%, rgb(32, 45, 58) 81.3%);
 }
+/*REGISTER*/
+
+#btnRegisterBack{
+    -fx-text-fill:  linear-gradient(#ff5400, #be1d00);
+}
+#btnRegisterBack:hover{
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(#db4600, #9b1b00);
+}
+
+#btnRegisterExit{
+    -fx-text-fill:  linear-gradient(#ff5400, #be1d00);
+}
+#btnRegisterExit:hover{
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(#db4600, #9b1b00);
+}
+/*LOGIN*/
+
+#btnLoginExit{
+    -fx-text-fill:  linear-gradient(#ff5400, #be1d00);
+}
+#btnLoginExit:hover{
+    -fx-text-fill: white;
+    -fx-background-color: linear-gradient(#db4600, #9b1b00);
+}
+
 /*MENU BAR*/
 .lion {
     -fx-background-color:
@@ -21,6 +48,16 @@
             rgba(0,0,0,0.08),
             linear-gradient(#9a9a9a, #909090),
             linear-gradient(ececec 0%, #e4e4e4 50%, #dddddd 51%, #e5e5e5 100%);
+}
+
+#btnMenuExit{
+    -fx-text-fill:linear-gradient(#ff5400, #be1d00);
+}
+
+#btnMenuExit:hover{
+    -fx-text-fill: white;
+    -fx-background-insets: 0 0 -1 0,0,1;
+    -fx-background-color: linear-gradient(#db4600, #9b1b00);
 }
 
 #btnLogout{
