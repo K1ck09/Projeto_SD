@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ItemController extends MenuController {
+public class ItemController {
     public Label tableJob;
     public Label tableOwner;
     public Label tableStrat;
@@ -20,7 +20,13 @@ public class ItemController extends MenuController {
     public Label tableWorkers;
     public Label tableState;
     HashMap<String,String> item =new HashMap<>();
+    private JobShopClient client;
 
+
+
+    public void setClient(JobShopClient client) {
+        this.client = client;
+    }
 
     public void handlerInsideJob(ActionEvent actionEvent) throws IOException {
         insertItens();
@@ -39,7 +45,7 @@ public class ItemController extends MenuController {
         Scene menuScene = new Scene(menuParent);
         Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         JobController controller = loader.getController();
-        controller.init(item,client);
+        controller.init(item,this.client);
         app_stage.setScene(menuScene);
         app_stage.setHeight(630.0);
         app_stage.setWidth(926.0);

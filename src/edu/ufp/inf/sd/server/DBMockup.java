@@ -9,7 +9,7 @@ public class DBMockup {
 
     private HashMap<String, User> users;// = new ArrayList();
     private HashMap<String, User> sessions;
-    
+
     //job name and job object
     private HashMap<String, JobGroupRI> jobGroups;
 

@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -83,7 +84,11 @@ public class MenuController {
     }
 
     private void insertItemInTable() throws IOException {
-        Node node = FXMLLoader.load(getClass().getResource("layouts/tableJob.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
+        Parent menuParent = loader.load();
+        ItemController controller = loader.getController();
+        controller.setClient(this.client);
+        Node node = loader.getRoot();
         if (node instanceof AnchorPane) {
             AnchorPane anchor = (AnchorPane) node;
             ObservableList<Node> anchorIn = anchor.getChildren();
@@ -112,9 +117,6 @@ public class MenuController {
 
 
         }
-
-        System.out.println("PRINTING" + node);
-        printNode(node);
         node.setUserData(client);
         table.getChildren().add(node);
         item.clear();
