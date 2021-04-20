@@ -11,4 +11,5 @@ public interface UserSessionRI extends Remote {
     void setCredtis(int credits)throws RemoteException;
     HashMap<String,JobGroupRI> getJobList()throws RemoteException;
     void logout() throws RemoteException;
+    boolean isJobUnique(String jobName) throws RemoteException;
 }

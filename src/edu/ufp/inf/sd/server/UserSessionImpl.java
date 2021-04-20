@@ -43,6 +43,11 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
+    public boolean isJobUnique(String jobName) throws RemoteException {
+        return db.getJobGroups().containsKey(jobName);
+    }
+
+    @Override
     public HashMap<String, JobGroupRI> createJob(HashMap<String,String> item) throws RemoteException {
         JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"));
         db.addJob(jobGroup);
