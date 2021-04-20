@@ -9,10 +9,14 @@ public class DBMockup {
 
     private HashMap<String, User> users;// = new ArrayList();
     private HashMap<String, User> sessions;
+    
+    //job name and job object
+    private HashMap<String, JobGroupRI> jobGroups;
 
     public DBMockup() {
         this.users = new HashMap<>();
         this.sessions = new HashMap<>();
+        this.jobGroups =new HashMap<>();
 
 
 
@@ -48,5 +52,9 @@ public class DBMockup {
     public void removeSession(String username){
         this.sessions.remove(username);
     }
+    // JOB METHODS
 
+    public HashMap<String, JobGroupRI> getJobGroups() {
+        return jobGroups;
+    }
 }
