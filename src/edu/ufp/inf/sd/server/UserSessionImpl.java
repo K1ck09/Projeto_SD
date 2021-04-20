@@ -2,18 +2,19 @@ package edu.ufp.inf.sd.server;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UserSessionImpl extends UnicastRemoteObject implements UserSessionRI {
-    UserFactoryImpl userFactory;
+    DBMockup db;
     User user;
 
-    public UserSessionImpl(UserFactoryImpl userFactory, User user) throws RemoteException {
+    public UserSessionImpl(DBMockup db, User user) throws RemoteException {
         super();
         this.user=user;
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Logged user : {0}", new Object[]{user.getUsername()});
-        this.userFactory=userFactory;
+        this.db=db;
     }
 
     public String getUsername() throws RemoteException{
@@ -32,12 +33,25 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public void logout() throws RemoteException {
-        this.userFactory.remove(this.user.getUsername());
+    public HashMap<String, JobGroupRI> getJobList() throws RemoteException {
+        return db.getJobGroups();
     }
 
     @Override
-    public void createJob(String username, String name) throws RemoteException {
-
+    public void logout() throws RemoteException {
+        this.db.removeSession(this.user.getUsername());
     }
+
+    @Override
+    public HashMap<String, JobGroupRI> createJob(HashMap<String,String> item) throws RemoteException {
+        JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"));
+        db.addJob(jobGroup);
+        return db.getJobGroups();
+    }
+
+    public JobGroupRI getJobGroup(String jobName){
+        return db.getJobGroups().get(jobName);
+    }
+
+
 }

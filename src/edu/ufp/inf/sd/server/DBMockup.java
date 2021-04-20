@@ -1,5 +1,6 @@
 package edu.ufp.inf.sd.server;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -40,6 +41,7 @@ public class DBMockup {
         return users.get(username);
     }
 
+
     // SESSIONS METHODS
     public HashMap<String, User> getSessions() {
         return sessions;
@@ -56,5 +58,10 @@ public class DBMockup {
 
     public HashMap<String, JobGroupRI> getJobGroups() {
         return jobGroups;
+    }
+
+
+    public void addJob(JobGroupRI jobGroup) throws RemoteException {
+        this.jobGroups.put(jobGroup.getJobName(),jobGroup);
     }
 }

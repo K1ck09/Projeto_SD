@@ -1,5 +1,7 @@
 package edu.ufp.inf.sd.client;
 
+import edu.ufp.inf.sd.server.JobGroupRI;
+import edu.ufp.inf.sd.server.JobShopRI;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,7 +21,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.rmi.RemoteException;
+import java.sql.SQLOutput;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class MenuController {
@@ -35,9 +40,10 @@ public class MenuController {
     public Label messageMenu;
 
     private HashMap<String, String> item = new HashMap<>();
+    private HashMap<String, JobGroupRI> jobGroups = new HashMap<>();
     public JobShopClient client;
 
-    public void MenuControllerInit(JobShopClient client) throws RemoteException {
+    public void MenuControllerInit(JobShopClient client) throws IOException {
         this.client = client;
         menuUsername.setText("Username: " + client.userSessionRI.getUsername());
         menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
@@ -52,7 +58,11 @@ public class MenuController {
                 }
             }
         });
-
+        jobGroups=client.userSessionRI.getJobList();
+        if(!jobGroups.isEmpty()){
+            System.out.println("entrei mulkere");
+         insertItemsInTable();
+        }
         // client.userSessionRI.setCredtis(10);
     }
 
@@ -66,8 +76,8 @@ public class MenuController {
                 item.put("owner", client.userSessionRI.getUsername());
                 item.put("workers", "0");
                 item.put("state", "Ongoing");
-                client.userSessionRI.createJob(client.userSessionRI.getUsername(), createJobName.getText());
-                insertItemInTable();
+                jobGroups=client.userSessionRI.createJob(item);
+                insertItemsInTable();
                 messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
                 messageMenu.setText("Job Created Sucessfully!");
                 createJobReward.clear();
@@ -83,43 +93,42 @@ public class MenuController {
         }
     }
 
-    private void insertItemInTable() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
-        Parent menuParent = loader.load();
-        ItemController controller = loader.getController();
-        controller.setClient(this.client);
-        Node node = loader.getRoot();
-        if (node instanceof AnchorPane) {
-            AnchorPane anchor = (AnchorPane) node;
-            ObservableList<Node> anchorIn = anchor.getChildren();
-            for (Node anchorNode : anchorIn)
-                if (anchorNode instanceof HBox) {
-                    HBox hbox = (HBox) anchorNode;
-                    ObservableList<Node> nodeIn = hbox.getChildren();
-                    for (Node label : nodeIn)
-                        if (label instanceof Label) {
-                            String id = label.getId();
-                            if (id != null && id.compareTo("tableJob") == 0) {
-                                ((Label) label).setText(item.get("job"));
-                            } else if (id != null && id.compareTo("tableOwner") == 0) {
-                                ((Label) label).setText(item.get("owner"));
-                            } else if (id != null && id.compareTo("tableStrat") == 0) {
-                                ((Label) label).setText(item.get("strat"));
-                            } else if (id != null && id.compareTo("tableReward") == 0) {
-                                ((Label) label).setText(item.get("reward"));
-                            } else if (id != null && id.compareTo("tableWorkers") == 0) {
-                                ((Label) label).setText(item.get("workers"));
-                            } else if (id != null && id.compareTo("tableState") == 0) {
-                                ((Label) label).setText(item.get("state"));
+    private void insertItemsInTable() throws IOException {
+        Collection<JobGroupRI> jobsList= jobGroups.values();
+        for(JobGroupRI job: jobsList){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
+            Parent menuParent = loader.load();
+            ItemController controller = loader.getController();
+            controller.setClient(this.client);
+            Node node = loader.getRoot();
+            if (node instanceof AnchorPane) {
+                AnchorPane anchor = (AnchorPane) node;
+                ObservableList<Node> anchorIn = anchor.getChildren();
+                for (Node anchorNode : anchorIn)
+                    if (anchorNode instanceof HBox) {
+                        HBox hbox = (HBox) anchorNode;
+                        ObservableList<Node> nodeIn = hbox.getChildren();
+                        for (Node label : nodeIn)
+                            if (label instanceof Label) {
+                                String id = label.getId();
+                                if (id != null && id.compareTo("tableJob") == 0) {
+                                    ((Label) label).setText(job.getJobName());
+                                } else if (id != null && id.compareTo("tableOwner") == 0) {
+                                    ((Label) label).setText(job.getJobOwner());
+                                } else if (id != null && id.compareTo("tableStrat") == 0) {
+                                    ((Label) label).setText(job.getJobStrat());
+                                } else if (id != null && id.compareTo("tableReward") == 0) {
+                                    ((Label) label).setText(job.getJobReward());
+                                } else if (id != null && id.compareTo("tableWorkers") == 0) {
+                                    ((Label) label).setText(job.getWorkersSize().toString());
+                                } else if (id != null && id.compareTo("tableState") == 0) {
+                                    ((Label) label).setText(job.getState());
+                                }
                             }
-                        }
-                }
-
-
+                    }
+            }
+            table.getChildren().add(node);
         }
-        node.setUserData(client);
-        table.getChildren().add(node);
-        item.clear();
     }
 
     public void handlerMenuHome(MouseEvent mouseEvent) {
@@ -140,9 +149,10 @@ public class MenuController {
         System.exit(0);
     }
 
-    public void printHashMap(HashMap<String, String> hashMap) {
-        for (String value : hashMap.values()) {
-            System.out.println("value: " + value);
+    public void printHashMap(HashMap<String, JobGroupRI> hashMap) throws RemoteException {
+        Collection<JobGroupRI> jobsList= jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            System.out.println("value: " + jobGroupRI.getJobName());
         }
     }
 
