@@ -70,7 +70,7 @@ public class JobShopServer {
             System.out.println(registryPort);
             System.out.println(serviceName);
             //============ Create a context for RMI setup ============
-            contextRMI = new SetupContextRMI(this.getClass(), registryIP, "1099", new String[]{serviceName});
+            contextRMI = new SetupContextRMI(this.getClass(), registryIP, "4010", new String[]{serviceName});
         } catch (RemoteException e) {
             Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, e);
         }

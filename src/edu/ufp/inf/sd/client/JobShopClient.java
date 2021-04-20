@@ -46,7 +46,7 @@ public class JobShopClient {
         try {
             //List ans set args
             String registryIP = "localhost";
-            String registryPort = "1099";
+            String registryPort = "4010";
             String serviceName = "JobShopService";
             //Create a context for RMI setup
             contextRMI = new SetupContextRMI(this.getClass(), registryIP, registryPort, new String[]{serviceName});

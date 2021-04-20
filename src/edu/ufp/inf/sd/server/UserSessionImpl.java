@@ -12,7 +12,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     public UserSessionImpl(UserFactoryImpl userFactory, User user) throws RemoteException {
         super();
         this.user=user;
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Register user : {0}", new Object[]{user.getCredits()});
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Logged user : {0}", new Object[]{user.getUsername()});
         this.userFactory=userFactory;
     }
 
@@ -37,54 +37,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public JobShopRI createJob(String username, String name) throws RemoteException {
-        return new JobShopImpl();
-    }
-
-    /*@Override
-    public void logout() {
+    public void createJob(String username, String name) throws RemoteException {
 
     }
-
-    @Override
-    public ArrayList<JobShopRI> getJobs(String username) {
-        return null;
-    }
-
-    @Override
-    public ArrayList<WorkerRI> getWorkers(String username) {
-        return null;
-    }
-
-
-
-    @Override
-    public void pauseJob() {
-
-    }
-
-    @Override
-    public void deleteJob() {
-
-    }
-
-    @Override
-    public void joinJob(String username, WorkerRI worker) {
-
-    }
-
-    @Override
-    public void createWorker(String username, WorkerRI worker) {
-
-    }
-
-    @Override
-    public void deleteWorker(String username, String name, WorkerRI worker) {
-
-    }
-
-    @Override
-    public boolean associateUserWorker(String username, WorkerRI worker) {
-        return false;
-    }*/
 }

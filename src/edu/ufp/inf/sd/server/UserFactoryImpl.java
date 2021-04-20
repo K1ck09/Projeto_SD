@@ -8,12 +8,10 @@ import java.util.logging.Logger;
 
 public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryRI {
     DBMockup db;
-    HashMap<String, User> sessions;
 
     protected UserFactoryImpl() throws RemoteException {
         super();
         this.db = new DBMockup();
-        this.sessions = new HashMap<String, User>();
     }
 
     @Override
@@ -31,8 +29,8 @@ public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryR
     public UserSessionRI login(String username, String password) throws RemoteException{
         if (db.existsUser(username, password)) {
             User user=db.getUser(username);
-            if (!this.sessions.containsKey(username)) {
-                this.sessions.put(username, user);
+            if (!db.getSessions().containsKey(username)) {
+                this.db.addSessions(user);
             }
             Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Sessions Sent");
             return new UserSessionImpl(this, user);
@@ -43,7 +41,7 @@ public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryR
 
     @Override
     public void remove(String username) throws RemoteException{
-        sessions.remove(username);
+        db.removeSession(username) ;
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-logged out");
     }
 }
