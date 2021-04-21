@@ -49,17 +49,20 @@
             <Label fx:id="jobState" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
         </children>
     </HBox>
-    <Button fx:id="btnAddWorkers" layoutX="770.0" layoutY="262.0" mnemonicParsing="false" onAction="#handlerAttachWorkers" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Add workers" />
-    <TextField fx:id="workersNum" layoutX="770.0" layoutY="227.0" prefHeight="25.0" prefWidth="103.0" promptText="Number of Workers" />
+    <Button fx:id="btnAddWorkers" layoutX="770.0" layoutY="262.0" mnemonicParsing="false" onAction="#handlerAttachWorkers" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Add Workers" />
+    <TextField fx:id="workersNum" layoutX="770.0" layoutY="227.0" prefHeight="25.0" prefWidth="103.0" promptText="Workers Number">
+      <font>
+         <Font size="11.0" />
+      </font></TextField>
    <ScrollPane layoutX="14.0" layoutY="188.0" prefHeight="429.0" prefWidth="592.0">
       <content>
          <VBox fx:id="table" prefHeight="429.0" prefWidth="593.0" />
       </content>
    </ScrollPane>
-   <Button fx:id="btnPauseWorker" layoutX="770.0" layoutY="349.0" mnemonicParsing="false" onAction="#handlerPauseWorker" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Worker" />
-   <Button fx:id="btnResumeWorker" layoutX="770.0" layoutY="319.0" mnemonicParsing="false" onAction="#handlerResumeWorker" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Worker" />
-   <Button fx:id="btnDeleteWorker" layoutX="770.0" layoutY="379.0" mnemonicParsing="false" onAction="#handlerDeleteWorker" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Worker" />
-   <Button fx:id="btnPuaseJob" layoutX="125.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerPauseJob" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Job" />
-   <Button fx:id="btnResumeJob" layoutX="14.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerResumeJob" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Job" />
-   <Button fx:id="btnDeleteJob" layoutX="236.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerDeleteJob" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Job" />
+   <Button fx:id="btnWorkerPause" layoutX="770.0" layoutY="349.0" mnemonicParsing="false" onAction="#handlerPauseWorker" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Worker" />
+   <Button fx:id="btnWorkerResume" layoutX="770.0" layoutY="319.0" mnemonicParsing="false" onAction="#handlerResumeWorker" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Worker" />
+   <Button fx:id="btnWorkerDelete" layoutX="770.0" layoutY="379.0" mnemonicParsing="false" onAction="#handlerDeleteWorker" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Worker" />
+   <Button fx:id="btnJobPause" layoutX="125.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerPauseJob" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Job" visible="false" />
+   <Button fx:id="btnJobResume" layoutX="14.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerResumeJob" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Job" visible="false" />
+   <Button fx:id="btnJobDelete" layoutX="236.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerDeleteJob" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Job" visible="false" />
 </Pane>

@@ -1,8 +1,11 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.WorkerRI;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -45,6 +48,11 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     @Override
     public boolean isJobUnique(String jobName) throws RemoteException {
         return db.getJobGroups().containsKey(jobName);
+    }
+
+    @Override
+    public Map<String, WorkerRI> getWorkersMap(JobGroupRI jobGroupRI) throws RemoteException {
+        return db.getJobGroups().get(jobGroupRI.getJobName()).getJobWorkers();
     }
 
     @Override

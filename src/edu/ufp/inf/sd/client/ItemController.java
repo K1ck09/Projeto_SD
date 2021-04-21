@@ -1,5 +1,6 @@
 package edu.ufp.inf.sd.client;
 
+import edu.ufp.inf.sd.server.JobGroupRI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -45,7 +46,8 @@ public class ItemController {
         Scene menuScene = new Scene(menuParent);
         Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         JobController controller = loader.getController();
-        controller.init(item,this.client);
+        JobGroupRI jobGroupRI = this.client.userSessionRI.getJobList().get(item.get("job"));
+        controller.init(item,this.client,jobGroupRI);
         app_stage.setScene(menuScene);
         app_stage.setHeight(630.0);
         app_stage.setWidth(926.0);

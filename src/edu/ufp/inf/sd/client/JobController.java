@@ -1,5 +1,6 @@
 package edu.ufp.inf.sd.client;
 
+import edu.ufp.inf.sd.server.JobGroupRI;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class JobController {
 
@@ -27,9 +30,19 @@ public class JobController {
     public ScrollPane tableWorkers;
     public Button btnAddWorkers;
     public TextField workersNum;
+    public Label menuUsername;
+    public Label menuCredits;
+    public Button btnWorkerPause;
+    public Button btnWorkerResume;
+    public Button btnWorkerDelete;
+    public Button btnJobPause;
+    public Button btnJobResume;
+    public Button btnJobDelete;
     private JobShopClient client;
+    private JobGroupRI jobGroupRI;
+    private Map<String,WorkerRI> workersMap= new HashMap<>();
 
-    public void init(HashMap<String, String> item, JobShopClient client) {
+    public void init(HashMap<String, String> item, JobShopClient client, JobGroupRI jobGroupRI) throws RemoteException {
         jobName.setText(item.get("job"));
         jobOwner.setText(item.get("owner"));
         jobStrat.setText(item.get("strat"));
@@ -37,6 +50,49 @@ public class JobController {
         jobWorkers.setText(item.get("workers"));
         jobState.setText(item.get("State"));
         this.client=client;
+        this.jobGroupRI=jobGroupRI;
+        if(this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner())==0){
+            btnJobDelete.setVisible(true);
+            btnJobPause.setVisible(true);
+            btnJobResume.setVisible(true);
+        }
+        menuCredits.setText(this.client.userSessionRI.getCredits());
+        menuUsername.setText(this.client.userSessionRI.getUsername());
+        workersMap = client.userSessionRI.getWorkersMap(jobGroupRI);
+        if (!workersMap.isEmpty()) {
+           //insertItens in table
+        }
+    }
+
+    public void handlerExit(MouseEvent mouseEvent) {
+        Platform.exit();
+        System.exit(0);
+    }
+
+    public void handlerAttachWorkers(ActionEvent actionEvent) throws RemoteException {
+        int num = Integer.parseInt(workersNum.getText());
+        for(int i =0; i < num; i++){
+            WorkerRI worker=new WorkerImpl(jobGroupRI.getJobOwner());
+            jobGroupRI.attachWorker(worker);
+        }
+    }
+
+    public void handlerPauseWorker(ActionEvent actionEvent) {
+    }
+
+    public void handlerResumeWorker(ActionEvent actionEvent) {
+    }
+
+    public void handlerDeleteWorker(ActionEvent actionEvent) {
+    }
+
+    public void handlerPauseJob(ActionEvent actionEvent) {
+    }
+
+    public void handlerResumeJob(ActionEvent actionEvent) {
+    }
+
+    public void handlerDeleteJob(ActionEvent actionEvent) {
     }
 
     public void handlerMenuHome(MouseEvent mouseEvent) throws IOException {
@@ -50,13 +106,5 @@ public class JobController {
         app_stage.setHeight(630.0);
         app_stage.setWidth(926.0);
         app_stage.show();
-    }
-
-    public void handlerExit(MouseEvent mouseEvent) {
-        Platform.exit();
-        System.exit(0);
-    }
-
-    public void handlerAttachWorkers(ActionEvent actionEvent) {
     }
 }

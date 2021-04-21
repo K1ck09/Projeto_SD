@@ -1,7 +1,11 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.WorkerRI;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Map;
 
 public interface JobGroupRI extends Remote {
     String getJobName()throws RemoteException;
@@ -11,4 +15,7 @@ public interface JobGroupRI extends Remote {
     State getJobState()throws RemoteException;
     Integer getWorkersSize()throws RemoteException;
     String getState() throws RemoteException;
+    void attachWorker(WorkerRI worker) throws RemoteException;
+    public Map<String, WorkerRI> getJobWorkers()throws RemoteException;
+
 }

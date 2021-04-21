@@ -175,7 +175,7 @@
     -fx-padding: 3 30 3 30;
     -fx-text-fill: black;
 }
-/*TABLE*/
+/*TABLE MENU*/
 
 .tableButton {
     -fx-background-color:
@@ -201,4 +201,16 @@
     -fx-border-color: #2A73FF;
     -fx-border-radius: 20;
     -fx-background-color: transparent;
+}
+
+/*JOB MENU*/
+
+#workerInfo{
+    -fx-background-color:
+            rgba(0,0,0,0.08),
+            linear-gradient(#7c7c7c, #6e6e6e),
+            linear-gradient(#b8b8b8 0%, #a2a2a2 50%, #949494 51%, #8d8d8d 100%);
+    -fx-background-insets: 0 0 -1 0,0,1;
+    -fx-text-fill: #242d35;
+    -fx-font-size: 14px;
 }

@@ -73,7 +73,6 @@ public class MenuController {
         // Update Joblist
         jobGroups = client.userSessionRI.getJobList();
         if (!jobGroups.isEmpty()) {
-            System.out.println("entrei mulkere");
             insertItemsInTable();
         }
         //Update
