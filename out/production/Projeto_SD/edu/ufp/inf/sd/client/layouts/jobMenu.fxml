@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -33,12 +34,16 @@
             </font>
         </Label>
     </HBox>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="87.0" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Job" textAlignment="CENTER" textFill="WHITE" />
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="110.0" layoutY="87.0" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Owner" textAlignment="CENTER" textFill="WHITE" />
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="210.0" layoutY="87.0" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Strategy" textAlignment="CENTER" textFill="WHITE" />
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="310.0" layoutY="87.0" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Reward" textAlignment="CENTER" textFill="WHITE" />
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="413.0" layoutY="87.0" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Workers" textAlignment="CENTER" textFill="WHITE" />
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="506.0" layoutY="87.0" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="State" textAlignment="CENTER" textFill="WHITE" />
+   <HBox layoutX="14.0" layoutY="87.0">
+      <children>
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Job" textAlignment="CENTER" textFill="WHITE" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Owner" textAlignment="CENTER" textFill="WHITE" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Strategy" textAlignment="CENTER" textFill="WHITE" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Reward" textAlignment="CENTER" textFill="WHITE" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Workers" textAlignment="CENTER" textFill="WHITE" />
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="State" textAlignment="CENTER" textFill="WHITE" />
+      </children>
+   </HBox>
     <HBox layoutX="14.0" layoutY="124.0" prefHeight="40.0" prefWidth="592.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
         <children>
             <Label fx:id="jobName" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
@@ -49,20 +54,39 @@
             <Label fx:id="jobState" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
         </children>
     </HBox>
-    <Button fx:id="btnAddWorkers" layoutX="770.0" layoutY="262.0" mnemonicParsing="false" onAction="#handlerAttachWorkers" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Add Workers" />
-    <TextField fx:id="workersNum" layoutX="770.0" layoutY="227.0" prefHeight="25.0" prefWidth="103.0" promptText="Workers Number">
-      <font>
-         <Font size="11.0" />
-      </font></TextField>
-   <ScrollPane layoutX="14.0" layoutY="188.0" prefHeight="429.0" prefWidth="592.0">
+   <HBox id="workerInfo" alignment="CENTER_LEFT" layoutX="14.0" layoutY="164.0" prefHeight="31.0" prefWidth="592.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
+      <children>
+         <Label fx:id="jobName1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="98.0" style="-fx-background-color: transparent;" text="Worker Owner" textAlignment="CENTER" textFill="#575656" />
+         <Label fx:id="jobOwner1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="State" textAlignment="CENTER" textFill="#575656" />
+         <Label fx:id="jobStrat1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
+         <Label fx:id="jobReward1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
+         <Label fx:id="jobWorkers1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
+         <Label fx:id="jobState1" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
+      </children>
+   </HBox>
+   <Group layoutX="765.0" layoutY="227.0">
+      <children>
+          <Button fx:id="btnAddWorkers" layoutX="5.0" layoutY="35.0" mnemonicParsing="false" onAction="#handlerAttachWorkers" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Add Workers" />
+          <TextField fx:id="workersNum" layoutX="5.0" prefHeight="25.0" prefWidth="103.0" promptText="Workers Number">
+            <font>
+               <Font size="11.0" />
+            </font>
+         </TextField>
+         <Button fx:id="btnWorkerPause" layoutX="5.0" layoutY="122.0" mnemonicParsing="false" onAction="#handlerPauseWorker" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Worker" />
+         <Button fx:id="btnWorkerResume" layoutX="5.0" layoutY="92.0" mnemonicParsing="false" onAction="#handlerResumeWorker" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Worker" />
+         <Button fx:id="btnWorkerDelete" layoutX="5.0" layoutY="152.0" mnemonicParsing="false" onAction="#handlerDeleteWorker" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Worker" />
+      </children>
+   </Group>
+   <ScrollPane layoutX="14.0" layoutY="208.0" prefHeight="393.0" prefWidth="592.0" style="-fx-border-radius: 5,5,4;">
       <content>
-         <VBox fx:id="table" prefHeight="429.0" prefWidth="593.0" />
+         <VBox fx:id="table" prefHeight="415.0" prefWidth="592.0" style="-fx-border-radius: 5,5,4;" />
       </content>
    </ScrollPane>
-   <Button fx:id="btnWorkerPause" layoutX="770.0" layoutY="349.0" mnemonicParsing="false" onAction="#handlerPauseWorker" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Worker" />
-   <Button fx:id="btnWorkerResume" layoutX="770.0" layoutY="319.0" mnemonicParsing="false" onAction="#handlerResumeWorker" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Worker" />
-   <Button fx:id="btnWorkerDelete" layoutX="770.0" layoutY="379.0" mnemonicParsing="false" onAction="#handlerDeleteWorker" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Worker" />
-   <Button fx:id="btnJobPause" layoutX="125.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerPauseJob" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Job" visible="false" />
-   <Button fx:id="btnJobResume" layoutX="14.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerResumeJob" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Job" visible="false" />
-   <Button fx:id="btnJobDelete" layoutX="236.0" layoutY="51.0" mnemonicParsing="false" onAction="#handlerDeleteJob" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Job" visible="false" />
+   <Group layoutX="14.0" layoutY="52.0">
+      <children>
+         <Button fx:id="btnJobPause" layoutX="116.0" layoutY="4.0" mnemonicParsing="false" onAction="#handlerPauseJob" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Job" />
+         <Button fx:id="btnJobResume" layoutX="5.0" layoutY="4.0" mnemonicParsing="false" onAction="#handlerResumeJob" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Job" />
+         <Button fx:id="btnJobDelete" layoutX="227.0" layoutY="4.0" mnemonicParsing="false" onAction="#handlerDeleteJob" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Job" />
+      </children>
+   </Group>
 </Pane>
