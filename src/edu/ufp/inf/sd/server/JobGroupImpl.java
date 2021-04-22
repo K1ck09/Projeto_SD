@@ -14,15 +14,19 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
     private String strat;
     private String reward;
     private State state;
+    private String workLoad;
+    private String sharesPerWorker;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
     ArrayList<OperationsRI> jobOperations = new ArrayList<>();
 
-    protected JobGroupImpl(String jobName,String owner,String strat,String reward) throws RemoteException {
+    protected JobGroupImpl(String jobName,String owner,String strat,String reward,String workLoad,String sharesPerWorker) throws RemoteException {
         this.jobName=jobName;
         this.owner=owner;
         this.strat=strat;
         this.reward=reward;
         this.state=new State("Ongoing");
+        this.workLoad=workLoad;
+        this.sharesPerWorker=sharesPerWorker;
     }
 
     @Override
@@ -65,6 +69,16 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
     @Override
     public Map<Integer, WorkerRI> getJobWorkers() throws RemoteException {
         return jobWorkers;
+    }
+
+    @Override
+    public String getWorkload() throws RemoteException {
+        return workLoad;
+    }
+
+    @Override
+    public String getSharesPerWorker() throws RemoteException {
+        return sharesPerWorker;
     }
 
 

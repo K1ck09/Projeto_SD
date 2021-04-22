@@ -36,7 +36,7 @@ public class MenuController {
     public TextField createJobName;
     public TextField createJobReward;
     public ChoiceBox<String> createJobStrategy;
-    private final ObservableList<String> stratTypes = FXCollections.observableArrayList("Choose Strategy","TabuSearch", "Genetic Algorithm");
+    private final ObservableList<String> stratTypes = FXCollections.observableArrayList("Choose Strategy", "TabuSearch", "Genetic Algorithm");
     public Label messageMenu;
     public Label displayTotalJobsUser;
     public Label displayAtiveWorkersUser;
@@ -48,6 +48,8 @@ public class MenuController {
     public Label displayFinishJobsUser;
     public Label displayPausedJobsUser;
     public Label displayOnGoingJobsUser;
+    public TextField createTotalWorkload;
+    public TextField createSharesPerWorker;
 
     private HashMap<String, String> item = new HashMap<>();
     private HashMap<String, JobGroupRI> jobGroups = new HashMap<>();
@@ -64,7 +66,7 @@ public class MenuController {
         createJobStrategy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy")!=0) {
+                if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy") != 0) {
                     item.put("strat", stratTypes.get(t1.intValue()));
                 } else if (item.containsKey("strat") && item.get("strat").compareTo(stratTypes.get(t1.intValue())) != 0) {
                     item.replace("strat", stratTypes.get(t1.intValue()));
@@ -136,7 +138,8 @@ public class MenuController {
 
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
         if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
-            if (containsJustNumbers(createJobReward.getText())) {
+            if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createTotalWorkload.getText())
+                    && containsJustNumbers(createSharesPerWorker.getText())) {
                 int inputReward = Integer.parseInt(createJobReward.getText());
                 int clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
                 if (inputReward <= clientCredits && inputReward > 0) {
@@ -146,6 +149,8 @@ public class MenuController {
                         item.put("owner", client.userSessionRI.getUsername());
                         item.put("workers", "0");
                         item.put("state", "Ongoing");
+                        item.put("load",createTotalWorkload.getText());
+                        item.put("shares",createSharesPerWorker.getText());
                         jobGroups = client.userSessionRI.createJob(item);
                         int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
                         client.userSessionRI.setCredtis(newBalance);
@@ -210,6 +215,10 @@ public class MenuController {
                                     ((Label) label).setText(job.getWorkersSize().toString());
                                 } else if (id != null && id.compareTo("tableState") == 0) {
                                     ((Label) label).setText(job.getState());
+                                } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
+                                    ((Label) label).setText(job.getWorkload());
+                                } else if (id != null && id.compareTo("tableSharesPerWorker") == 0) {
+                                    ((Label) label).setText(job.getSharesPerWorker());
                                 }
                             }
                     }

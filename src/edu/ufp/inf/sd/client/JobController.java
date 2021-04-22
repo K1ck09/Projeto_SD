@@ -40,6 +40,10 @@ public class JobController {
     public Button btnJobResume;
     public Button btnJobDelete;
     public VBox table;
+    public Label jobWorkload;
+    public Label jobSharesPerWorker;
+    public Label menuJobLabel;
+    public Label menuWorkerLabel;
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
@@ -51,12 +55,15 @@ public class JobController {
         jobReward.setText(item.get("reward"));
         jobWorkers.setText(item.get("workers"));
         jobState.setText(item.get("State"));
+        jobWorkload.setText("load");
+        jobSharesPerWorker.setText("shares");
         this.client = client;
         this.jobGroupRI = jobGroupRI;
         if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnJobDelete.setVisible(true);
             btnJobPause.setVisible(true);
             btnJobResume.setVisible(true);
+            menuJobLabel.setVisible(true);
         }
         menuCredits.setText(this.client.userSessionRI.getCredits());
         menuUsername.setText(this.client.userSessionRI.getUsername());
@@ -81,6 +88,7 @@ public class JobController {
             WorkerRI worker = new WorkerImpl(jobGroupRI.getJobOwner());
             jobGroupRI.attachWorker(worker);
         }
+        // é rpeciso dar sinal ao job que já tem workers
     }
 
     public void handlerPauseWorker(ActionEvent actionEvent) {
@@ -122,3 +130,4 @@ public class JobController {
 
     }
 }
+

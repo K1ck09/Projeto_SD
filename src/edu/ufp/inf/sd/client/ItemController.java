@@ -19,6 +19,8 @@ public class ItemController {
     public Label tableReward;
     public Label tableWorkers;
     public Label tableState;
+    public Label tableWorkLoad;
+    public Label tableSharesPerWorker;
     HashMap<String,String> item =new HashMap<>();
     private JobShopClient client;
 
@@ -60,6 +62,8 @@ public class ItemController {
         item.put("reward", tableReward.getText());
         item.put("workers",tableWorkers.getText());
         item.put("State",tableState.getText());
+        item.put("load",tableWorkLoad.getText());
+        item.put("shares",tableSharesPerWorker.getText());
     }
 
     void clearItemMap(){

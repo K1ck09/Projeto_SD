@@ -12,6 +12,9 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private State state;
     private String owner;
     private String jobGroupName;
+    private int currentShares;
+    private int totalShares;
+    private int currentMakespan;
     private ArrayList<Thread> threads = new ArrayList<>();
 
     protected WorkerImpl(String jobOwner) throws RemoteException {

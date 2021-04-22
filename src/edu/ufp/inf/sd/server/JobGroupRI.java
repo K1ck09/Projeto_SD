@@ -17,5 +17,6 @@ public interface JobGroupRI extends Remote {
     String getState() throws RemoteException;
     void attachWorker(WorkerRI worker) throws RemoteException;
     public Map<Integer, WorkerRI> getJobWorkers()throws RemoteException;
-
+    String getWorkload()throws RemoteException;
+    String getSharesPerWorker() throws RemoteException;
 }

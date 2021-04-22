@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -11,14 +10,15 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="925.0" styleClass="bgc" stylesheets="@css/app.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.JobController">
-    <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="925.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
+<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="1033.0" styleClass="bgc" stylesheets="@css/app.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.JobController">
+    <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="1033.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
         <Label fx:id="menuHome" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerMenuHome" prefHeight="51.0" prefWidth="105.0" styleClass="lion" stylesheets="@css/app.css" text="Home" textAlignment="CENTER">
             <font>
                 <Font size="14.0" />
             </font>
         </Label>
         <Label prefHeight="51.0" prefWidth="105.0" />
+      <Label prefHeight="51.0" prefWidth="105.0" />
         <Label prefHeight="51.0" prefWidth="105.0" />
         <Label prefHeight="51.0" prefWidth="105.0" />
         <Label prefHeight="51.0" prefWidth="105.0" />
@@ -34,7 +34,7 @@
             </font>
         </Label>
     </HBox>
-   <HBox layoutX="14.0" layoutY="87.0" prefHeight="40.0" prefWidth="592.0">
+   <HBox layoutX="14.0" layoutY="59.0" prefHeight="40.0" prefWidth="592.0">
       <children>
          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Job" textAlignment="CENTER" textFill="WHITE" />
          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Owner" textAlignment="CENTER" textFill="WHITE" />
@@ -44,7 +44,7 @@
          <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="State" textAlignment="CENTER" textFill="WHITE" />
       </children>
    </HBox>
-    <HBox layoutX="14.0" layoutY="124.0" prefHeight="40.0" prefWidth="592.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
+    <HBox layoutX="14.0" layoutY="96.0" prefHeight="40.0" prefWidth="731.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
         <children>
             <Label fx:id="jobName" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
             <Label fx:id="jobOwner" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
@@ -52,73 +52,82 @@
             <Label fx:id="jobReward" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
             <Label fx:id="jobWorkers" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
             <Label fx:id="jobState" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
+         <Label fx:id="jobWorkload" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
+         <Label fx:id="jobSharesPerWorker" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER" />
         </children>
     </HBox>
-   <HBox id="workerInfo" alignment="CENTER_LEFT" layoutX="14.0" layoutY="164.0" prefHeight="31.0" prefWidth="592.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
+   <HBox id="workerInfo" alignment="CENTER_LEFT" layoutX="14.0" layoutY="136.0" prefHeight="31.0" prefWidth="731.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
       <children>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="25.0" style="-fx-background-color: transparent;" text="ID" textAlignment="CENTER" textFill="#575656">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="94.0" style="-fx-background-color: transparent;" text="ID" textAlignment="CENTER" textFill="#575656">
             <font>
                <Font size="11.0" />
             </font>
          </Label>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="98.0" style="-fx-background-color: transparent;" text="Owner" textAlignment="CENTER" textFill="#575656">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="127.0" style="-fx-background-color: transparent;" text="Owner" textAlignment="CENTER" textFill="#575656">
             <font>
                <Font size="11.0" />
             </font></Label>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="State" textAlignment="CENTER" textFill="#575656">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="119.0" style="-fx-background-color: transparent;" text="State" textAlignment="CENTER" textFill="#575656">
             <font>
                <Font size="11.0" />
             </font></Label>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Last MakeSpan" textAlignment="CENTER" textFill="#575656">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: transparent;" text="Last MakeSpan" textAlignment="CENTER" textFill="#575656">
             <font>
                <Font size="11.0" />
             </font></Label>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Best MakeSpan" textAlignment="CENTER" textFill="#575656">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: transparent;" text="Best MakeSpan" textAlignment="CENTER" textFill="#575656">
             <font>
                <Font size="11.0" />
             </font></Label>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0" style="-fx-background-color: transparent;" text="Times Submitted" textAlignment="CENTER" textFill="#575656">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: transparent;" text="Times Submitted" textAlignment="CENTER" textFill="#575656">
             <font>
                <Font size="11.0" />
             </font></Label>
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="75.0" style="-fx-background-color: transparent;" text="Rewarded" textAlignment="CENTER" textFill="#575656">
+         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="101.0" style="-fx-background-color: transparent;" text="Rewarded" textAlignment="CENTER" textFill="#575656">
             <font>
                <Font size="11.0" />
             </font>
          </Label>
       </children>
    </HBox>
-   <Group layoutX="765.0" layoutY="227.0">
+   <ScrollPane layoutX="14.0" layoutY="180.0" prefHeight="433.0" prefWidth="731.0" style="-fx-border-radius: 5,5,4;">
+      <content>
+         <VBox fx:id="table" prefHeight="434.0" prefWidth="731.0" style="-fx-border-radius: 5,5,4;" />
+      </content>
+   </ScrollPane>
+   <VBox layoutX="855.0" layoutY="180.0" spacing="5.0">
       <children>
-          <Button fx:id="btnAddWorkers" layoutX="5.0" layoutY="35.0" mnemonicParsing="false" onAction="#handlerAttachWorkers" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Add Workers" />
-          <TextField fx:id="workersNum" layoutX="5.0" prefHeight="25.0" prefWidth="103.0" promptText="Workers Number">
+         <Button fx:id="btnJobResume" mnemonicParsing="false" onAction="#handlerResumeJob" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Job" />
+         <Button fx:id="btnJobPause" mnemonicParsing="false" onAction="#handlerPauseJob" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Job" />
+         <Button fx:id="btnJobDelete" mnemonicParsing="false" onAction="#handlerDeleteJob" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Job" />
+      </children>
+   </VBox>
+   <VBox layoutX="855.0" layoutY="362.0" spacing="5.0">
+      <children>
+          <TextField fx:id="workersNum" prefHeight="25.0" prefWidth="103.0" promptText="Workers Number">
             <font>
                <Font size="11.0" />
             </font>
          </TextField>
-         <Button fx:id="btnWorkerPause" layoutX="5.0" layoutY="122.0" mnemonicParsing="false" onAction="#handlerPauseWorker" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Worker" visible="false" />
-         <Button fx:id="btnWorkerResume" layoutX="5.0" layoutY="92.0" mnemonicParsing="false" onAction="#handlerResumeWorker" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Worker" visible="false" />
-         <Button fx:id="btnWorkerDelete" layoutX="5.0" layoutY="152.0" mnemonicParsing="false" onAction="#handlerDeleteWorker" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Worker" visible="false" />
+          <Button fx:id="btnAddWorkers" mnemonicParsing="false" onAction="#handlerAttachWorkers" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Add Workers" />
+         <VBox spacing="5.0">
+            <children>
+               <Button fx:id="btnWorkerResume" mnemonicParsing="false" onAction="#handlerResumeWorker" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Worker" />
+               <Button fx:id="btnWorkerPause" mnemonicParsing="false" onAction="#handlerPauseWorker" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Worker" />
+               <Button fx:id="btnWorkerDelete" mnemonicParsing="false" onAction="#handlerDeleteWorker" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Worker" />
+            </children>
+            <VBox.margin>
+               <Insets top="15.0" />
+            </VBox.margin>
+         </VBox>
       </children>
-   </Group>
-   <ScrollPane layoutX="14.0" layoutY="208.0" prefHeight="393.0" prefWidth="592.0" style="-fx-border-radius: 5,5,4;">
-      <content>
-         <VBox fx:id="table" prefHeight="393.0" prefWidth="592.0" style="-fx-border-radius: 5,5,4;" />
-      </content>
-   </ScrollPane>
-   <Group layoutX="14.0" layoutY="52.0">
-      <children>
-         <Button fx:id="btnJobPause" layoutX="116.0" layoutY="4.0" mnemonicParsing="false" onAction="#handlerPauseJob" prefHeight="25.0" prefWidth="103.0" styleClass="orange" stylesheets="@css/app.css" text="Pause Job" visible="false" />
-         <Button fx:id="btnJobResume" layoutX="5.0" layoutY="4.0" mnemonicParsing="false" onAction="#handlerResumeJob" prefHeight="25.0" prefWidth="103.0" styleClass="green" stylesheets="@css/app.css" text="Resume Job" visible="false" />
-         <Button fx:id="btnJobDelete" layoutX="227.0" layoutY="4.0" mnemonicParsing="false" onAction="#handlerDeleteJob" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Job" visible="false" />
-      </children>
-   </Group>
-   <Label layoutX="623.0" layoutY="137.0" text="Job" textFill="WHITE">
+   </VBox>
+   <Label fx:id="menuJobLabel" layoutX="895.0" layoutY="142.0" text="Job" textFill="WHITE">
       <font>
          <Font size="14.0" />
       </font>
    </Label>
-   <Label layoutX="617.0" layoutY="174.0" text="Worker" textFill="#bcbcbc">
+   <Label fx:id="menuWorkerLabel" layoutX="885.0" layoutY="326.0" text="Worker" textFill="#bcbcbc">
       <font>
          <Font size="13.0" />
       </font>
