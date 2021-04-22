@@ -53,13 +53,14 @@
          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="102.0" styleClass="tableButton" stylesheets="@css/app.css" text="Shares Per Worker" textAlignment="CENTER" />
         </children>
     </HBox>
-   <HBox layoutX="13.0" layoutY="67.0" spacing="5.0">
+   <HBox layoutX="13.0" layoutY="67.0" prefHeight="33.0" prefWidth="1010.0" spacing="5.0">
       <children>
           <TextField fx:id="createJobName" promptText="Enter Job Name" />
           <TextField fx:id="createJobReward" prefHeight="25.0" prefWidth="149.0" promptText="Enter Job Reward" />
           <ChoiceBox fx:id="createJobStrategy" onMouseClicked="#handlerChoiceBox" prefWidth="150.0" styleClass="menuBar" stylesheets="@css/app.css" />
          <Slider fx:id="createTotalWorkload" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" showTickLabels="true" snapToTicks="true" value="5.0" />
          <TextField fx:id="createSharesPerWorker" promptText="Worker Shares (Number)" />
+         <Button fx:id="btnFile" mnemonicParsing="false" onAction="#handleFile" prefHeight="25.0" prefWidth="110.0" styleClass="glass-grey" stylesheets="@css/app.css" text="Choose a file" />
           <Button fx:id="btnCreateTask" mnemonicParsing="false" onAction="#handlerCreateTask" prefHeight="25.0" prefWidth="113.0" styleClass="green" stylesheets="@css/app.css" text="New Job" />
       </children>
    </HBox>

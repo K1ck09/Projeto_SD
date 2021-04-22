@@ -2,6 +2,9 @@ package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.WorkerRI;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
@@ -62,8 +65,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public Map<String, JobGroupRI> createJob(HashMap<String,String> item) throws RemoteException {
-        JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"),item.get("shares"));
+    public Map<String, JobGroupRI> createJob(HashMap<String, String> item, File file) throws RemoteException {
+        JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"),item.get("shares"),file);
         db.addJob(jobGroup);
         return db.getJobGroups();
     }

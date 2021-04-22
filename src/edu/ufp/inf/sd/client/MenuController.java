@@ -17,7 +17,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.rmi.RemoteException;
@@ -49,6 +51,8 @@ public class MenuController extends LoadGUIClient {
     public Label displayOnGoingJobsUser;
     public TextField createSharesPerWorker;
     public Slider createTotalWorkload;
+    public Button btnFile;
+    File file;
 
     private HashMap<String, String> item = new HashMap<>();
     private Map<String, JobGroupRI> jobGroups = new HashMap<>();
@@ -135,6 +139,16 @@ public class MenuController extends LoadGUIClient {
         return hasNumber;
     }
 
+    public void handleFile(ActionEvent actionEvent) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+        file= fileChooser.showOpenDialog(stage);
+        if(file!=null){
+            btnFile.setText(file.getName());
+        }
+    }
+
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
         if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
             if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createSharesPerWorker.getText())) {
@@ -149,7 +163,7 @@ public class MenuController extends LoadGUIClient {
                         item.put("state", "Ongoing");
                         item.put("load",String.valueOf((int) createTotalWorkload.getValue()*10)); // min shares 10!
                         item.put("shares",createSharesPerWorker.getText());
-                        jobGroups = client.userSessionRI.createJob(item);
+                        jobGroups = client.userSessionRI.createJob(item,file);
                         int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
                         client.userSessionRI.setCredtis(newBalance);
                         menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
@@ -259,4 +273,6 @@ public class MenuController extends LoadGUIClient {
     public void messageClear(MouseEvent mouseEvent) {
         messageMenu.setText("");
     }
+
+
 }

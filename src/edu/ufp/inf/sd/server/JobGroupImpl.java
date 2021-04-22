@@ -2,6 +2,7 @@ package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.WorkerRI;
 
+import java.io.File;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -16,10 +17,11 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
     private State state;
     private String workLoad;
     private String sharesPerWorker;
+    private File file;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
     ArrayList<OperationsRI> jobOperations = new ArrayList<>();
 
-    protected JobGroupImpl(String jobName,String owner,String strat,String reward,String workLoad,String sharesPerWorker) throws RemoteException {
+    protected JobGroupImpl(String jobName,String owner,String strat,String reward,String workLoad,String sharesPerWorker,File file) throws RemoteException {
         this.jobName=jobName;
         this.owner=owner;
         this.strat=strat;
@@ -27,6 +29,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
         this.state=new State();
         this.workLoad=workLoad;
         this.sharesPerWorker=sharesPerWorker;
+        this.file=file;
     }
 
     @Override
