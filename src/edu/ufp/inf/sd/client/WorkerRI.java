@@ -8,5 +8,5 @@ public interface WorkerRI extends Remote {
     void resumeWorker() throws RemoteException;
     void pauseWorker() throws RemoteException;
     void deleteWorker() throws RemoteException;
-    public String getId() throws RemoteException;
+    public Integer getId() throws RemoteException;
 }

@@ -79,6 +79,7 @@ public class MenuController {
         updateStatistics();
         // client.userSessionRI.setCredtis(10);
     }
+
     private void updateStatistics() throws RemoteException {
         displayTotalJobs.setText(String.valueOf(jobGroups.size()));
         displayTotalJobsUser.setText(String.valueOf(userJobsNumber()));
@@ -86,21 +87,23 @@ public class MenuController {
         displayOnGoingJobs.setText(String.valueOf(onGoingJobsNumber()));
 
     }
+
     private int userJobsNumber() throws RemoteException {
-        int num=0;
+        int num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            if(jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername())==0){
+            if (jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername()) == 0) {
                 num++;
             }
         }
         return num;
     }
+
     private int onGoingJobsNumber() throws RemoteException {
-        int num=0;
+        int num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            if(jobGroupRI.getJobState().getCurrentState().compareTo("Ongoing")==0 ){
+            if (jobGroupRI.getJobState().getCurrentState().compareTo("Ongoing") == 0) {
                 num++;
             }
         }
@@ -108,15 +111,16 @@ public class MenuController {
     }
 
     private int onGoingJobsNumberUser() throws RemoteException {
-        int num=0;
+        int num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            if(jobGroupRI.getJobState().getCurrentState().compareTo("Ongoing")==0 && jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername())==0){
+            if (jobGroupRI.getJobState().getCurrentState().compareTo("Ongoing") == 0 && jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername()) == 0) {
                 num++;
             }
         }
         return num;
     }
+
     private boolean containsJustNumbers(String reward) {
         boolean hasNumber = false;
         for (char c : reward.toCharArray()) {

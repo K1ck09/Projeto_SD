@@ -7,6 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
 public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
+    Integer id;
     private JobShopClient client;
     private State state;
     private String owner;
@@ -19,7 +20,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
     @Override
     public void setOperation() throws RemoteException {
-
+        //Precisa de receber operation
     }
 
     @Override
@@ -37,7 +38,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
     }
 
-    public String getId() throws RemoteException{
-        return owner;
+    public Integer getId() throws RemoteException{
+        return id;
     }
 }

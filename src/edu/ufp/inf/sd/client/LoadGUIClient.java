@@ -22,7 +22,7 @@ public class LoadGUIClient extends Application {
         stage=primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("layouts/login.fxml"));
         primaryStage.setTitle("Job Shop Scheduling");
-        primaryStage.initStyle(StageStyle.UNDECORATED);
+        //primaryStage.initStyle(StageStyle.UNDECORATED);
         primaryStage.setScene(new Scene(root, 460, 340));
         primaryStage.show();
     }

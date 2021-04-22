@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -38,9 +39,10 @@ public class JobController {
     public Button btnJobPause;
     public Button btnJobResume;
     public Button btnJobDelete;
+    public VBox table;
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
-    private Map<String,WorkerRI> workersMap= new HashMap<>();
+    private Map<Integer, WorkerRI> workersMap = new HashMap<>();
 
     public void init(HashMap<String, String> item, JobShopClient client, JobGroupRI jobGroupRI) throws RemoteException {
         jobName.setText(item.get("job"));
@@ -49,9 +51,9 @@ public class JobController {
         jobReward.setText(item.get("reward"));
         jobWorkers.setText(item.get("workers"));
         jobState.setText(item.get("State"));
-        this.client=client;
-        this.jobGroupRI=jobGroupRI;
-        if(this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner())==0){
+        this.client = client;
+        this.jobGroupRI = jobGroupRI;
+        if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnJobDelete.setVisible(true);
             btnJobPause.setVisible(true);
             btnJobResume.setVisible(true);
@@ -60,8 +62,12 @@ public class JobController {
         menuUsername.setText(this.client.userSessionRI.getUsername());
         workersMap = client.userSessionRI.getWorkersMap(jobGroupRI);
         if (!workersMap.isEmpty()) {
-           //insertItens in table
+            insertWorkersInTable();
         }
+    }
+
+    private void insertWorkersInTable() {
+
     }
 
     public void handlerExit(MouseEvent mouseEvent) {
@@ -71,8 +77,8 @@ public class JobController {
 
     public void handlerAttachWorkers(ActionEvent actionEvent) throws RemoteException {
         int num = Integer.parseInt(workersNum.getText());
-        for(int i =0; i < num; i++){
-            WorkerRI worker=new WorkerImpl(jobGroupRI.getJobOwner());
+        for (int i = 0; i < num; i++) {
+            WorkerRI worker = new WorkerImpl(jobGroupRI.getJobOwner());
             jobGroupRI.attachWorker(worker);
         }
     }
@@ -106,5 +112,13 @@ public class JobController {
         app_stage.setHeight(630.0);
         app_stage.setWidth(926.0);
         app_stage.show();
+    }
+
+    public void showWorkerbuttons(int workerID) {
+
+    }
+
+    public void showJobButtons() {
+
     }
 }

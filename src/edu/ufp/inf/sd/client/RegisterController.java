@@ -24,6 +24,7 @@ public class RegisterController {
     public Button btnRegister;
     @FXML
     public Label missingData;
+    public Button btnBackToLogin;
 
     public void userRegister(ActionEvent actionEvent) throws RemoteException {
         missingData.setStyle("-fx-text-fill: #fc0000; -fx-font-size: 12px;");
@@ -38,7 +39,8 @@ public class RegisterController {
                 if(client.userFactoryRI.register(username,password)){
                     System.out.println("im in 2");
                     missingData.setStyle("-fx-text-fill: #2fb200;");
-                    missingData.setText("Register Succeded. Please press '<- Back' and proceed to Login");
+                    missingData.setText("Register Succeded. Proceed to Login");
+                    btnBackToLogin.setVisible(true);
                 }else{
                     missingData.setText("Username already exists. Choose another Username.");
                     System.out.println("im out 3");
@@ -85,5 +87,11 @@ public class RegisterController {
     public void handlerExit(MouseEvent mouseEvent) {
         Platform.exit();
         System.exit(0);
+    }
+
+    public void handlerBackToLogin(ActionEvent actionEvent) throws IOException {
+        LoadGUIClient m = new LoadGUIClient();
+        m.changeScene("layouts/login.fxml");
+
     }
 }

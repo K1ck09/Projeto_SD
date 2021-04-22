@@ -15,5 +15,5 @@ public interface UserSessionRI extends Remote {
     HashMap<String,JobGroupRI> getJobList()throws RemoteException;
     void logout() throws RemoteException;
     boolean isJobUnique(String jobName) throws RemoteException;
-    Map<String, WorkerRI> getWorkersMap(JobGroupRI jobGroupRI) throws RemoteException ;
+    Map<Integer, WorkerRI> getWorkersMap(JobGroupRI jobGroupRI) throws RemoteException ;
 }

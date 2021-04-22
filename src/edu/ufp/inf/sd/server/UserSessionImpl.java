@@ -51,7 +51,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public Map<String, WorkerRI> getWorkersMap(JobGroupRI jobGroupRI) throws RemoteException {
+    public Map<Integer, WorkerRI> getWorkersMap(JobGroupRI jobGroupRI) throws RemoteException {
         return db.getJobGroups().get(jobGroupRI.getJobName()).getJobWorkers();
     }
 
