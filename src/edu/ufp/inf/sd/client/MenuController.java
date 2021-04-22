@@ -2,6 +2,7 @@ package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobGroupRI;
 import edu.ufp.inf.sd.server.JobShopRI;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -11,10 +12,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -26,8 +24,9 @@ import java.rmi.RemoteException;
 import java.sql.SQLOutput;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
-public class MenuController {
+public class MenuController extends LoadGUIClient {
 
     public VBox table;
     public Button btnCreateTask;
@@ -48,11 +47,11 @@ public class MenuController {
     public Label displayFinishJobsUser;
     public Label displayPausedJobsUser;
     public Label displayOnGoingJobsUser;
-    public TextField createTotalWorkload;
     public TextField createSharesPerWorker;
+    public Slider createTotalWorkload;
 
     private HashMap<String, String> item = new HashMap<>();
-    private HashMap<String, JobGroupRI> jobGroups = new HashMap<>();
+    private Map<String, JobGroupRI> jobGroups = new HashMap<>();
     public JobShopClient client;
 
     public void MenuControllerInit(JobShopClient client) throws IOException {
@@ -138,18 +137,17 @@ public class MenuController {
 
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
         if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
-            if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createTotalWorkload.getText())
-                    && containsJustNumbers(createSharesPerWorker.getText())) {
+            if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createSharesPerWorker.getText())) {
                 int inputReward = Integer.parseInt(createJobReward.getText());
                 int clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
                 if (inputReward <= clientCredits && inputReward > 0) {
+                    item.put("job", createJobName.getText());
                     if (!client.userSessionRI.isJobUnique(item.get("job"))) {
                         item.put("reward", createJobReward.getText());
-                        item.put("job", createJobName.getText());
                         item.put("owner", client.userSessionRI.getUsername());
                         item.put("workers", "0");
                         item.put("state", "Ongoing");
-                        item.put("load",createTotalWorkload.getText());
+                        item.put("load",String.valueOf((int) createTotalWorkload.getValue()*10)); // min shares 10!
                         item.put("shares",createSharesPerWorker.getText());
                         jobGroups = client.userSessionRI.createJob(item);
                         int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
@@ -228,9 +226,7 @@ public class MenuController {
     }
 
     public void handlerLogout(MouseEvent mouseEvent) throws IOException {
-        this.client.userSessionRI.logout();
-        LoadGUIClient m = new LoadGUIClient();
-        m.changeScene("layouts/login.fxml");
+        changeScene("layouts/login.fxml");
     }
 
     public void handlerChoiceBox(MouseEvent mouseEvent) {
@@ -242,7 +238,7 @@ public class MenuController {
         System.exit(0);
     }
 
-    public void printHashMap(HashMap<String, JobGroupRI> hashMap) throws RemoteException {
+    public void printHashMap(Map<String, JobGroupRI> hashMap) throws RemoteException {
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             System.out.println("value: " + jobGroupRI.getJobName());

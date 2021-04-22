@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobGroupRI;
+import edu.ufp.inf.sd.server.State;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
@@ -44,6 +45,7 @@ public class JobController {
     public Label jobSharesPerWorker;
     public Label menuJobLabel;
     public Label menuWorkerLabel;
+    public VBox btnsJob;
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
@@ -55,15 +57,12 @@ public class JobController {
         jobReward.setText(item.get("reward"));
         jobWorkers.setText(item.get("workers"));
         jobState.setText(item.get("State"));
-        jobWorkload.setText("load");
-        jobSharesPerWorker.setText("shares");
+        jobWorkload.setText(item.get("load"));
+        jobSharesPerWorker.setText(item.get("shares"));
         this.client = client;
         this.jobGroupRI = jobGroupRI;
         if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
-            btnJobDelete.setVisible(true);
-            btnJobPause.setVisible(true);
-            btnJobResume.setVisible(true);
-            menuJobLabel.setVisible(true);
+            btnsJob.setVisible(true);
         }
         menuCredits.setText(this.client.userSessionRI.getCredits());
         menuUsername.setText(this.client.userSessionRI.getUsername());
@@ -85,7 +84,7 @@ public class JobController {
     public void handlerAttachWorkers(ActionEvent actionEvent) throws RemoteException {
         int num = Integer.parseInt(workersNum.getText());
         for (int i = 0; i < num; i++) {
-            WorkerRI worker = new WorkerImpl(jobGroupRI.getJobOwner());
+            WorkerRI worker = new WorkerImpl(client,client.userSessionRI.getUserWorkersSize()+1, jobGroupRI.getJobOwner( ),new State(),jobGroupRI.getJobName());
             jobGroupRI.attachWorker(worker);
         }
         // é rpeciso dar sinal ao job que já tem workers

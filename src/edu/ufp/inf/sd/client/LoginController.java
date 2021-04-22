@@ -75,8 +75,8 @@ public class LoginController implements Initializable {
         MenuController controller = loader.getController();
         controller.MenuControllerInit(this.client);
         app_stage.setScene(menuScene);
-        app_stage.setHeight(630.0);
-        app_stage.setWidth(926.0);
+        app_stage.setHeight(668.0);
+        app_stage.setWidth(1049.0);
         app_stage.show();
     }
 

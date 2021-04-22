@@ -6,16 +6,16 @@ import java.rmi.RemoteException;
 public class State implements Serializable {
     private String currentState;
 
-    public final String PAUSED = "Paused";
-    public final String FINISHED = "Finished";
-    public final String UNFINISHED = "Unfinished";
-    public final String ONGOING = "Ongoing";
 
-    public State(String currentState) {
-        this.currentState=currentState;
+    public State() {
+        this.currentState="Available";
     }
 
     public String getCurrentState() throws RemoteException {
         return currentState;
+    }
+
+    public void setCurrentState(String currentState) {
+        this.currentState = currentState;
     }
 }

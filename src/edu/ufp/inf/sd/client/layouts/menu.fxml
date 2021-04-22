@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 
 <Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="1033.0" styleClass="bgc" stylesheets="@css/app.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.MenuController">
-    <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="1040.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
+    <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="1033.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
         <Label fx:id="menuHome" alignment="CENTER" contentDisplay="CENTER" prefHeight="51.0" prefWidth="105.0" styleClass="lion" stylesheets="@css/app.css" text="Home" textAlignment="CENTER">
             <font>
                 <Font size="14.0" />
@@ -31,7 +32,7 @@
                 <Insets />
             </HBox.margin>
         </Label>
-        <Label id="btnMenuExit" fx:id="btnMenuExit" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerExit" prefHeight="31.0" prefWidth="78.0" style="-fx-padding: 0;" styleClass="lion" stylesheets="@css/app.css" text="Exit" textAlignment="CENTER">
+        <Label id="btnMenuExit" fx:id="btnMenuExit" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerExit" prefHeight="31.0" prefWidth="81.0" style="-fx-padding: 0;" styleClass="lion" stylesheets="@css/app.css" text="Exit" textAlignment="CENTER">
             <HBox.margin>
                 <Insets />
             </HBox.margin>
@@ -48,7 +49,7 @@
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="88.0" styleClass="tableButton" stylesheets="@css/app.css" text="Reward" textAlignment="CENTER" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="88.0" styleClass="tableButton" stylesheets="@css/app.css" text="Workers" textAlignment="CENTER" />
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="88.0" styleClass="tableButton" stylesheets="@css/app.css" text="State" textAlignment="CENTER" />
-         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="100.0" styleClass="tableButton" stylesheets="@css/app.css" text="Total WorkLoad" textAlignment="CENTER" />
+         <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="100.0" styleClass="tableButton" stylesheets="@css/app.css" text="Shares Limit" textAlignment="CENTER" />
          <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="102.0" styleClass="tableButton" stylesheets="@css/app.css" text="Shares Per Worker" textAlignment="CENTER" />
         </children>
     </HBox>
@@ -57,7 +58,7 @@
           <TextField fx:id="createJobName" promptText="Enter Job Name" />
           <TextField fx:id="createJobReward" prefHeight="25.0" prefWidth="149.0" promptText="Enter Job Reward" />
           <ChoiceBox fx:id="createJobStrategy" onMouseClicked="#handlerChoiceBox" prefWidth="150.0" styleClass="menuBar" stylesheets="@css/app.css" />
-         <TextField fx:id="createTotalWorkload" promptText="Total Workload (Number)" />
+         <Slider fx:id="createTotalWorkload" blockIncrement="1.0" majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" showTickLabels="true" snapToTicks="true" value="5.0" />
          <TextField fx:id="createSharesPerWorker" promptText="Worker Shares (Number)" />
           <Button fx:id="btnCreateTask" mnemonicParsing="false" onAction="#handlerCreateTask" prefHeight="25.0" prefWidth="113.0" styleClass="green" stylesheets="@css/app.css" text="New Job" />
       </children>
@@ -136,9 +137,14 @@
             <VBox fx:id="table" prefHeight="404.0" prefWidth="730.0" />
         </content>
     </ScrollPane>
-    <Label fx:id="messageMenu" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="37.0" onMouseEntered="#messageClear" prefHeight="17.0" prefWidth="592.0" textAlignment="CENTER" textFill="#ff3232">
+    <Label fx:id="messageMenu" alignment="CENTER" contentDisplay="CENTER" layoutX="155.0" layoutY="36.0" onMouseEntered="#messageClear" prefHeight="17.0" prefWidth="592.0" textAlignment="CENTER" textFill="#ff3232">
         <font>
             <Font size="15.0" />
         </font>
     </Label>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="475.0" layoutY="100.0" prefHeight="21.0" prefWidth="140.0" text="Total Job Shares Multiplier" textFill="WHITE">
+      <font>
+         <Font size="11.0" />
+      </font>
+   </Label>
 </Pane>

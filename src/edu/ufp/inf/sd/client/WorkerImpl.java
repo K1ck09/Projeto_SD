@@ -17,8 +17,11 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private int currentMakespan;
     private ArrayList<Thread> threads = new ArrayList<>();
 
-    protected WorkerImpl(String jobOwner) throws RemoteException {
+    protected WorkerImpl( JobShopClient client,Integer id,String jobOwner, State state,String jobGroupName) throws RemoteException {
         this.owner=jobOwner;
+        this.client=client;
+        this.state=state;
+        this.jobGroupName=jobGroupName;
     }
 
     @Override
@@ -44,4 +47,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public Integer getId() throws RemoteException{
         return id;
     }
+
+
 }

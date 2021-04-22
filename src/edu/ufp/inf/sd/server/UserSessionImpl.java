@@ -4,6 +4,7 @@ import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -36,7 +37,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public HashMap<String, JobGroupRI> getJobList() throws RemoteException {
+    public Map<String, JobGroupRI> getJobList() throws RemoteException {
         return db.getJobGroups();
     }
 
@@ -56,7 +57,12 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public HashMap<String, JobGroupRI> createJob(HashMap<String,String> item) throws RemoteException {
+    public int getUserWorkersSize() throws RemoteException{
+        return db.getUserWorkersSize();
+    }
+
+    @Override
+    public Map<String, JobGroupRI> createJob(HashMap<String,String> item) throws RemoteException {
         JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"),item.get("shares"));
         db.addJob(jobGroup);
         return db.getJobGroups();
@@ -64,6 +70,13 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
     public JobGroupRI getJobGroup(String jobName){
         return db.getJobGroups().get(jobName);
+    }
+
+    public void printHashMap(Map<String, JobGroupRI> hashMap) throws RemoteException {
+        Collection<JobGroupRI> jobsList = hashMap.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            System.out.println("value: " + jobGroupRI.getJobName());
+        }
     }
 
 

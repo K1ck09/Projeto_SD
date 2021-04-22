@@ -7,7 +7,6 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.ItemController">
     <children>
-        <Button mnemonicParsing="false" onAction="#handlerInsideJob" prefHeight="40.0" prefWidth="731.0" style="-fx-background-color: transparent; -fx-background-radius: 0;" />
         <HBox fx:id="tableItem" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="731.0" styleClass="tableBar" stylesheets="@css/app.css">
             <children>
                 <Label fx:id="tableJob" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="94.0" prefWidth="88.0" style="-fx-background-color: transparent;" textAlignment="CENTER" textFill="#363636" />
@@ -20,5 +19,6 @@
             <Label fx:id="tableSharesPerWorker" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="94.0" prefWidth="102.0" style="-fx-background-color: transparent;" textAlignment="CENTER" textFill="#363636" />
             </children>
         </HBox>
+        <Button mnemonicParsing="false" onAction="#handlerInsideJob" prefHeight="40.0" prefWidth="731.0" style="-fx-background-color: transparent; -fx-background-radius: 0;" />
     </children>
 </AnchorPane>

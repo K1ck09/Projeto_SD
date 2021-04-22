@@ -24,7 +24,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
         this.owner=owner;
         this.strat=strat;
         this.reward=reward;
-        this.state=new State("Ongoing");
+        this.state=new State();
         this.workLoad=workLoad;
         this.sharesPerWorker=sharesPerWorker;
     }

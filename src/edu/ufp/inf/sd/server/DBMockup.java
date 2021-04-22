@@ -1,8 +1,11 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.WorkerRI;
+
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -12,18 +15,18 @@ public class DBMockup {
     private HashMap<String, User> sessions;
 
     //job name and job object
-    private HashMap<String, JobGroupRI> jobGroups;
+    private Map<String, JobGroupRI> jobGroups;
+
+    //User->Workers //all
+    private HashMap<String, WorkerRI> userWorkers;
 
     public DBMockup() {
         this.users = new HashMap<>();
         this.sessions = new HashMap<>();
         this.jobGroups =new HashMap<>();
+        this.userWorkers =new HashMap<>();
 
-
-
-
-        User user = new User("a","a",10);
-        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Register user : {0}", new Object[]{user.getCredits()});
+        User user = new User("a","a",10000);
         users.put(user.getUsername(),user);
     }
     // USERS METHODS
@@ -41,7 +44,6 @@ public class DBMockup {
         return users.get(username);
     }
 
-
     // SESSIONS METHODS
     public HashMap<String, User> getSessions() {
         return sessions;
@@ -56,12 +58,15 @@ public class DBMockup {
     }
     // JOB METHODS
 
-    public HashMap<String, JobGroupRI> getJobGroups() {
+    public Map<String, JobGroupRI> getJobGroups() {
         return jobGroups;
     }
 
 
     public void addJob(JobGroupRI jobGroup) throws RemoteException {
         this.jobGroups.put(jobGroup.getJobName(),jobGroup);
+    }
+    public int getUserWorkersSize(){
+        return userWorkers.size();
     }
 }
