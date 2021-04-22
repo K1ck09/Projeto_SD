@@ -36,7 +36,7 @@ public class MenuController {
     public TextField createJobName;
     public TextField createJobReward;
     public ChoiceBox<String> createJobStrategy;
-    private final ObservableList<String> stratTypes = FXCollections.observableArrayList("TabuSearch", "Genetic Algorithm");
+    private final ObservableList<String> stratTypes = FXCollections.observableArrayList("Choose Strategy","TabuSearch", "Genetic Algorithm");
     public Label messageMenu;
     public Label displayTotalJobsUser;
     public Label displayAtiveWorkersUser;
@@ -60,10 +60,11 @@ public class MenuController {
         menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
         // Set Strat choicebox
         createJobStrategy.setItems(stratTypes);
+        createJobStrategy.getSelectionModel().clearAndSelect(0);
         createJobStrategy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                if (!item.containsKey("strat")) {
+                if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy")!=0) {
                     item.put("strat", stratTypes.get(t1.intValue()));
                 } else if (item.containsKey("strat") && item.get("strat").compareTo(stratTypes.get(t1.intValue())) != 0) {
                     item.replace("strat", stratTypes.get(t1.intValue()));
@@ -154,7 +155,7 @@ public class MenuController {
                         messageMenu.setText("Job Created Sucessfully!");
                         createJobReward.clear();
                         createJobName.clear();
-                        createJobStrategy.getSelectionModel().clearSelection();
+                        createJobStrategy.getSelectionModel().clearAndSelect(0);
                         item.clear();
                         updateStatistics();
                     } else {
