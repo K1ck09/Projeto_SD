@@ -23,14 +23,13 @@ public class ItemWorkerController {
     public Label tableRewarded;
     public Label tableWorkerID;
     private JobController jobController;
-    private int workerID;
 
     public void setJobController(JobController jobController){
         this.jobController=jobController;
     }
 
     public void handlerWorkerSelect(ActionEvent actionEvent) {
-        workerID=Integer.parseInt(tableWorkerID.getText());
+        int workerID = Integer.parseInt(tableWorkerID.getText());
         jobController.showWorkerbuttons(workerID);
      }
 }

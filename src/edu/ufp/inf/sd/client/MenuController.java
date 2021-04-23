@@ -19,9 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.rmi.RemoteException;
 import java.sql.SQLOutput;
 import java.util.Collection;
@@ -144,10 +142,9 @@ public class MenuController extends LoadGUIClient {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
         file= fileChooser.showOpenDialog(stage);
-        if(file!=null){
-            btnFile.setText(file.getName());
-        }
+        btnFile.setText(file.getName());
     }
+
 
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
         if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
@@ -157,24 +154,29 @@ public class MenuController extends LoadGUIClient {
                 if (inputReward <= clientCredits && inputReward > 0) {
                     item.put("job", createJobName.getText());
                     if (!client.userSessionRI.isJobUnique(item.get("job"))) {
-                        item.put("reward", createJobReward.getText());
-                        item.put("owner", client.userSessionRI.getUsername());
-                        item.put("workers", "0");
-                        item.put("state", "Ongoing");
-                        item.put("load",String.valueOf((int) createTotalWorkload.getValue()*10)); // min shares 10!
-                        item.put("shares",createSharesPerWorker.getText());
-                        jobGroups = client.userSessionRI.createJob(item,file);
-                        int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
-                        client.userSessionRI.setCredtis(newBalance);
-                        menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
-                        insertItemsInTable();
-                        messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
-                        messageMenu.setText("Job Created Sucessfully!");
-                        createJobReward.clear();
-                        createJobName.clear();
-                        createJobStrategy.getSelectionModel().clearAndSelect(0);
-                        item.clear();
-                        updateStatistics();
+                        insertDataInItem();
+                        if(file!=null){
+                            jobGroups = client.userSessionRI.createJob(item);
+                            JobGroupRI currentJob= jobGroups.get(item.get("job"));
+                            if(currentJob!=null) {
+                                uploadFileToJob(currentJob);
+                                int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
+                                client.userSessionRI.setCredtis(newBalance);
+                                menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
+                                insertItemsInTable();
+                                messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
+                                messageMenu.setText("Job Created Sucessfully!");
+                                clearSelectionAndVariables();
+                                updateStatistics();
+                            }else{
+                                messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                                messageMenu.setText("Job Creation Unsuccessful. An Error must have occured. Please try Again");
+                            }
+                        }else{
+                            btnFile.setText("Choose file");
+                            messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                            messageMenu.setText("Please select job file");
+                        }
                     } else {
                         createJobName.clear();
                         messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
@@ -193,6 +195,54 @@ public class MenuController extends LoadGUIClient {
         } else {
             messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
             messageMenu.setText("Please make sure you fill all the fields.");
+        }
+    }
+
+    private void clearSelectionAndVariables() {
+        createJobReward.clear();
+        createJobName.clear();
+        createSharesPerWorker.clear();
+        createTotalWorkload.adjustValue(5);
+        createJobStrategy.getSelectionModel().clearAndSelect(0);
+        btnFile.setText("Choose File");
+        item.clear();
+    }
+
+    private void insertDataInItem() throws RemoteException {
+        item.put("reward", createJobReward.getText());
+        item.put("owner", client.userSessionRI.getUsername());
+        item.put("workers", "0");
+        item.put("state", "Ongoing");
+        item.put("load",String.valueOf((int) createTotalWorkload.getValue()*10)); // min shares 10!
+        item.put("shares",createSharesPerWorker.getText());
+    }
+
+    private void uploadFileToJob(JobGroupRI currentJob) {
+        if(file!=null){
+            byte [] dataToSend= new byte[(int) file.length()];
+            FileInputStream in;
+            try {
+                in = new FileInputStream(file);
+                try {
+                    in.read(dataToSend, 0, dataToSend.length);
+                    currentJob.uploadFile(dataToSend);
+                } catch (IOException e) {
+                    messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                    messageMenu.setText("Error Uploading file. Please try again");
+                    e.printStackTrace();
+                }
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                    messageMenu.setText("Error Uploading file. Please try again");
+                    e.printStackTrace();
+                }
+            } catch (FileNotFoundException e) {
+                messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                messageMenu.setText("Error Uploading file. Please try again");
+                e.printStackTrace();
+            }
         }
     }
 

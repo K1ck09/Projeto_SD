@@ -65,8 +65,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public Map<String, JobGroupRI> createJob(HashMap<String, String> item, File file) throws RemoteException {
-        JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"),item.get("shares"),file);
+    public Map<String, JobGroupRI> createJob(HashMap<String, String> item) throws RemoteException {
+        JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"),item.get("shares"));
         db.addJob(jobGroup);
         return db.getJobGroups();
     }

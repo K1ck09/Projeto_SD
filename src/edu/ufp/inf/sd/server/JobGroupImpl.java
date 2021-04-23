@@ -1,11 +1,16 @@
 package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.WorkerRI;
+import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 
-import java.io.File;
+import java.awt.*;
+import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,10 +23,13 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
     private String workLoad;
     private String sharesPerWorker;
     private File file;
+    private String filePath;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
-    ArrayList<OperationsRI> jobOperations = new ArrayList<>();
+    ArrayList<Operations> jobOperations = new ArrayList<>();
 
-    protected JobGroupImpl(String jobName,String owner,String strat,String reward,String workLoad,String sharesPerWorker,File file) throws RemoteException {
+    private static final  String FILE_PATH="C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
+
+    protected JobGroupImpl(String jobName,String owner,String strat,String reward,String workLoad,String sharesPerWorker) throws RemoteException {
         this.jobName=jobName;
         this.owner=owner;
         this.strat=strat;
@@ -29,12 +37,18 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
         this.state=new State();
         this.workLoad=workLoad;
         this.sharesPerWorker=sharesPerWorker;
-        this.file=file;
     }
 
     @Override
     public void run() {
-        //Criar Operation e enviar
+        if(strat.compareTo("TabuSearch")==0 && jobWorkers.size()!=0){
+
+            /*TabuSearchJSSP ts = new TabuSearchJSSP(file);
+            Operations op= new Operations(file,jobName,);
+            jobOperations.add(op);*/
+        }
+
+
     }
 
     @Override
@@ -66,7 +80,10 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
 
     @Override
     public void attachWorker(WorkerRI worker) throws RemoteException {
-        jobWorkers.put(worker.getId(),worker);
+        /*jobWorkers.put(worker.getId(),worker);
+        if(this.state.getCurrentState().compareTo("Available")==0){
+            run();
+        }*/
     }
 
     @Override
@@ -82,6 +99,45 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI,Runn
     @Override
     public String getSharesPerWorker() throws RemoteException {
         return sharesPerWorker;
+    }
+
+    @Override
+    public void uploadFile(byte[] mydata) throws IOException {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH_mm_ss");
+        LocalDateTime now = LocalDateTime.now();
+        file= new File(FILE_PATH+getJobOwner()+jobName+dtf.format(now));
+        filePath=file.getAbsolutePath();
+        System.out.println(filePath);
+        FileOutputStream out=new FileOutputStream(file);
+        out.write(mydata);
+        out.flush();
+        out.close();
+    }
+
+    @Override
+    public byte[] downloadFileFromServer(String serverpath) throws RemoteException {
+        byte [] mydata;
+
+        File serverpathfile = new File(serverpath);
+        mydata=new byte[(int) serverpathfile.length()];
+        FileInputStream in;
+        try {
+            in = new FileInputStream(serverpathfile);
+            try {
+                in.read(mydata, 0, mydata.length);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return mydata;
     }
 
 

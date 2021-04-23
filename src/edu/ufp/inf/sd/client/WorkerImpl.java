@@ -1,7 +1,12 @@
 package edu.ufp.inf.sd.client;
 
+import edu.ufp.inf.sd.server.Operations;
 import edu.ufp.inf.sd.server.State;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
@@ -25,8 +30,8 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public void setOperation() throws RemoteException {
-        //Precisa de receber operation
+    public void setOperation(Operations operation) throws RemoteException {
+
     }
 
     @Override
@@ -46,6 +51,10 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
     public Integer getId() throws RemoteException{
         return id;
+    }
+
+    public State getState() throws RemoteException{
+        return state;
     }
 
 

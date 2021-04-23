@@ -83,8 +83,8 @@ public class JobController {
 
     public void handlerAttachWorkers(ActionEvent actionEvent) throws RemoteException {
         int num = Integer.parseInt(workersNum.getText());
-        for (int i = 0; i < num; i++) {
-            WorkerRI worker = new WorkerImpl(client,client.userSessionRI.getUserWorkersSize()+1, jobGroupRI.getJobOwner( ),new State(),jobGroupRI.getJobName());
+        for (int i = 0; i < 1; i++) {
+            WorkerRI worker = new WorkerImpl(client,client.userSessionRI.getUserWorkersSize()+1, jobGroupRI.getJobOwner(),new State(),jobGroupRI.getJobName());
             jobGroupRI.attachWorker(worker);
         }
         // é rpeciso dar sinal ao job que já tem workers
@@ -116,8 +116,8 @@ public class JobController {
         MenuController controller = loader.getController();
         controller.MenuControllerInit(client);
         app_stage.setScene(menuScene);
-        app_stage.setHeight(630.0);
-        app_stage.setWidth(926.0);
+        app_stage.setHeight(668.0);
+        app_stage.setWidth(1049.0);
         app_stage.show();
     }
 

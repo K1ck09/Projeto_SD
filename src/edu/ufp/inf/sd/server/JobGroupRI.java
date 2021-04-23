@@ -2,6 +2,7 @@ package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.WorkerRI;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -13,10 +14,14 @@ public interface JobGroupRI extends Remote {
     String getJobStrat()throws RemoteException;
     String getJobReward()throws RemoteException;
     State getJobState()throws RemoteException;
+
+    byte[] downloadFileFromServer(String serverpath) throws RemoteException;
+
     Integer getWorkersSize()throws RemoteException;
     String getState() throws RemoteException;
     void attachWorker(WorkerRI worker) throws RemoteException;
     public Map<Integer, WorkerRI> getJobWorkers()throws RemoteException;
     String getWorkload()throws RemoteException;
     String getSharesPerWorker() throws RemoteException;
+    void uploadFile(byte[] mydata) throws RemoteException, IOException;
 }
