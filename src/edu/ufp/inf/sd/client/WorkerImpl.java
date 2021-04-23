@@ -13,13 +13,14 @@ import java.util.ArrayList;
 
 public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     Integer id;
-    private JobShopClient client;
+    private final JobShopClient client;
     private State state;
-    private String owner;
-    private String jobGroupName;
+    private final String owner;
+    private final String jobGroupName;
     private int currentShares;
     private int totalShares;
     private int currentMakespan;
+    private int totalRewarded=0;
     private ArrayList<Thread> threads = new ArrayList<>();
 
     protected WorkerImpl( JobShopClient client,Integer id,String jobOwner, State state,String jobGroupName) throws RemoteException {
@@ -59,4 +60,19 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public String getJobGroupName() {
+        return jobGroupName;
+    }
+
+    public JobShopClient getClient() {
+        return client;
+    }
+
+    public int getTotalRewarded() {
+        return totalRewarded;
+    }
 }

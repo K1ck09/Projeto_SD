@@ -290,11 +290,12 @@ public class MenuController extends LoadGUIClient {
     }
 
     public void handlerLogout(MouseEvent mouseEvent) throws IOException {
+        this.client.userSessionRI.logout();
         changeScene("layouts/login.fxml");
+
     }
 
     public void handlerChoiceBox(MouseEvent mouseEvent) {
-        //reateJobStrategy.getItems().addAll("item1", "item2", "item3");
     }
 
     public void handlerExit(MouseEvent mouseEvent) {

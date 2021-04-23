@@ -48,7 +48,7 @@ public class ItemController {
         Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         JobController controller = loader.getController();
         JobGroupRI jobGroupRI = this.client.userSessionRI.getJobList().get(item.get("job"));
-        controller.init(item,this.client,jobGroupRI);
+        controller.init(item,this.client,jobGroupRI.getJobName());
         app_stage.setScene(menuScene);
         app_stage.setHeight(668.0);
         app_stage.setWidth(1049.0);

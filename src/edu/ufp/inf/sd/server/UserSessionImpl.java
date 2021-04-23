@@ -2,12 +2,8 @@ package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.WorkerRI;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -47,6 +43,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     @Override
     public void logout() throws RemoteException {
         this.db.removeSession(this.user.getUsername());
+        Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Logged OUT : {0}", new Object[]{user.getUsername()});
+
     }
 
     @Override
@@ -55,8 +53,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public Map<Integer, WorkerRI> getWorkersMap(JobGroupRI jobGroupRI) throws RemoteException {
-        return db.getJobGroups().get(jobGroupRI.getJobName()).getJobWorkers();
+    public Map<Integer, WorkerRI> getWorkersMap(String jobGroupRI) throws RemoteException {
+        return db.getJobGroups().get(jobGroupRI).getJobWorkers();
     }
 
 
