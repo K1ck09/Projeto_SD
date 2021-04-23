@@ -17,14 +17,10 @@ public class DBMockup {
     //job name and job object
     private Map<String, JobGroupRI> jobGroups;
 
-    //User->Workers //all
-    private HashMap<String, WorkerRI> userWorkers;
-
     public DBMockup() {
         this.users = new HashMap<>();
         this.sessions = new HashMap<>();
         this.jobGroups =new HashMap<>();
-        this.userWorkers =new HashMap<>();
 
         User user = new User("a","a",10000);
         users.put(user.getUsername(),user);
@@ -66,7 +62,5 @@ public class DBMockup {
     public void addJob(JobGroupRI jobGroup) throws RemoteException {
         this.jobGroups.put(jobGroup.getJobName(),jobGroup);
     }
-    public int getUserWorkersSize(){
-        return userWorkers.size();
-    }
+
 }

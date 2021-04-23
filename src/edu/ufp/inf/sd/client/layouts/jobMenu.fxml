@@ -134,4 +134,9 @@
          <Button fx:id="btnJobDelete" mnemonicParsing="false" onAction="#handlerDeleteJob" prefHeight="25.0" prefWidth="103.0" styleClass="red" stylesheets="@css/app.css" text="Delete Job" />
       </children>
    </VBox>
+   <Label fx:id="infoMessage" alignment="CENTER" contentDisplay="CENTER" layoutX="771.0" layoutY="89.0" onMouseEntered="#clearMessage" prefHeight="20.0" prefWidth="260.0" textAlignment="CENTER" textFill="WHITE">
+      <font>
+         <Font size="14.0" />
+      </font>
+   </Label>
 </Pane>

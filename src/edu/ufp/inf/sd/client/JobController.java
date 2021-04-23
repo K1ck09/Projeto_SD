@@ -46,6 +46,7 @@ public class JobController {
     public Label menuJobLabel;
     public Label menuWorkerLabel;
     public VBox btnsJob;
+    public Label infoMessage;
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
@@ -83,11 +84,19 @@ public class JobController {
 
     public void handlerAttachWorkers(ActionEvent actionEvent) throws RemoteException {
         int num = Integer.parseInt(workersNum.getText());
-        for (int i = 0; i < 1; i++) {
-            WorkerRI worker = new WorkerImpl(client,client.userSessionRI.getUserWorkersSize()+1, jobGroupRI.getJobOwner(),new State(),jobGroupRI.getJobName());
-            jobGroupRI.attachWorker(worker);
+        if(num>0){
+            for (int i = 0; i < num; i++) {
+                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1, jobGroupRI.getJobOwner(),new State(),jobGroupRI.getJobName());
+                System.out.println(worker.getId());
+                jobGroupRI.attachWorker(worker);
+            }
+        }else{
+            workersNum.clear();
+            infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+            infoMessage.setText("Number of workers can't be 0!");
         }
         // é rpeciso dar sinal ao job que já tem workers
+        workersNum.clear();
     }
 
     public void handlerPauseWorker(ActionEvent actionEvent) {
@@ -127,6 +136,10 @@ public class JobController {
 
     public void showJobButtons() {
 
+    }
+
+    public void clearMessage(MouseEvent mouseEvent) {
+        infoMessage.setText("");
     }
 }
 

@@ -59,10 +59,6 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         return db.getJobGroups().get(jobGroupRI.getJobName()).getJobWorkers();
     }
 
-    @Override
-    public int getUserWorkersSize() throws RemoteException{
-        return db.getUserWorkersSize();
-    }
 
     @Override
     public Map<String, JobGroupRI> createJob(HashMap<String, String> item) throws RemoteException {
@@ -75,12 +71,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         return db.getJobGroups().get(jobName);
     }
 
-    public void printHashMap(Map<String, JobGroupRI> hashMap) throws RemoteException {
-        Collection<JobGroupRI> jobsList = hashMap.values();
-        for (JobGroupRI jobGroupRI : jobsList) {
-            System.out.println("value: " + jobGroupRI.getJobName());
-        }
-    }
+
 
 
 }

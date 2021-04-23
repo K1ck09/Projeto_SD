@@ -23,6 +23,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private ArrayList<Thread> threads = new ArrayList<>();
 
     protected WorkerImpl( JobShopClient client,Integer id,String jobOwner, State state,String jobGroupName) throws RemoteException {
+        this.id=id;
         this.owner=jobOwner;
         this.client=client;
         this.state=state;
