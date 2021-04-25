@@ -145,7 +145,6 @@ public class MenuController extends LoadGUIClient {
         btnFile.setText(file.getName());
     }
 
-
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
         if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
             if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createSharesPerWorker.getText())) {
@@ -161,7 +160,7 @@ public class MenuController extends LoadGUIClient {
                             if(currentJob!=null) {
                                 uploadFileToJob(currentJob);
                                 int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
-                                client.userSessionRI.setCredtis(newBalance);
+                                client.userSessionRI.setCredits(newBalance);
                                 menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
                                 insertItemsInTable();
                                 messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green

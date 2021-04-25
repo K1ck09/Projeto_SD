@@ -23,6 +23,7 @@ public class ItemController {
     public Label tableSharesPerWorker;
     HashMap<String,String> item =new HashMap<>();
     private JobShopClient client;
+    private JobGroupRI thisJob;
 
 
 
@@ -31,14 +32,9 @@ public class ItemController {
     }
 
     public void handlerInsideJob(ActionEvent actionEvent) throws IOException {
-        insertItens();
+        this.thisJob=this.client.userSessionRI.getJobList().get(tableJob.getText());
+        //insertItens();
         changeToMenuScene(actionEvent);
-    }
-
-    public void printHashMap(HashMap<String, String> hashMap) {
-        for (String value : hashMap.values()) {
-            System.out.println("value: " + value);
-        }
     }
 
     private void changeToMenuScene(ActionEvent actionEvent) throws IOException {
@@ -47,8 +43,8 @@ public class ItemController {
         Scene menuScene = new Scene(menuParent);
         Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         JobController controller = loader.getController();
-        JobGroupRI jobGroupRI = this.client.userSessionRI.getJobList().get(item.get("job"));
-        controller.init(item,this.client,jobGroupRI.getJobName());
+        //JobGroupRI jobGroupRI = this.client.userSessionRI.getJobList().get(item.get("job"));
+        controller.init(this.client,thisJob);
         app_stage.setScene(menuScene);
         app_stage.setHeight(668.0);
         app_stage.setWidth(1049.0);
@@ -68,5 +64,11 @@ public class ItemController {
 
     void clearItemMap(){
         item.clear();
+    }
+
+    public void printHashMap(HashMap<String, String> hashMap) {
+        for (String value : hashMap.values()) {
+            System.out.println("value: " + value);
+        }
     }
 }

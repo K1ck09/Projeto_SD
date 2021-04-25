@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI, Runnable {
+public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String jobName;
     private String owner;
     private String strat;
@@ -36,26 +36,13 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI, Run
         this.sharesPerWorker = sharesPerWorker;
     }
 
-    @Override
-    public void run() {
-        if (strat.compareTo("TabuSearch") == 0 && jobWorkers.size() != 0) {
-
-            /*TabuSearchJSSP ts = new TabuSearchJSSP(file);
-            Operations op= new Operations(file,jobName,);
-            jobOperations.add(op);*/
-        }
-
-
-    }
 
     @Override
     public void attachWorker(WorkerRI worker) throws RemoteException {
         jobWorkers.put(worker.getId(),worker);
-        printHashMap(jobWorkers);
-        /*
         if(this.state.getCurrentState().compareTo("Available")==0){
-            run();
-        }*/
+
+        }
     }
 
 

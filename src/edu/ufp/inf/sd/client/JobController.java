@@ -20,6 +20,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -51,27 +52,28 @@ public class JobController {
     public Label menuWorkerLabel;
     public VBox btnsJob;
     public Label infoMessage;
+    public VBox btnsWorkers;
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
 
-    public void init(HashMap<String, String> item, JobShopClient client, String jobGroupRI) throws IOException {
-        jobName.setText(item.get("job"));
-        jobOwner.setText(item.get("owner"));
-        jobStrat.setText(item.get("strat"));
-        jobReward.setText(item.get("reward"));
-        jobWorkers.setText(item.get("workers"));
-        jobState.setText(item.get("State"));
-        jobWorkload.setText(item.get("load"));
-        jobSharesPerWorker.setText(item.get("shares"));
+    public void init( JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
+        jobName.setText(jobGroupRI.getJobName());
+        jobOwner.setText(jobGroupRI.getJobOwner());
+        jobStrat.setText(jobGroupRI.getJobStrat());
+        jobReward.setText(jobGroupRI.getJobReward());
+        jobWorkers.setText(String.valueOf(jobGroupRI.getWorkersSize()));
+        jobState.setText(jobGroupRI.getState());
+        jobWorkload.setText(jobGroupRI.getWorkload());
+        jobSharesPerWorker.setText(jobGroupRI.getSharesPerWorker());
         this.client = client;
-        this.jobGroupRI = this.client.userSessionRI.getJobList().get(jobGroupRI);
-        if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI) == 0) {
+        this.jobGroupRI = jobGroupRI;
+        if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnsJob.setVisible(true);
         }
         menuCredits.setText(this.client.userSessionRI.getCredits());
         menuUsername.setText(this.client.userSessionRI.getUsername());
-        workersMap = client.userSessionRI.getWorkersMap(jobGroupRI);
+        workersMap = jobGroupRI.getJobWorkers();
         if (!workersMap.isEmpty()) {
             insertWorkersInTable();
         }
@@ -79,6 +81,7 @@ public class JobController {
 
     private void insertWorkersInTable() throws IOException {
         table.getChildren().clear();
+        printHashMap(workersMap);
         Collection<WorkerRI> workerList = workersMap.values();
         for(WorkerRI worker:workerList){
             FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableWorker.fxml"));
@@ -138,7 +141,7 @@ public class JobController {
         }
         // é rpeciso dar sinal ao job que já tem workers
         infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
-        infoMessage.setText("'"+ num +"' were attached to job successfully!");
+        infoMessage.setText("Workers were attached to job successfully!");
         workersNum.clear();
         updateJobWorkers();
         insertWorkersInTable();
@@ -179,16 +182,21 @@ public class JobController {
         app_stage.show();
     }
 
-    public void showWorkerbuttons(int workerID) {
-
-    }
-
-    public void showJobButtons() {
-
+    public void showWorkerbuttons(int workerID) throws RemoteException {
+        if(jobGroupRI.getJobWorkers().get(workerID).getOwner().compareTo(client.userSessionRI.getUsername())==0){
+            btnsWorkers.setVisible(true);
+        }
     }
 
     public void clearMessage(MouseEvent mouseEvent) {
         infoMessage.setText("");
+    }
+
+    public void printHashMap(Map<Integer, WorkerRI> hashMap) throws RemoteException {
+        Collection<WorkerRI> workers = hashMap.values();
+        for (WorkerRI worker : workers) {
+            System.out.println(worker.getOwner());
+        }
     }
 }
 

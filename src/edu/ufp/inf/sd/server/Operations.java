@@ -4,7 +4,7 @@ import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 
 import java.io.File;
 
-public class Operations {
+public class Operations implements Runnable {
     File file;
     String jobName;
     int makespan;
@@ -14,5 +14,10 @@ public class Operations {
         this.file=file;
         this.jobName=jobName;
         this.ts=ts;
+    }
+
+    @Override
+    public void run() {
+
     }
 }

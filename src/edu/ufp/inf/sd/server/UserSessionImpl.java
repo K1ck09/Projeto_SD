@@ -30,7 +30,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public void setCredtis(int credits) throws RemoteException{
+    public void setCredits(int credits) throws RemoteException{
         user.setCredits(credits);
 
     }

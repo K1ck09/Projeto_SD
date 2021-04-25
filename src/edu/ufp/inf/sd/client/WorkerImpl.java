@@ -2,6 +2,7 @@ package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.Operations;
 import edu.ufp.inf.sd.server.State;
+import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,28 +51,28 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public void deleteWorker() throws RemoteException{
 
     }
-
+    @Override
     public Integer getId() throws RemoteException{
         return id;
     }
-
+    @Override
     public State getState() throws RemoteException{
         return state;
     }
 
-
+    @Override
     public String getOwner() {
         return owner;
     }
-
+    @Override
     public String getJobGroupName() {
         return jobGroupName;
     }
-
+    @Override
     public JobShopClient getClient() {
         return client;
     }
-
+    @Override
     public int getTotalRewarded() {
         return totalRewarded;
     }

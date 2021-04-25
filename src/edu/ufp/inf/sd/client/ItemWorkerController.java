@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 
 public class ItemWorkerController {
@@ -28,7 +29,7 @@ public class ItemWorkerController {
         this.jobController=jobController;
     }
 
-    public void handlerWorkerSelect(ActionEvent actionEvent) {
+    public void handlerWorkerSelect(ActionEvent actionEvent) throws RemoteException {
         int workerID = Integer.parseInt(tableWorkerID.getText());
         jobController.showWorkerbuttons(workerID);
      }

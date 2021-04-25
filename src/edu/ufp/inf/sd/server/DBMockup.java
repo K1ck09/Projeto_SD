@@ -23,7 +23,9 @@ public class DBMockup {
         this.jobGroups =new HashMap<>();
 
         User user = new User("a","a",10000);
+        User user1 = new User("q","q",10000);
         users.put(user.getUsername(),user);
+        users.put(user1.getUsername(),user1);
     }
     // USERS METHODS
     public boolean existsUser(String u, String p) {
