@@ -8,13 +8,22 @@ import java.rmi.RemoteException;
 
 public interface WorkerRI extends Remote {
     void setOperation(Operations operation) throws RemoteException;
+
     void resumeWorker() throws RemoteException;
+
     void pauseWorker() throws RemoteException;
+
     void deleteWorker() throws RemoteException;
-    public Integer getId() throws RemoteException;
-    public State getState()throws RemoteException;
-    public String getOwner()throws RemoteException;
-    public String getJobGroupName()throws RemoteException;
-    public JobShopClient getClient()throws RemoteException;
-    public int getTotalRewarded()throws RemoteException;
+
+    Integer getId() throws RemoteException;
+
+    State getState() throws RemoteException;
+
+    String getOwner() throws RemoteException;
+
+    String getJobGroupName() throws RemoteException;
+
+    JobShopClient getClient() throws RemoteException;
+
+    int getTotalRewarded() throws RemoteException;
 }

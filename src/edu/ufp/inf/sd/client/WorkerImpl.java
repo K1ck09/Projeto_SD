@@ -34,7 +34,11 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
     @Override
     public void setOperation(Operations operation) throws RemoteException {
-
+        //receber instancia da operation
+        //criar thread e correr o TSJSSP
+        //receber resposta guardar e notificar o server
+        Thread thread = new Thread();
+        currentMakespan = operation.ts.run();
     }
 
     @Override
