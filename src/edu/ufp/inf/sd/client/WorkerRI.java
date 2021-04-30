@@ -1,6 +1,5 @@
 package edu.ufp.inf.sd.client;
 
-import edu.ufp.inf.sd.server.Operations;
 import edu.ufp.inf.sd.server.State;
 
 import java.rmi.Remote;

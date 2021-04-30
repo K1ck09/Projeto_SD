@@ -1,13 +1,7 @@
 package edu.ufp.inf.sd.client;
 
-import edu.ufp.inf.sd.server.Operations;
 import edu.ufp.inf.sd.server.State;
-import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;

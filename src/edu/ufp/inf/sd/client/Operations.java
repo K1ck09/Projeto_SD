@@ -1,4 +1,4 @@
-package edu.ufp.inf.sd.server;
+package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.client.WorkerRI;
 import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;

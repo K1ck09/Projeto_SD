@@ -1,9 +1,8 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.Operations;
 import edu.ufp.inf.sd.client.WorkerRI;
-import edu.ufp.inf.sd.util.tabusearch.TabuSearchJSSP;
 
-import java.awt.*;
 import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
