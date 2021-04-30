@@ -39,32 +39,12 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
     @Override
     public void attachWorker(WorkerRI worker) throws RemoteException {
-        //dar attach ao worker
         jobWorkers.put(worker.getId(),worker);
-        //ver state e criar thread
         if(this.state.getCurrentState().compareTo("Available")==0){
-            Operations op = new Operations(file,jobName,worker);
-            Thread thread = new Thread(op);
-            thread.start();
+
         }
-
     }
 
-    @Override
-    public String getState() throws RemoteException {
-        return state.getCurrentState();
-    }
-
-    @Override
-    public void setState(State state) {
-        this.state = state;
-
-    }
-
-    @Override
-    public void detachWorker(WorkerRI worker) throws RemoteException {
-        jobWorkers.remove(worker.getId());
-    }
 
     @Override
     public void uploadFile(byte[] mydata) throws IOException {
@@ -152,7 +132,10 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         return state;
     }
 
-
+    @Override
+    public String getState() throws RemoteException {
+        return state.getCurrentState();
+    }
 
     public void printHashMap(Map<Integer, WorkerRI> hashMap) throws RemoteException {
         Collection<WorkerRI> workers = hashMap.values();
