@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobGroupRI;
+import edu.ufp.inf.sd.server.JobThread;
 import edu.ufp.inf.sd.server.State;
 
 import java.io.*;
@@ -23,6 +24,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private static final String PATH_FILE="C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\client\\temp\\";
     private File file;
     private JobController controller;
+    private JobThread jobThread;
 
     protected WorkerImpl( JobShopClient client,Integer id,String jobOwner, State state,String jobGroupName,JobController controller) throws RemoteException {
         this.id=id;
@@ -35,15 +37,18 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public void setOperation(String filepath) throws RemoteException,IOException {
-        downloadFile(filepath);
+    public void setOperation(String filepath, JobThread jobThread) throws RemoteException,IOException {
+        this.jobThread=jobThread;
+        // Usar quando implemntar JobThread
+    }
+
+    @Override
+    public void setOperation(String filePath)throws RemoteException,IOException {
+        downloadFile(filePath);
         op= new Operations(file.getAbsolutePath(),this);
         this.state.setCurrentState("Ongoing");
         Thread t=new Thread(op);
         t.start();
-        //criar threads - usar thread pool? ou criar threads a medida que é chamado?
-        //verificar se já há ciclo na criação
-
     }
 
     @Override
@@ -56,6 +61,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                 System.out.println(currentMakespan+"-"+bestMakespan+"-"+totalShares);
                 controller.update();
                 this.totalShares++;
+                //jobThread.updateTotalShares();
                 Thread t=new Thread(op);
                 t.start();
             }else{
@@ -125,4 +131,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public int getTotalRewarded() {
         return totalRewarded;
     }
+
+
 }

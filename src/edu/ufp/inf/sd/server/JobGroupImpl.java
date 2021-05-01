@@ -18,14 +18,17 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private State state;
     private String workLoad;
     private String sharesPerWorker;
+    private Integer totalShares=0;
     private File file;
     private String filePath;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
     ArrayList<Operations> jobOperations = new ArrayList<>();
+   // private JobThread jobThread;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
 
     protected JobGroupImpl(String jobName, String owner, String strat, String reward, String workLoad, String sharesPerWorker) throws RemoteException {
+        //this.jobThread=new JobThread();
         this.jobName = jobName;
         this.owner = owner;
         this.strat = strat;
@@ -44,12 +47,24 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     public void attachWorker(WorkerRI worker) throws RemoteException,IOException {
         jobWorkers.put(worker.getId(),worker);
         if(this.state.getCurrentState().compareTo("Available")==0 || this.state.getCurrentState().compareTo("Ongoing")==0 ){
+            //Job Threadvariaveis todas a 0/null;
+           // Thread t=new Thread(jobThread);
+           // System.out.println("starting THREAD");
+           // t.start();
             worker.setOperation(filePath);
         }
     }
 
     public String getFilePath() {
         return filePath;
+    }
+
+    public Integer getTotalShares() {
+        return totalShares;
+    }
+
+    public void setTotalShares(Integer totalShares) {
+        this.totalShares = totalShares;
     }
 
     @Override

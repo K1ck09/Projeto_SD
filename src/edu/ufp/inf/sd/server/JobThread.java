@@ -14,15 +14,35 @@ public class JobThread extends JobGroupImpl implements Runnable {
 
     @Override
     public void run() {
-        Collection<WorkerRI> workers= jobWorkers.values();
+        Collection<WorkerRI> workers= null;
+        try {
+            workers = this.getJobWorkers().values();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+        System.out.println(jobWorkers.values());
         for(WorkerRI w : workers){
             try {
+                System.out.println(w.getOwner()+"-"+w.getId());
                 if(w.getState().getCurrentState().compareTo("Available")==0){
-                    w.setOperation(this.getFilePath());
+                    w.setOperation(this.getFilePath(),this);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    void changeWorkerState(int bestMakeSpan){
+
+    }
+
+    void notifyAllWorkers(){
+
+    }
+
+    public void updateTotalShares(){
+        int newTotal= this.getTotalShares()+1;
+        this.setTotalShares(newTotal);
     }
 }

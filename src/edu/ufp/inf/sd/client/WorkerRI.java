@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobGroupRI;
+import edu.ufp.inf.sd.server.JobThread;
 import edu.ufp.inf.sd.server.State;
 
 import java.io.IOException;
@@ -8,7 +9,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface WorkerRI extends Remote {
-    void setOperation(String filename) throws RemoteException, IOException;
+    void setOperation(String filename, JobThread jobThread) throws RemoteException, IOException;
     void updateMakeSpan(int makespan) throws RemoteException, IOException;
     public int getBestMakespan()throws RemoteException;
     public int getTotalShares()throws RemoteException;
@@ -22,4 +23,5 @@ public interface WorkerRI extends Remote {
     public String getJobGroupName()throws RemoteException;
     public JobShopClient getClient()throws RemoteException;
     public int getTotalRewarded()throws RemoteException;
+    void setOperation(String filePath) throws RemoteException, IOException;
 }
