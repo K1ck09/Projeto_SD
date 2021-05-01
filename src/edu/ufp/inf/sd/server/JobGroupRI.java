@@ -17,11 +17,11 @@ public interface JobGroupRI extends Remote {
 
     Integer getWorkersSize()throws RemoteException;
     String getState() throws RemoteException;
-    void attachWorker(WorkerRI worker) throws RemoteException;
+    void attachWorker(WorkerRI worker) throws RemoteException, IOException;
     public Map<Integer, WorkerRI> getJobWorkers()throws RemoteException;
     String getWorkload()throws RemoteException;
     String getSharesPerWorker() throws RemoteException;
 
     void uploadFile(byte[] mydata) throws RemoteException, IOException;
-    byte[] downloadFileFromServer(String serverpath) throws RemoteException;
+    byte[] downloadFileFromServer(String serverpath) throws RemoteException, IOException;
 }

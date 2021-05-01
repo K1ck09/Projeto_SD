@@ -130,8 +130,8 @@ public class JobController {
         int num = Integer.parseInt(workersNum.getText());
         if(num>0){
             for (int i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1, jobGroupRI.getJobOwner(),new State(),jobGroupRI.getJobName());
-                System.out.println(worker.getId());
+                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1, jobGroupRI.getJobOwner(),new State(),jobGroupRI.getJobName(),this);
+                System.out.println(worker);
                 jobGroupRI.attachWorker(worker);
             }
         }else{
@@ -144,9 +144,10 @@ public class JobController {
         workersNum.clear();
         updateJobWorkers();
         insertWorkersInTable();
+
     }
 
-    private void updateJobWorkers() throws RemoteException {
+    private void updateJobWorkers() throws RemoteException,IOException {
         workersMap=client.userSessionRI.getWorkersMap(jobGroupRI.getJobName());
     }
 
@@ -196,6 +197,11 @@ public class JobController {
         for (WorkerRI worker : workers) {
             System.out.println(worker.getOwner());
         }
+    }
+
+    public void update() throws IOException {
+        updateJobWorkers();
+        insertWorkersInTable();
     }
 }
 

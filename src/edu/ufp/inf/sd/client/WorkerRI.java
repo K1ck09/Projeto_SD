@@ -3,12 +3,13 @@ package edu.ufp.inf.sd.client;
 import edu.ufp.inf.sd.server.JobGroupRI;
 import edu.ufp.inf.sd.server.State;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface WorkerRI extends Remote {
-    void setOperation(JobGroupRI job,String filename) throws RemoteException;
-    void updateMakeSpan(int makespan) throws RemoteException;
+    void setOperation(JobGroupRI job,String filename) throws RemoteException, IOException;
+    void updateMakeSpan(int makespan) throws RemoteException, IOException;
 
     void resumeWorker() throws RemoteException;
     void pauseWorker() throws RemoteException;

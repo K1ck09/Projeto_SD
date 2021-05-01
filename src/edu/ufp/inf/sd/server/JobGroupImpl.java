@@ -37,7 +37,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
 
     @Override
-    public void attachWorker(WorkerRI worker) throws RemoteException {
+    public void attachWorker(WorkerRI worker) throws RemoteException,IOException {
         jobWorkers.put(worker.getId(),worker);
         if(this.state.getCurrentState().compareTo("Available")==0 || this.state.getCurrentState().compareTo("Ongoing")==0 ){
             worker.setOperation(this,filePath);
@@ -54,35 +54,22 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
         //creates a file ||
         //               vv
-       /* FileOutputStream out = new FileOutputStream(file);
+        FileOutputStream out = new FileOutputStream(file);
         out.write(mydata);
         out.flush();
-        out.close();*/
+        out.close();
     }
 
     @Override
-    public byte[] downloadFileFromServer(String serverpath) throws RemoteException {
+    public byte[] downloadFileFromServer(String serverpath) throws RemoteException,IOException {
         byte[] mydata;
 
         File serverpathfile = new File(serverpath);
         mydata = new byte[(int) serverpathfile.length()];
         FileInputStream in;
-        try {
-            in = new FileInputStream(serverpathfile);
-            try {
-                in.read(mydata, 0, mydata.length);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                in.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
+        in = new FileInputStream(serverpathfile);
+        in.read(mydata, 0, mydata.length);
+        in.close();
         return mydata;
     }
 

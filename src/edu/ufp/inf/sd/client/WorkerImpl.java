@@ -6,7 +6,7 @@ import edu.ufp.inf.sd.server.State;
 import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     Integer id;
@@ -19,65 +19,59 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private int currentMakespan;
     private int totalRewarded=0;
     private JobGroupRI JobGroupRI;
-    private ArrayList<Thread> threads = new ArrayList<>();
+    private Operations op;
     private static final String PATH_FILE="C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\client\\temp\\";
     private File file;
+    private JobController controller;
 
-    protected WorkerImpl( JobShopClient client,Integer id,String jobOwner, State state,String jobGroupName) throws RemoteException {
+    protected WorkerImpl( JobShopClient client,Integer id,String jobOwner, State state,String jobGroupName,JobController controller) throws RemoteException {
         this.id=id;
         this.owner=jobOwner;
         this.client=client;
         this.state=state;
         this.jobGroupName = jobGroupName;
+        this.JobGroupRI=client.userSessionRI.getJobList().get(jobGroupName);
+        this.controller=controller;
     }
 
     @Override
-    public void setOperation(JobGroupRI job,String filepath) throws RemoteException {
+    public void setOperation(JobGroupRI job,String filepath) throws RemoteException,IOException {
         downloadFile(job,filepath);
-        Operations op= new Operations(filepath,this);
+        op= new Operations(file.getAbsolutePath(),this);
+        this.state.setCurrentState("Ongoing");
+        Thread t=new Thread(op);
+        t.start();
         //criar threads - usar thread pool? ou criar threads a medida que é chamado?
         //verificar se já há ciclo na criação
 
     }
 
     @Override
-    public void updateMakeSpan(int makespan) throws RemoteException {
-        this.currentMakespan=makespan;
-        if(this.bestMakespan>this.currentMakespan){
-            this. bestMakespan=this.currentMakespan;
-        }
-        if(this.totalShares<Integer.parseInt(this.JobGroupRI.getSharesPerWorker())){
-            this.totalShares++;
-        }else{
-            //finish Share - Call method in Job
-        }
+    public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
+            this.currentMakespan=makespan;
+            if(this.bestMakespan>this.currentMakespan){
+                this. bestMakespan=this.currentMakespan;
+            }
+            if(this.totalShares<=Integer.parseInt(this.JobGroupRI.getSharesPerWorker())){
+                System.out.println(currentMakespan+"-"+bestMakespan+"-"+totalShares);
+                controller.update();
+                this.totalShares++;
+                Thread t=new Thread(op);
+                t.start();
+            }else{
+                this.state.setCurrentState("Completed");
+                //finish Share - Call method in Job
+            }
     }
 
 
-    private void downloadFile(JobGroupRI job, String filepath) throws RemoteException {
+    private void downloadFile(JobGroupRI job, String filepath) throws RemoteException,IOException {
         byte [] data = job.downloadFileFromServer(filepath);
-        this.file=new File(PATH_FILE);
-        FileOutputStream out= null;
-        try {
-            out = new FileOutputStream(this.file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            out.write(data);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            out.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.file=new File(PATH_FILE+this.id+"_"+owner+"_"+jobGroupName);
+        FileOutputStream out = new FileOutputStream(this.file);
+        out.write(data);
+        out.flush();
+        out.close();
     }
 
     @Override
