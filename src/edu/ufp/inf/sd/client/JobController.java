@@ -139,7 +139,6 @@ public class JobController {
             infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
             infoMessage.setText("Number of workers can't be 0!");
         }
-        // é rpeciso dar sinal ao job que já tem workers
         infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
         infoMessage.setText("Workers were attached to job successfully!");
         workersNum.clear();

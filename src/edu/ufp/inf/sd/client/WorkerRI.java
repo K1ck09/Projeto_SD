@@ -1,13 +1,15 @@
 package edu.ufp.inf.sd.client;
 
-import edu.ufp.inf.sd.server.Operations;
+import edu.ufp.inf.sd.server.JobGroupRI;
 import edu.ufp.inf.sd.server.State;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface WorkerRI extends Remote {
-    void setOperation(Operations operation) throws RemoteException;
+    void setOperation(JobGroupRI job,String filename) throws RemoteException;
+    void updateMakeSpan(int makespan) throws RemoteException;
+
     void resumeWorker() throws RemoteException;
     void pauseWorker() throws RemoteException;
     void deleteWorker() throws RemoteException;
