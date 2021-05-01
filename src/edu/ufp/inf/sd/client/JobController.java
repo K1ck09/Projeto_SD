@@ -80,45 +80,84 @@ public class JobController {
     }
 
     private void insertWorkersInTable() throws IOException {
-        table.getChildren().clear();
-        printHashMap(workersMap);
-        Collection<WorkerRI> workerList = workersMap.values();
-        for(WorkerRI worker:workerList){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableWorker.fxml"));
-            Parent menuParent = loader.load();
-            ItemWorkerController controller = loader.getController();
-            controller.setJobController(this);
-            Node node = loader.getRoot();
-            if (node instanceof AnchorPane) {
-                AnchorPane anchor = (AnchorPane) node;
-                ObservableList<Node> anchorIn = anchor.getChildren();
-                for (Node anchorNode : anchorIn)
-                    if (anchorNode instanceof HBox) {
-                        HBox hbox = (HBox) anchorNode;
-                        ObservableList<Node> nodeIn = hbox.getChildren();
-                        for (Node label : nodeIn)
-                            if (label instanceof Label) {
-                                String id = label.getId();
-                                if (id != null && id.compareTo("tableWorkerID") == 0) {
-                                    ((Label) label).setText(String.valueOf(worker.getId()));
-                                } else if (id != null && id.compareTo("tableWorkerState") == 0) {
-                                    ((Label) label).setText(worker.getState().getCurrentState());
-                                } else if (id != null && id.compareTo("tableWorkerOwner") == 0) {
-                                    ((Label) label).setText(worker.getOwner());
-                                }else if (id != null && id.compareTo("tableRewarded") == 0) {
-                                    ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
-                                }else if (id != null && id.compareTo("tableLastMakeSpan") == 0) {
-                                    ((Label) label).setText("-");
-                                }else if (id != null && id.compareTo("tableTimesSubmitted") == 0) {
-                                    ((Label) label).setText("-");
-                                }else if (id != null && id.compareTo("tableBestMakeSpan") == 0) {
-                                    ((Label) label).setText("-");
-                                }
-                            }
-                    }
+        Platform.runLater(()->{
+            //modify your javafx app here.
+            table.getChildren().clear();
+            try {
+                printHashMap(workersMap);
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
-            table.getChildren().add(node);
-        }
+            Collection<WorkerRI> workerList = workersMap.values();
+            for(WorkerRI worker:workerList){
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableWorker.fxml"));
+                try {
+                    Parent menuParent = loader.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ItemWorkerController controller = loader.getController();
+                controller.setJobController(this);
+                Node node = loader.getRoot();
+                if (node instanceof AnchorPane) {
+                    AnchorPane anchor = (AnchorPane) node;
+                    ObservableList<Node> anchorIn = anchor.getChildren();
+                    for (Node anchorNode : anchorIn)
+                        if (anchorNode instanceof HBox) {
+                            HBox hbox = (HBox) anchorNode;
+                            ObservableList<Node> nodeIn = hbox.getChildren();
+                            for (Node label : nodeIn)
+                                if (label instanceof Label) {
+                                    String id = label.getId();
+                                    if (id != null && id.compareTo("tableWorkerID") == 0) {
+                                        try {
+                                            ((Label) label).setText(String.valueOf(worker.getId()));
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else if (id != null && id.compareTo("tableWorkerState") == 0) {
+                                        try {
+                                            ((Label) label).setText(worker.getState().getCurrentState());
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    } else if (id != null && id.compareTo("tableWorkerOwner") == 0) {
+                                        try {
+                                            ((Label) label).setText(worker.getOwner());
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }else if (id != null && id.compareTo("tableRewarded") == 0) {
+                                        try {
+                                            ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }else if (id != null && id.compareTo("tableLastMakeSpan") == 0) {
+                                        try {
+                                            ((Label) label).setText(String.valueOf(worker.getCurrentMakespan()));
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }else if (id != null && id.compareTo("tableTimesSubmitted") == 0) {
+                                        try {
+                                            ((Label) label).setText(String.valueOf(worker.getTotalShares()));
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }else if (id != null && id.compareTo("tableBestMakeSpan") == 0) {
+                                        try {
+                                            ((Label) label).setText(String.valueOf(worker.getBestMakespan()));
+                                        } catch (RemoteException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                        }
+                }
+                table.getChildren().add(node);
+            }
+        });
     }
 
     public void handlerExit(MouseEvent mouseEvent) {

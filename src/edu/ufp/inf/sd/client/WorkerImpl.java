@@ -52,7 +52,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             if(this.bestMakespan>this.currentMakespan){
                 this. bestMakespan=this.currentMakespan;
             }
-            if(this.totalShares<=Integer.parseInt(this.JobGroupRI.getSharesPerWorker())){
+            if(this.totalShares<Integer.parseInt(this.JobGroupRI.getSharesPerWorker())){
                 System.out.println(currentMakespan+"-"+bestMakespan+"-"+totalShares);
                 controller.update();
                 this.totalShares++;
@@ -72,6 +72,18 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         out.write(data);
         out.flush();
         out.close();
+    }
+
+    public int getCurrentMakespan()throws RemoteException {
+        return currentMakespan;
+    }
+
+    public int getBestMakespan() throws RemoteException{
+        return bestMakespan;
+    }
+
+    public int getTotalShares() throws RemoteException{
+        return totalShares;
     }
 
     @Override

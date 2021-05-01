@@ -10,7 +10,9 @@ import java.rmi.RemoteException;
 public interface WorkerRI extends Remote {
     void setOperation(JobGroupRI job,String filename) throws RemoteException, IOException;
     void updateMakeSpan(int makespan) throws RemoteException, IOException;
-
+    public int getBestMakespan()throws RemoteException;
+    public int getTotalShares()throws RemoteException;
+    public int getCurrentMakespan()throws RemoteException;
     void resumeWorker() throws RemoteException;
     void pauseWorker() throws RemoteException;
     void deleteWorker() throws RemoteException;
