@@ -35,15 +35,22 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         this.sharesPerWorker = sharesPerWorker;
     }
 
+    public JobGroupImpl() throws RemoteException {
+        super();
+    }
+
 
     @Override
     public void attachWorker(WorkerRI worker) throws RemoteException,IOException {
         jobWorkers.put(worker.getId(),worker);
         if(this.state.getCurrentState().compareTo("Available")==0 || this.state.getCurrentState().compareTo("Ongoing")==0 ){
-            worker.setOperation(this,filePath);
+            worker.setOperation(filePath);
         }
     }
 
+    public String getFilePath() {
+        return filePath;
+    }
 
     @Override
     public void uploadFile(byte[] mydata) throws IOException {

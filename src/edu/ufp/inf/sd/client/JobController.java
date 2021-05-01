@@ -81,7 +81,6 @@ public class JobController {
 
     private void insertWorkersInTable() throws IOException {
         Platform.runLater(()->{
-            //modify your javafx app here.
             table.getChildren().clear();
             try {
                 printHashMap(workersMap);
@@ -141,7 +140,7 @@ public class JobController {
                                         }
                                     }else if (id != null && id.compareTo("tableTimesSubmitted") == 0) {
                                         try {
-                                            ((Label) label).setText(String.valueOf(worker.getTotalShares()));
+                                            ((Label) label).setText(worker.getTotalShares()+"/"+jobGroupRI.getSharesPerWorker());
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
@@ -186,7 +185,7 @@ public class JobController {
 
     }
 
-    private void updateJobWorkers() throws RemoteException,IOException {
+    private void updateJobWorkers() throws IOException {
         workersMap=client.userSessionRI.getWorkersMap(jobGroupRI.getJobName());
     }
 

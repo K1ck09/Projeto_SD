@@ -35,8 +35,8 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public void setOperation(JobGroupRI job,String filepath) throws RemoteException,IOException {
-        downloadFile(job,filepath);
+    public void setOperation(String filepath) throws RemoteException,IOException {
+        downloadFile(filepath);
         op= new Operations(file.getAbsolutePath(),this);
         this.state.setCurrentState("Ongoing");
         Thread t=new Thread(op);
@@ -65,8 +65,8 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
 
-    private void downloadFile(JobGroupRI job, String filepath) throws RemoteException,IOException {
-        byte [] data = job.downloadFileFromServer(filepath);
+    private void downloadFile( String filepath) throws RemoteException,IOException {
+        byte [] data = JobGroupRI.downloadFileFromServer(filepath);
         this.file=new File(PATH_FILE+this.id+"_"+owner+"_"+jobGroupName);
         FileOutputStream out = new FileOutputStream(this.file);
         out.write(data);

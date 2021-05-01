@@ -159,6 +159,7 @@ public class MenuController extends LoadGUIClient {
                             JobGroupRI currentJob= jobGroups.get(item.get("job"));
                             if(currentJob!=null) {
                                 uploadFileToJob(currentJob);
+                                // decidir se tira o dinheiro so no fim ou no inicio e depois devolve se não encontrar nada
                                 int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
                                 client.userSessionRI.setCredits(newBalance);
                                 menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
@@ -277,7 +278,7 @@ public class MenuController extends LoadGUIClient {
                                 } else if (id != null && id.compareTo("tableState") == 0) {
                                     ((Label) label).setText(job.getState());
                                 } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
-                                    ((Label) label).setText(job.getWorkload());
+                                    ((Label) label).setText("0/"+job.getWorkload());
                                 } else if (id != null && id.compareTo("tableSharesPerWorker") == 0) {
                                     ((Label) label).setText(job.getSharesPerWorker());
                                 }

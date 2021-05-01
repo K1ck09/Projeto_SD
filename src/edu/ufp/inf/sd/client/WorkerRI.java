@@ -8,7 +8,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface WorkerRI extends Remote {
-    void setOperation(JobGroupRI job,String filename) throws RemoteException, IOException;
+    void setOperation(String filename) throws RemoteException, IOException;
     void updateMakeSpan(int makespan) throws RemoteException, IOException;
     public int getBestMakespan()throws RemoteException;
     public int getTotalShares()throws RemoteException;
