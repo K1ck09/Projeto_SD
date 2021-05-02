@@ -1,8 +1,6 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobGroupRI;
-import edu.ufp.inf.sd.server.JobShopRI;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -21,7 +19,6 @@ import javafx.stage.FileChooser;
 
 import java.io.*;
 import java.rmi.RemoteException;
-import java.sql.SQLOutput;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;

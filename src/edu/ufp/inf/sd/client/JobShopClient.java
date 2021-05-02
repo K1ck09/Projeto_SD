@@ -1,6 +1,5 @@
 package edu.ufp.inf.sd.client;
 
-import edu.ufp.inf.sd.server.JobShopRI;
 import edu.ufp.inf.sd.server.UserFactoryRI;
 import edu.ufp.inf.sd.server.UserSessionRI;
 import edu.ufp.inf.sd.util.rmisetup.SetupContextRMI;
