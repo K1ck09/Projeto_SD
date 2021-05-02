@@ -54,7 +54,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     @Override
     public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
             this.currentMakespan=makespan;
-            System.out.println("["+id+"] -> "+currentMakespan);
+            //System.out.println("["+id+"] -> "+currentMakespan);
             if(this.bestMakespan>this.currentMakespan){
                 this. bestMakespan=this.currentMakespan;
             }
