@@ -168,7 +168,7 @@ public class JobController {
         int num = Integer.parseInt(workersNum.getText());
         if(num>0){
             for (int i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1, jobGroupRI.getJobOwner(),new State(),jobGroupRI.getJobName(),this);
+                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1, jobGroupRI.getJobOwner(),new State("Available",String.valueOf(jobGroupRI.getWorkersSize()+1)),jobGroupRI.getJobName(),this);
                 System.out.println(worker);
                 jobGroupRI.attachWorker(worker);
             }
