@@ -53,6 +53,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 bestCombination.add(worker);
             }
         }
+        System.out.println(bestCombination.get(0).getBestMakespan());
     }
 
     @Override

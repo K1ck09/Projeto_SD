@@ -18,7 +18,7 @@ public class Operations implements Runnable {
     public void run() {
         try {
             worker.updateMakeSpan(ts.run());
-            Thread.sleep(2000);
+            Thread.sleep(1500);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
