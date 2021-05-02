@@ -20,7 +20,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.rmi.ConnectException;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -82,11 +81,11 @@ public class JobController {
     private void insertWorkersInTable() throws IOException {
         Platform.runLater(()->{
             table.getChildren().clear();
-            try {
+/*            try {
                 printHashMap(workersMap);
             } catch (RemoteException e) {
                 e.printStackTrace();
-            }
+            }*/
             Collection<WorkerRI> workerList = workersMap.values();
             for(WorkerRI worker:workerList){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableWorker.fxml"));
@@ -169,7 +168,7 @@ public class JobController {
         if(num>0){
             for (int i = 0; i < num; i++) {
                 WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1, jobGroupRI.getJobOwner(),new State("Available",String.valueOf(jobGroupRI.getWorkersSize()+1)),jobGroupRI.getJobName(),this);
-                System.out.println(worker);
+                //System.out.println(worker);
                 jobGroupRI.attachWorker(worker);
             }
         }else{
