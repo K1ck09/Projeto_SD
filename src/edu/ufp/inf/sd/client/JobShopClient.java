@@ -38,8 +38,6 @@ public class JobShopClient {
 
     public UserSessionRI userSessionRI;
 
-    private JobShopRI jobShopRI;
-
 
     public JobShopClient() {
         try {

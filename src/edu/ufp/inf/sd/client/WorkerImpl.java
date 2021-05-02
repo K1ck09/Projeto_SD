@@ -61,7 +61,8 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                 System.out.println(currentMakespan+"-"+bestMakespan+"-"+totalShares);
                 controller.update();
                 this.totalShares++;
-                //jobThread.updateTotalShares();
+                this.state.setCurrentState("StandBy");
+                JobGroupRI.updateTotalShares(totalShares,this);
                 Thread t=new Thread(op);
                 t.start();
             }else{

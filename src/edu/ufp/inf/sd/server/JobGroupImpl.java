@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.Operations;
+import edu.ufp.inf.sd.client.WorkerImpl;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.io.*;
@@ -22,7 +23,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private File file;
     private String filePath;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
-    ArrayList<Operations> jobOperations = new ArrayList<>();
+    ArrayList<WorkerRI> bestCombination = new ArrayList<>();
    // private JobThread jobThread;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
@@ -42,6 +43,18 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         super();
     }
 
+    @Override
+    public void updateTotalShares(int totalShares, WorkerRI worker) throws RemoteException {
+        if(bestCombination.isEmpty()){
+            bestCombination.add(worker);
+        }else{
+            if(bestCombination.get(0).getBestMakespan()>worker.getBestMakespan()){
+                bestCombination.remove(0);
+                bestCombination.add(worker);
+            }
+        }
+        System.out.println(bestCombination.get(0).getBestMakespan());
+    }
 
     @Override
     public void attachWorker(WorkerRI worker) throws RemoteException,IOException {
