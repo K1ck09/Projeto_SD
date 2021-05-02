@@ -57,16 +57,9 @@ public class JobController {
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
 
     public void init( JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
-        jobName.setText(jobGroupRI.getJobName());
-        jobOwner.setText(jobGroupRI.getJobOwner());
-        jobStrat.setText(jobGroupRI.getJobStrat());
-        jobReward.setText(jobGroupRI.getJobReward());
-        jobWorkers.setText(String.valueOf(jobGroupRI.getWorkersSize()));
-        jobState.setText(jobGroupRI.getState());
-        jobWorkload.setText(jobGroupRI.getWorkload());
-        jobSharesPerWorker.setText(jobGroupRI.getSharesPerWorker());
         this.client = client;
         this.jobGroupRI = jobGroupRI;
+        updateJobItem();
         if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnsJob.setVisible(true);
         }
@@ -76,6 +69,17 @@ public class JobController {
         if (!workersMap.isEmpty()) {
             insertWorkersInTable();
         }
+    }
+
+    private void updateJobItem() throws RemoteException {
+        jobName.setText(jobGroupRI.getJobName());
+        jobOwner.setText(jobGroupRI.getJobOwner());
+        jobStrat.setText(jobGroupRI.getJobStrat());
+        jobReward.setText(jobGroupRI.getJobReward());
+        jobWorkers.setText(String.valueOf(jobGroupRI.getWorkersSize()));
+        jobState.setText(jobGroupRI.getState());
+        jobWorkload.setText(jobGroupRI.getWorkload());
+        jobSharesPerWorker.setText(jobGroupRI.getSharesPerWorker());
     }
 
     private void insertWorkersInTable() throws IOException {
@@ -181,7 +185,7 @@ public class JobController {
         workersNum.clear();
         updateJobWorkers();
         insertWorkersInTable();
-
+        updateJobItem();
     }
 
     private void updateJobWorkers() throws IOException {
