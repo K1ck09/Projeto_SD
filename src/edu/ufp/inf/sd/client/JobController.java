@@ -58,6 +58,21 @@ public class JobController {
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
 
     public void init( JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
+        this.client = client;
+        this.jobGroupRI = jobGroupRI;
+        updateJobItem();
+        if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
+            btnsJob.setVisible(true);
+        }else
+        menuCredits.setText(this.client.userSessionRI.getCredits());
+        menuUsername.setText(this.client.userSessionRI.getUsername());
+        workersMap = jobGroupRI.getJobWorkers();
+        if (!workersMap.isEmpty()) {
+            insertWorkersInTable();
+        }
+    }
+
+    private void updateJobItem() throws RemoteException {
         jobName.setText(jobGroupRI.getJobName());
         jobOwner.setText(jobGroupRI.getJobOwner());
         jobStrat.setText(jobGroupRI.getJobStrat());
@@ -66,17 +81,6 @@ public class JobController {
         jobState.setText(jobGroupRI.getState());
         jobWorkload.setText(jobGroupRI.getWorkload());
         jobSharesPerWorker.setText(jobGroupRI.getSharesPerWorker());
-        this.client = client;
-        this.jobGroupRI = jobGroupRI;
-        if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
-            btnsJob.setVisible(true);
-        }
-        menuCredits.setText(this.client.userSessionRI.getCredits());
-        menuUsername.setText(this.client.userSessionRI.getUsername());
-        workersMap = jobGroupRI.getJobWorkers();
-        if (!workersMap.isEmpty()) {
-            insertWorkersInTable();
-        }
     }
 
     private void insertWorkersInTable() throws IOException {
@@ -223,6 +227,8 @@ public class JobController {
     public void showWorkerbuttons(int workerID) throws RemoteException {
         if(jobGroupRI.getJobWorkers().get(workerID).getOwner().compareTo(client.userSessionRI.getUsername())==0){
             btnsWorkers.setVisible(true);
+        }else {
+            btnsWorkers.setVisible(false);
         }
     }
 
