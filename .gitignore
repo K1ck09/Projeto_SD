@@ -1,4 +1,4 @@
-/setenv.bat
-out/**
-src/edu/ufp/inf/sd/server/files/**
-src/edu/ufp/inf/sd/client/temp/**
+src/edu/ufp/inf/sd/runscripts_rmi/setenv.bat
+out/
+src/edu/ufp/inf/sd/server/files/
+src/edu/ufp/inf/sd/client/temp/
