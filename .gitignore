@@ -1,2 +1,4 @@
 src/edu/ufp/inf/sd/rmi/projeto/runscripts/setenv.bat
 out/
+src\edu\ufp\inf\sd\server\files/
+src\edu\ufp\inf\sd\client\temp/
