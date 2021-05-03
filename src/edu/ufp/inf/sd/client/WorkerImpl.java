@@ -39,7 +39,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     @Override
     public void setOperation(String filepath, JobThread jobThread) throws RemoteException,IOException {
         this.jobThread=jobThread;
-        // Usar quando implemntar JobThread
+        // Usar quando implemntar JobThead
     }
 
     @Override
@@ -69,27 +69,13 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     @Override
     public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
             this.currentMakespan=makespan;
-            System.out.println("["+id+"] -> "+currentMakespan);
+            //System.out.println("["+id+"] -> "+currentMakespan);
             if(this.bestMakespan>this.currentMakespan){
                 this. bestMakespan=this.currentMakespan;
             }
             this.state.setCurrentState("StandBy");
-            //this.totalShares++;
             controller.update();
             JobGroupRI.updateTotalShares(totalShares,this);
-            /*if(this.totalShares<Integer.parseInt(this.JobGroupRI.getSharesPerWorker())){
-                //System.out.println(currentMakespan+"-"+bestMakespan+"-"+totalShares);
-                controller.update();
-                this.totalShares++;
-                this.state.setCurrentState("Ongoing");
-                JobGroupRI.updateTotalShares(totalShares,this);
-                Thread t=new Thread(op);
-                t.start();
-            }else{
-                this.state.setCurrentState("StandBy");
-                controller.update();
-                //finish Share - Call method in Job
-            }*/
     }
 
 

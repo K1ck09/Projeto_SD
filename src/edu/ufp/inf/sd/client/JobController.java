@@ -209,19 +209,24 @@ public class JobController {
             for (int i = 0; i < num; i++) {
                 WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1,client.userSessionRI.getUser(), new State("Available",String.valueOf(jobGroupRI.getWorkersSize()+1)),jobGroupRI.getJobName(),this);
                 //System.out.println(worker);
-                jobGroupRI.attachWorker(worker);
+                if(jobGroupRI.attachWorker(worker)){
+                    infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
+                    infoMessage.setText("Workers were attached to job successfully!");
+                    workersNum.clear();
+                    updateJobWorkers();
+                    insertWorkersInTable();
+                    updateJobItem();
+                }else {
+                    workersNum.clear();
+                    infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                    infoMessage.setText("Not possible to attach worker!");
+                }
             }
         }else{
             workersNum.clear();
             infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
             infoMessage.setText("Number of workers can't be 0!");
         }
-        infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
-        infoMessage.setText("Workers were attached to job successfully!");
-        workersNum.clear();
-        updateJobWorkers();
-        insertWorkersInTable();
-        updateJobItem();
     }
 
     private void updateJobWorkers() throws IOException {
@@ -280,7 +285,6 @@ public class JobController {
         updateJobItem();
         updateJobWorkers();
         insertWorkersInTable();
-        //printHashMap(workersMap);
     }
 }
 

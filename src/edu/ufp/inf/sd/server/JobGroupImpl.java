@@ -53,17 +53,14 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 bestCombination.add(worker);
             }
         }
-        //System.out.println(bestCombination.get(0).getBestMakespan());
-        System.out.println("["+worker.getId()+"] -> "+worker.getTotalShares());
-        System.out.println("Shares - "+this.totalShares+" Workload - "+workLoad);
+        //System.out.println("["+worker.getId()+"] -> "+worker.getTotalShares());
+        //System.out.println("Shares - "+this.totalShares+" Workload - "+workLoad);
         if(this.totalShares<Integer.parseInt(this.workLoad) && worker.getState().getCurrentState().compareTo("StandBy")==0){
             this.totalShares++;
             worker.setTotalShares(worker.getTotalShares()+1);
             worker.setOperation();
         }else{
-        //if(this.totalShares==Integer.parseInt(this.workLoad)){
             this.state.setCurrentState("Finished");
-            //jobController.updateJobItem();
             notifyAllWorkers();
         }
     }
@@ -74,27 +71,21 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         }
     }
 
-    private void giveWork() throws RemoteException,IOException {
-        for(WorkerRI w :jobWorkers.values()){
-            if(w.getState().getCurrentState().compareTo("StandBy")==0){
-                w.setOperation(this.filePath);
-            }
-        }
-    }
-
     @Override
-    public void attachWorker(WorkerRI worker) throws RemoteException,IOException {
+    public boolean attachWorker(WorkerRI worker) throws RemoteException,IOException {
         if(jobWorkers.size()==0){
             this.state.setCurrentState("OnGoing");
         }
-        jobWorkers.put(worker.getId(),worker);
         if(this.state.getCurrentState().compareTo("Available")==0 || this.state.getCurrentState().compareTo("OnGoing")==0 ){
+            jobWorkers.put(worker.getId(),worker);
             //Job Threadvariaveis todas a 0/null;
            // Thread t=new Thread(jobThread);
            // System.out.println("starting THREAD");
            // t.start();
             worker.setOperation(filePath);
+            return true;
         }
+        return false;
     }
 
     public String getFilePath() {
