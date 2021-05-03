@@ -60,7 +60,7 @@
                    style="-fx-background-color: transparent;" text="Shares Limit" textAlignment="CENTER"
                    textFill="WHITE"/>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="102.0"
-                   style="-fx-background-color: transparent;" text="Shares Per Worker" textAlignment="CENTER"
+                   style="-fx-background-color: transparent;" text="Best Result" textAlignment="CENTER"
                    textFill="WHITE"/>
         </children>
     </HBox>
@@ -81,8 +81,8 @@
                    style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER"/>
             <Label fx:id="jobWorkload" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="100.0"
                    style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER"/>
-            <Label fx:id="jobSharesPerWorker" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0"
-                   prefWidth="102.0" style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER"/>
+            <Label fx:id="jobBestResult" alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" prefWidth="102.0"
+                   style="-fx-background-color: transparent;" text="Label" textAlignment="CENTER"/>
         </children>
     </HBox>
     <HBox id="workerInfo" alignment="CENTER_LEFT" layoutX="14.0" layoutY="136.0" prefHeight="31.0" prefWidth="731.0"

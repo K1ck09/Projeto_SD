@@ -20,6 +20,8 @@ public interface JobGroupRI extends Remote {
     public Map<Integer, WorkerRI> getJobWorkers()throws RemoteException;
     String getWorkload()throws RemoteException;
 
+    String getBestResut() throws RemoteException;
+
     Integer getTotalShares() throws RemoteException;
 
     void uploadFile(byte[] mydata) throws RemoteException, IOException;

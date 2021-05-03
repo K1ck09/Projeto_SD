@@ -273,6 +273,8 @@ public class MenuController extends LoadGUIClient {
                                     ((Label) label).setText(job.getState());
                                 } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
                                     ((Label) label).setText(job.getTotalShares()+"/"+job.getWorkload());
+                                }else if (id != null && id.compareTo("tableBestResult") == 0) {
+                                    ((Label) label).setText(job.getBestResut());
                                 }
                             }
                     }

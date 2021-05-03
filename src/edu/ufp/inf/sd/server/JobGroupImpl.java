@@ -92,7 +92,13 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     public void setTotalShares(Integer totalShares) {
         this.totalShares = totalShares;
     }
-
+    @Override
+    public String getBestResut() throws RemoteException {
+        if(bestCombination.size()!=0){
+            return String.valueOf(bestCombination.get(0).getBestMakespan());
+        }
+        return "-";
+    }
     @Override
     public Integer getTotalShares() throws RemoteException{
         return totalShares;

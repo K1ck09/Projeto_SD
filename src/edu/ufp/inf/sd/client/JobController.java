@@ -46,12 +46,12 @@ public class JobController {
     public Button btnJobDelete;
     public VBox table;
     public Label jobWorkload;
-    public Label jobSharesPerWorker;
     public Label menuJobLabel;
     public Label menuWorkerLabel;
     public VBox btnsJob;
     public Label infoMessage;
     public VBox btnsWorkers;
+    public Label jobBestResult;
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
@@ -106,6 +106,11 @@ public class JobController {
                     }
                     try {
                         jobWorkload.setText(jobGroupRI.getWorkload());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobBestResult.setText(jobGroupRI.getBestResut());
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
