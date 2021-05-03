@@ -41,7 +41,7 @@ public class JobThread extends JobGroupImpl implements Runnable {
 
     }
 
-    public void updateTotalShares(){
+    public void updateTotalShares() throws RemoteException {
         int newTotal= this.getTotalShares()+1;
         this.setTotalShares(newTotal);
     }

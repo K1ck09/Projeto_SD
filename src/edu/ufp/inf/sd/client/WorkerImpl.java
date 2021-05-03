@@ -65,7 +65,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         t.start();
     }
 
-
     @Override
     public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
             this.currentMakespan=makespan;
@@ -77,7 +76,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             controller.update();
             JobGroupRI.updateTotalShares(totalShares,this);
     }
-
 
     private void downloadFile( String filepath) throws RemoteException,IOException {
         byte [] data = JobGroupRI.downloadFileFromServer(filepath);
@@ -91,25 +89,23 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public int getCurrentMakespan()throws RemoteException {
         return currentMakespan;
     }
-
     public int getBestMakespan() throws RemoteException{
         return bestMakespan;
     }
-
     public int getTotalShares() throws RemoteException{
         return totalShares;
     }
-
+    public void setTotalShares(int totalShares)throws RemoteException {
+        this.totalShares = totalShares;
+    }
     @Override
     public void resumeWorker() throws RemoteException{
 
     }
-
     @Override
     public void pauseWorker() throws RemoteException{
 
     }
-
     @Override
     public void deleteWorker() throws RemoteException{
 
@@ -122,7 +118,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public State getState() throws RemoteException{
         return state;
     }
-
     @Override
     public User getOwner() {
         return owner;
@@ -138,9 +133,5 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     @Override
     public int getTotalRewarded() {
         return totalRewarded;
-    }
-
-    public void setTotalShares(int totalShares)throws RemoteException {
-        this.totalShares = totalShares;
     }
 }

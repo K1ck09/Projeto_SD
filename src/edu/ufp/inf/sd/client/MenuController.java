@@ -44,8 +44,7 @@ public class MenuController extends LoadGUIClient {
     public Label displayFinishJobsUser;
     public Label displayPausedJobsUser;
     public Label displayOnGoingJobsUser;
-    public TextField createSharesPerWorker;
-    public Slider createTotalWorkload;
+    public TextField createTotalWorkload;
     public Button btnFile;
     File file;
 
@@ -144,7 +143,7 @@ public class MenuController extends LoadGUIClient {
 
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
         if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
-            if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createSharesPerWorker.getText())) {
+            if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createTotalWorkload.getText())) {
                 int inputReward = Integer.parseInt(createJobReward.getText());
                 int clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
                 if (inputReward <= clientCredits && inputReward > 0) {
@@ -198,8 +197,7 @@ public class MenuController extends LoadGUIClient {
     private void clearSelectionAndVariables() {
         createJobReward.clear();
         createJobName.clear();
-        createSharesPerWorker.clear();
-        createTotalWorkload.adjustValue(5);
+        createTotalWorkload.clear();
         createJobStrategy.getSelectionModel().clearAndSelect(0);
         btnFile.setText("Choose File");
         item.clear();
@@ -210,8 +208,7 @@ public class MenuController extends LoadGUIClient {
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
         item.put("state", "Ongoing");
-        item.put("load",String.valueOf((int) createTotalWorkload.getValue()*Integer.parseInt(createSharesPerWorker.getText()))); // min shares 10!
-        item.put("shares",createSharesPerWorker.getText());
+        item.put("load",createTotalWorkload.getText()); // min shares 10!
     }
 
     private void uploadFileToJob(JobGroupRI currentJob) {
@@ -275,9 +272,7 @@ public class MenuController extends LoadGUIClient {
                                 } else if (id != null && id.compareTo("tableState") == 0) {
                                     ((Label) label).setText(job.getState());
                                 } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
-                                    ((Label) label).setText("0/"+job.getWorkload());
-                                } else if (id != null && id.compareTo("tableSharesPerWorker") == 0) {
-                                    ((Label) label).setText(job.getSharesPerWorker());
+                                    ((Label) label).setText(job.getTotalShares()+"/"+job.getWorkload());
                                 }
                             }
                     }

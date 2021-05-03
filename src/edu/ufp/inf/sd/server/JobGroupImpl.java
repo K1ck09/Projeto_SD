@@ -17,7 +17,6 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String reward;
     private State state;
     private String workLoad;
-    private String sharesPerWorker;
     private Integer totalShares=0;
     private File file;
     private String filePath;
@@ -28,7 +27,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
 
-    protected JobGroupImpl(String jobName, String owner, String strat, String reward, String workLoad, String sharesPerWorker) throws RemoteException {
+    protected JobGroupImpl(String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
         //this.jobThread=new JobThread();
         this.jobName = jobName;
         this.owner = owner;
@@ -36,7 +35,6 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         this.reward = reward;
         this.state = new State("Available",this.jobName);
         this.workLoad = workLoad;
-        this.sharesPerWorker = sharesPerWorker;
     }
 
     public JobGroupImpl() throws RemoteException {
@@ -91,15 +89,14 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     public String getFilePath() {
         return filePath;
     }
-
-    public Integer getTotalShares() {
-        return totalShares;
-    }
-
     public void setTotalShares(Integer totalShares) {
         this.totalShares = totalShares;
     }
 
+    @Override
+    public Integer getTotalShares() throws RemoteException{
+        return totalShares;
+    }
     @Override
     public void uploadFile(byte[] mydata) throws IOException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH_mm_ss");
@@ -114,7 +111,6 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         out.flush();
         out.close();
     }
-
     @Override
     public byte[] downloadFileFromServer(String serverpath) throws RemoteException,IOException {
         byte[] mydata;
@@ -127,57 +123,42 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         in.close();
         return mydata;
     }
-
     @Override
     public Map<Integer, WorkerRI> getJobWorkers() throws RemoteException {
         return jobWorkers;
     }
-
     @Override
     public String getWorkload() throws RemoteException {
         return workLoad;
     }
-
-    @Override
-    public String getSharesPerWorker() throws RemoteException {
-        return sharesPerWorker;
-    }
-
     @Override
     public Integer getWorkersSize() {
         return jobWorkers.size();
     }
-
     @Override
     public String getJobName() {
         return jobName;
     }
-
     @Override
     public String getJobOwner() {
         return owner;
     }
-
     @Override
     public String getJobStrat() {
         return strat;
     }
-
     @Override
     public String getJobReward() {
         return reward;
     }
-
     @Override
     public State getJobState() {
         return state;
     }
-
     @Override
     public String getState() throws RemoteException {
         return state.getCurrentState();
     }
-
     public void printHashMap(Map<Integer, WorkerRI> hashMap) throws RemoteException {
         Collection<WorkerRI> workers = hashMap.values();
         for (WorkerRI worker : workers) {

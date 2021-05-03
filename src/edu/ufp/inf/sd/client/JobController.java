@@ -109,11 +109,6 @@ public class JobController {
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-                    try {
-                        jobSharesPerWorker.setText(jobGroupRI.getSharesPerWorker());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
                 }
         );
     }
@@ -179,7 +174,7 @@ public class JobController {
                                         }
                                     }else if (id != null && id.compareTo("tableTimesSubmitted") == 0) {
                                         try {
-                                            ((Label) label).setText(worker.getTotalShares()+"/"+jobGroupRI.getSharesPerWorker());
+                                            ((Label) label).setText(worker.getTotalShares()+"/"+jobGroupRI.getWorkload());
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
