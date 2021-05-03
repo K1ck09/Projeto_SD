@@ -79,7 +79,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
     private void downloadFile( String filepath) throws RemoteException,IOException {
         byte [] data = JobGroupRI.downloadFileFromServer(filepath);
-        this.file=new File(PATH_FILE+this.id+"_"+owner+"_"+jobGroupName);
+        this.file=new File(PATH_FILE+this.id+"_"+owner.getUsername()+"_"+jobGroupName);
         FileOutputStream out = new FileOutputStream(this.file);
         out.write(data);
         out.flush();
