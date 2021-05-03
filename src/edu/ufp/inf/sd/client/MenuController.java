@@ -210,7 +210,7 @@ public class MenuController extends LoadGUIClient {
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
         item.put("state", "Ongoing");
-        item.put("load",String.valueOf((int) createTotalWorkload.getValue()*10)); // min shares 10!
+        item.put("load",String.valueOf((int) createTotalWorkload.getValue()*Integer.parseInt(createSharesPerWorker.getText()))); // min shares 10!
         item.put("shares",createSharesPerWorker.getText());
     }
 

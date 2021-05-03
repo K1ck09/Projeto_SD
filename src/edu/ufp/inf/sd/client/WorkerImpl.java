@@ -50,6 +50,14 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         Thread t=new Thread(op);
         t.start();
     }
+    @Override
+    public void setOperation()throws RemoteException,IOException {
+        op= new Operations(file.getAbsolutePath(),this);
+        this.state.setCurrentState("Ongoing");
+        Thread t=new Thread(op);
+        t.start();
+    }
+
 
     @Override
     public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
@@ -67,7 +75,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                 Thread t=new Thread(op);
                 t.start();
             }else{
-                this.state.setCurrentState("Standby");
+                this.state.setCurrentState("StandBy");
                 controller.update();
                 //finish Share - Call method in Job
             }

@@ -44,7 +44,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public void updateTotalShares(int totalShares, WorkerRI worker) throws RemoteException {
+    public synchronized void updateTotalShares(int totalShares, WorkerRI worker) throws IOException {
         if(bestCombination.isEmpty()){
             bestCombination.add(worker);
         }else{
@@ -53,7 +53,18 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 bestCombination.add(worker);
             }
         }
-        System.out.println(bestCombination.get(0).getBestMakespan());
+        //System.out.println(bestCombination.get(0).getBestMakespan());
+        if((this.totalShares+totalShares)<Integer.parseInt(this.workLoad)){
+
+        }
+    }
+
+    private void giveWork() throws RemoteException,IOException {
+        for(WorkerRI w :jobWorkers.values()){
+            if(w.getState().getCurrentState().compareTo("StandBy")==0){
+                w.setOperation(this.filePath);
+            }
+        }
     }
 
     @Override
