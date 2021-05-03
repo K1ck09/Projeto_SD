@@ -71,15 +71,51 @@ public class JobController {
         }
     }
 
-    private void updateJobItem() throws RemoteException {
-        jobName.setText(jobGroupRI.getJobName());
-        jobOwner.setText(jobGroupRI.getJobOwner());
-        jobStrat.setText(jobGroupRI.getJobStrat());
-        jobReward.setText(jobGroupRI.getJobReward());
-        jobWorkers.setText(String.valueOf(jobGroupRI.getWorkersSize()));
-        jobState.setText(jobGroupRI.getState());
-        jobWorkload.setText(jobGroupRI.getWorkload());
-        jobSharesPerWorker.setText(jobGroupRI.getSharesPerWorker());
+    public void updateJobItem() throws RemoteException {
+        Platform.runLater(
+                () -> {
+                    try {
+                        jobName.setText(jobGroupRI.getJobName());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobOwner.setText(jobGroupRI.getJobOwner());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobStrat.setText(jobGroupRI.getJobStrat());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobReward.setText(jobGroupRI.getJobReward());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobWorkers.setText(String.valueOf(jobGroupRI.getWorkersSize()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobState.setText(jobGroupRI.getState());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobWorkload.setText(jobGroupRI.getWorkload());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        jobSharesPerWorker.setText(jobGroupRI.getSharesPerWorker());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
     }
 
     private void insertWorkersInTable() throws IOException {
@@ -125,7 +161,7 @@ public class JobController {
                                         }
                                     } else if (id != null && id.compareTo("tableWorkerOwner") == 0) {
                                         try {
-                                            ((Label) label).setText(worker.getOwner());
+                                            ((Label) label).setText(worker.getOwner().getUsername());
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
@@ -171,7 +207,7 @@ public class JobController {
         int num = Integer.parseInt(workersNum.getText());
         if(num>0){
             for (int i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1, jobGroupRI.getJobOwner(),new State("Available",String.valueOf(jobGroupRI.getWorkersSize()+1)),jobGroupRI.getJobName(),this);
+                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1,client.userSessionRI.getUser(), new State("Available",String.valueOf(jobGroupRI.getWorkersSize()+1)),jobGroupRI.getJobName(),this);
                 //System.out.println(worker);
                 jobGroupRI.attachWorker(worker);
             }
@@ -224,7 +260,7 @@ public class JobController {
     }
 
     public void showWorkerbuttons(int workerID) throws RemoteException {
-        if(jobGroupRI.getJobWorkers().get(workerID).getOwner().compareTo(client.userSessionRI.getUsername())==0){
+        if(jobGroupRI.getJobWorkers().get(workerID).getOwner().getUsername().compareTo(client.userSessionRI.getUsername())==0){
             btnsWorkers.setVisible(true);
         }
     }
@@ -236,13 +272,15 @@ public class JobController {
     public void printHashMap(Map<Integer, WorkerRI> hashMap) throws RemoteException {
         Collection<WorkerRI> workers = hashMap.values();
         for (WorkerRI worker : workers) {
-            System.out.println(worker.getOwner());
+            System.out.println("["+worker.getId()+"] -> "+worker.getState().getCurrentState());
         }
     }
 
     public void update() throws IOException {
+        updateJobItem();
         updateJobWorkers();
         insertWorkersInTable();
+        //printHashMap(workersMap);
     }
 }
 

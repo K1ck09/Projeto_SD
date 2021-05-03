@@ -3,6 +3,7 @@ package edu.ufp.inf.sd.client;
 import edu.ufp.inf.sd.server.JobGroupRI;
 import edu.ufp.inf.sd.server.JobThread;
 import edu.ufp.inf.sd.server.State;
+import edu.ufp.inf.sd.server.User;
 
 import java.io.IOException;
 import java.rmi.Remote;
@@ -22,9 +23,11 @@ public interface WorkerRI extends Remote {
     void deleteWorker() throws RemoteException;
     public Integer getId() throws RemoteException;
     public State getState()throws RemoteException;
-    public String getOwner()throws RemoteException;
+    public User getOwner()throws RemoteException;
     public String getJobGroupName()throws RemoteException;
     public JobShopClient getClient()throws RemoteException;
     public int getTotalRewarded()throws RemoteException;
     void setOperation(String filePath) throws RemoteException, IOException;
+    void updateWorkerController() throws RemoteException,IOException;
+    public void setTotalShares(int totalShares)throws RemoteException;
 }

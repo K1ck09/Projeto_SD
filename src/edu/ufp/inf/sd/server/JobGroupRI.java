@@ -1,5 +1,6 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.JobController;
 import edu.ufp.inf.sd.client.WorkerImpl;
 import edu.ufp.inf.sd.client.WorkerRI;
 

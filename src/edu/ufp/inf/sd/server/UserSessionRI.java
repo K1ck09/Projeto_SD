@@ -18,4 +18,5 @@ public interface UserSessionRI extends Remote {
     boolean isJobUnique(String jobName) throws RemoteException;
     Map<Integer, WorkerRI> getWorkersMap(String jobGroupRI) throws RemoteException ;
     Map<String, JobGroupRI> createJob(HashMap<String, String> item) throws RemoteException;
+    public User getUser()throws RemoteException;
 }

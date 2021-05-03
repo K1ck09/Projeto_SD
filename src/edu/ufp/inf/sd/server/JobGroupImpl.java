@@ -1,7 +1,6 @@
 package edu.ufp.inf.sd.server;
 
-import edu.ufp.inf.sd.client.Operations;
-import edu.ufp.inf.sd.client.WorkerImpl;
+import edu.ufp.inf.sd.client.JobController;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.io.*;
@@ -24,6 +23,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String filePath;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
     ArrayList<WorkerRI> bestCombination = new ArrayList<>();
+    JobController jobController=null;
    // private JobThread jobThread;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
@@ -54,8 +54,23 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             }
         }
         //System.out.println(bestCombination.get(0).getBestMakespan());
-        if((this.totalShares+totalShares)<Integer.parseInt(this.workLoad)){
+        System.out.println("["+worker.getId()+"] -> "+worker.getTotalShares());
+        System.out.println("Shares - "+this.totalShares+" Workload - "+workLoad);
+        if(this.totalShares<Integer.parseInt(this.workLoad) && worker.getState().getCurrentState().compareTo("StandBy")==0){
+            this.totalShares++;
+            worker.setTotalShares(worker.getTotalShares()+1);
+            worker.setOperation();
+        }else{
+        //if(this.totalShares==Integer.parseInt(this.workLoad)){
+            this.state.setCurrentState("Finished");
+            //jobController.updateJobItem();
+            notifyAllWorkers();
+        }
+    }
 
+    private void notifyAllWorkers() throws IOException {
+        for(WorkerRI w :jobWorkers.values()){
+            w.updateWorkerController();
         }
     }
 
@@ -69,8 +84,11 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
     @Override
     public void attachWorker(WorkerRI worker) throws RemoteException,IOException {
+        if(jobWorkers.size()==0){
+            this.state.setCurrentState("OnGoing");
+        }
         jobWorkers.put(worker.getId(),worker);
-        if(this.state.getCurrentState().compareTo("Available")==0 || this.state.getCurrentState().compareTo("Ongoing")==0 ){
+        if(this.state.getCurrentState().compareTo("Available")==0 || this.state.getCurrentState().compareTo("OnGoing")==0 ){
             //Job Threadvariaveis todas a 0/null;
            // Thread t=new Thread(jobThread);
            // System.out.println("starting THREAD");

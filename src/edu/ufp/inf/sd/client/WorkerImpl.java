@@ -3,17 +3,17 @@ package edu.ufp.inf.sd.client;
 import edu.ufp.inf.sd.server.JobGroupRI;
 import edu.ufp.inf.sd.server.JobThread;
 import edu.ufp.inf.sd.server.State;
+import edu.ufp.inf.sd.server.User;
 
 import java.io.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.HashMap;
 
 public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     Integer id;
     private final JobShopClient client;
     private State state;
-    private final String owner;
+    private final User owner;
     private final String jobGroupName;
     private int bestMakespan= Integer.MAX_VALUE;
     private int totalShares=0;
@@ -26,7 +26,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private JobController controller;
     private JobThread jobThread;
 
-    protected WorkerImpl( JobShopClient client,Integer id,String jobOwner, State state,String jobGroupName,JobController controller) throws RemoteException {
+    protected WorkerImpl( JobShopClient client,Integer id,User jobOwner, State state,String jobGroupName,JobController controller) throws RemoteException {
         this.id=id;
         this.owner=jobOwner;
         this.client=client;
@@ -50,6 +50,13 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         Thread t=new Thread(op);
         t.start();
     }
+
+    @Override
+    public void updateWorkerController() throws RemoteException, IOException {
+        this.state.setCurrentState("Stopped");
+        this.controller.update();
+    }
+
     @Override
     public void setOperation()throws RemoteException,IOException {
         op= new Operations(file.getAbsolutePath(),this);
@@ -62,11 +69,15 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     @Override
     public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
             this.currentMakespan=makespan;
-            //System.out.println("["+id+"] -> "+currentMakespan);
+            System.out.println("["+id+"] -> "+currentMakespan);
             if(this.bestMakespan>this.currentMakespan){
                 this. bestMakespan=this.currentMakespan;
             }
-            if(this.totalShares<Integer.parseInt(this.JobGroupRI.getSharesPerWorker())){
+            this.state.setCurrentState("StandBy");
+            //this.totalShares++;
+            controller.update();
+            JobGroupRI.updateTotalShares(totalShares,this);
+            /*if(this.totalShares<Integer.parseInt(this.JobGroupRI.getSharesPerWorker())){
                 //System.out.println(currentMakespan+"-"+bestMakespan+"-"+totalShares);
                 controller.update();
                 this.totalShares++;
@@ -78,7 +89,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                 this.state.setCurrentState("StandBy");
                 controller.update();
                 //finish Share - Call method in Job
-            }
+            }*/
     }
 
 
@@ -127,7 +138,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public String getOwner() {
+    public User getOwner() {
         return owner;
     }
     @Override
@@ -143,5 +154,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         return totalRewarded;
     }
 
-
+    public void setTotalShares(int totalShares)throws RemoteException {
+        this.totalShares = totalShares;
+    }
 }

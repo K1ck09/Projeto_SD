@@ -69,7 +69,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         return db.getJobGroups().get(jobName);
     }
 
-
-
-
+    public User getUser()throws RemoteException {
+        return user;
+    }
 }
