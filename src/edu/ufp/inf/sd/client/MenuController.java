@@ -150,13 +150,13 @@ public class MenuController extends LoadGUIClient {
                     if (!client.userSessionRI.isJobUnique(item.get("job"))) {
                         insertDataInItem();
                         if(file!=null){
-                            jobGroups = client.userSessionRI.createJob(item);
+                            jobGroups = client.userSessionRI.createJob(this.client.userSessionRI, item);
                             JobGroupRI currentJob= jobGroups.get(item.get("job"));
                             if(currentJob!=null) {
                                 uploadFileToJob(currentJob);
                                 // decidir se tira o dinheiro so no fim ou no inicio e depois devolve se não encontrar nada
-                                int newBalance = Integer.parseInt(client.userSessionRI.getCredits()) - Integer.parseInt(item.get("reward"));
-                                client.userSessionRI.setCredits(newBalance);
+                                int newBalance =-Integer.parseInt(item.get("reward"));
+                                client.userSessionRI.setCredits(this.client.userSessionRI.getUser(),newBalance);
                                 menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
                                 insertItemsInTable();
                                 messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green

@@ -1,5 +1,6 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.JobShopClient;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.rmi.RemoteException;
@@ -26,13 +27,14 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
     @Override
     public String getCredits() throws RemoteException {
+        user = db.getUser(user.getUsername());
         return String.valueOf(user.getCredits());
     }
 
     @Override
-    public void setCredits(int credits) throws RemoteException{
-        user.setCredits(credits);
-
+    public void setCredits(User user,int credits) throws RemoteException{
+        user.addCredits(credits);
+        db.updateUser(user);
     }
 
     @Override
@@ -59,8 +61,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
 
     @Override
-    public Map<String, JobGroupRI> createJob(HashMap<String, String> item) throws RemoteException {
-        JobGroupRI jobGroup= new JobGroupImpl(item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"));
+    public Map<String, JobGroupRI> createJob(UserSessionRI userSessionRI, HashMap<String, String> item) throws RemoteException {
+        JobGroupRI jobGroup= new JobGroupImpl(userSessionRI,item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"));
         db.addJob(jobGroup);
         return db.getJobGroups();
     }

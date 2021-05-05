@@ -38,6 +38,10 @@ public class DBMockup {
         }
     }
 
+    public void updateUser(User user){
+        this.users.replace(user.getUsername(),user);
+    }
+
     public User getUser(String username) {
         return users.get(username);
     }

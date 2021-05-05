@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.sql.SQLOutput;
 import java.util.ResourceBundle;
 
@@ -37,14 +38,18 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        clientConnection();
+        try {
+            clientConnection();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void userLogin(ActionEvent actionEvent) throws IOException {
         checkLogin(actionEvent);
     }
 
-    private void clientConnection() {
+    private void clientConnection() throws RemoteException {
         this.client = new JobShopClient();
         this.client.lookupService();
     }

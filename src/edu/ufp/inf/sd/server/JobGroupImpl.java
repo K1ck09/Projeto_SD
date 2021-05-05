@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.JobController;
+import edu.ufp.inf.sd.client.JobShopClient;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.io.*;
@@ -22,12 +23,15 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String filePath;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
     ArrayList<WorkerRI> bestCombination = new ArrayList<>();
+    private boolean paid = false;
     JobController jobController=null;
    // private JobThread jobThread;
+   UserSessionRI client;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
 
-    protected JobGroupImpl(String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
+    protected JobGroupImpl(UserSessionRI client,String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
+        this.client=client;
         //this.jobThread=new JobThread();
         this.jobName = jobName;
         this.owner = owner;
@@ -59,6 +63,12 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             worker.setOperation();
         }else{
             this.state.setCurrentState("Finished");
+            if(!paid){
+                System.out.println("REWARD: "+this.reward+"USER CREDITS: "+bestCombination.get(0).getOwner().getCredits());
+                this.client.setCredits(bestCombination.get(0).getOwner(),Integer.parseInt(this.reward));
+                System.out.println("REWARD: "+this.reward+"USER NEW CREDITS: "+bestCombination.get(0).getOwner().getCredits());
+                this.paid=true;
+            }
             notifyAllWorkers();
         }
     }

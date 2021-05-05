@@ -56,22 +56,37 @@ public class JobController {
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
 
-    public void init( JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
+    public void init(JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
         this.client = client;
         this.jobGroupRI = jobGroupRI;
         updateJobItem();
         if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnsJob.setVisible(true);
         }
-        menuCredits.setText(this.client.userSessionRI.getCredits());
-        menuUsername.setText(this.client.userSessionRI.getUsername());
+        updateUser();
         workersMap = jobGroupRI.getJobWorkers();
         if (!workersMap.isEmpty()) {
             insertWorkersInTable();
         }
     }
 
-    public void updateJobItem() throws RemoteException {
+    private void updateUser() throws RemoteException {
+        Platform.runLater(
+                () -> {
+                    try {
+                        menuCredits.setText(this.client.userSessionRI.getCredits());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        menuUsername.setText(this.client.userSessionRI.getUsername());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                } );
+    }
+
+    private void updateJobItem() throws RemoteException {
         Platform.runLater(
                 () -> {
                     try {
@@ -119,7 +134,7 @@ public class JobController {
     }
 
     private void insertWorkersInTable() throws IOException {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             table.getChildren().clear();
 /*            try {
                 printHashMap(workersMap);
@@ -127,7 +142,7 @@ public class JobController {
                 e.printStackTrace();
             }*/
             Collection<WorkerRI> workerList = workersMap.values();
-            for(WorkerRI worker:workerList){
+            for (WorkerRI worker : workerList) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableWorker.fxml"));
                 try {
                     Parent menuParent = loader.load();
@@ -165,25 +180,25 @@ public class JobController {
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
-                                    }else if (id != null && id.compareTo("tableRewarded") == 0) {
+                                    } else if (id != null && id.compareTo("tableRewarded") == 0) {
                                         try {
                                             ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
-                                    }else if (id != null && id.compareTo("tableLastMakeSpan") == 0) {
+                                    } else if (id != null && id.compareTo("tableLastMakeSpan") == 0) {
                                         try {
                                             ((Label) label).setText(String.valueOf(worker.getCurrentMakespan()));
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
-                                    }else if (id != null && id.compareTo("tableTimesSubmitted") == 0) {
+                                    } else if (id != null && id.compareTo("tableTimesSubmitted") == 0) {
                                         try {
-                                            ((Label) label).setText(worker.getTotalShares()+"/"+jobGroupRI.getWorkload());
+                                            ((Label) label).setText(worker.getTotalShares() + "/" + jobGroupRI.getWorkload());
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
-                                    }else if (id != null && id.compareTo("tableBestMakeSpan") == 0) {
+                                    } else if (id != null && id.compareTo("tableBestMakeSpan") == 0) {
                                         try {
                                             ((Label) label).setText(String.valueOf(worker.getBestMakespan()));
                                         } catch (RemoteException e) {
@@ -205,24 +220,24 @@ public class JobController {
 
     public void handlerAttachWorkers(ActionEvent actionEvent) throws IOException {
         int num = Integer.parseInt(workersNum.getText());
-        if(num>0){
+        if (num > 0) {
             for (int i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client,jobGroupRI.getWorkersSize()+1,client.userSessionRI.getUser(), new State("Available",String.valueOf(jobGroupRI.getWorkersSize()+1)),jobGroupRI.getJobName(),this);
+                WorkerRI worker = new WorkerImpl(client, jobGroupRI.getWorkersSize() + 1, client.userSessionRI.getUser(), new State("Available", String.valueOf(jobGroupRI.getWorkersSize() + 1)), jobGroupRI.getJobName(), this);
                 //System.out.println(worker);
-                if(jobGroupRI.attachWorker(worker)){
+                if (jobGroupRI.attachWorker(worker)) {
                     infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
                     infoMessage.setText("Workers were attached to job successfully!");
                     workersNum.clear();
                     updateJobWorkers();
                     insertWorkersInTable();
                     updateJobItem();
-                }else {
+                } else {
                     workersNum.clear();
                     infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
                     infoMessage.setText("Not possible to attach worker!");
                 }
             }
-        }else{
+        } else {
             workersNum.clear();
             infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
             infoMessage.setText("Number of workers can't be 0!");
@@ -230,7 +245,7 @@ public class JobController {
     }
 
     private void updateJobWorkers() throws IOException {
-        workersMap=client.userSessionRI.getWorkersMap(jobGroupRI.getJobName());
+        workersMap = client.userSessionRI.getWorkersMap(jobGroupRI.getJobName());
     }
 
     public void handlerPauseWorker(ActionEvent actionEvent) {
@@ -265,7 +280,7 @@ public class JobController {
     }
 
     public void showWorkerbuttons(int workerID) throws RemoteException {
-        if(jobGroupRI.getJobWorkers().get(workerID).getOwner().getUsername().compareTo(client.userSessionRI.getUsername())==0){
+        if (jobGroupRI.getJobWorkers().get(workerID).getOwner().getUsername().compareTo(client.userSessionRI.getUsername()) == 0) {
             btnsWorkers.setVisible(true);
         }
     }
@@ -277,7 +292,7 @@ public class JobController {
     public void printHashMap(Map<Integer, WorkerRI> hashMap) throws RemoteException {
         Collection<WorkerRI> workers = hashMap.values();
         for (WorkerRI worker : workers) {
-            System.out.println("["+worker.getId()+"] -> "+worker.getState().getCurrentState());
+            System.out.println("[" + worker.getId() + "] -> " + worker.getState().getCurrentState());
         }
     }
 
@@ -285,6 +300,7 @@ public class JobController {
         updateJobItem();
         updateJobWorkers();
         insertWorkersInTable();
+        updateUser();
     }
 }
 

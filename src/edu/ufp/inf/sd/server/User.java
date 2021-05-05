@@ -36,4 +36,8 @@ public class User implements Serializable {
         this.credits = credits;
     }
 
+    public void addCredits(int plus){
+        this.credits+=plus;
+    }
+
 }
