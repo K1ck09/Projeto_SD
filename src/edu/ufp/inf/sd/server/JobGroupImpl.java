@@ -62,7 +62,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         if(this.totalShares<Integer.parseInt(this.workLoad) && worker.getState().getCurrentState().compareTo("StandBy")==0){
             this.totalShares++;
             updateList();
-            this.client.updateMenus();//deixar se não causar lag
+            //this.client.updateMenus();//deixar se não causar lag
             worker.setTotalShares(worker.getTotalShares()+1);
             worker.setOperation();
         }else{
