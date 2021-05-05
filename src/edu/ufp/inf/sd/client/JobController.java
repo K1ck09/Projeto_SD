@@ -120,7 +120,16 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                         e.printStackTrace();
                     }
                     try {
-                        jobState.setText(jobGroupRI.getState());
+                        if(jobGroupRI.getState().compareTo("Available")==0){
+                            jobState.setStyle("-fx-text-fill: #0dbc00");
+                            jobState.setText(jobGroupRI.getState());
+                        }else if(jobGroupRI.getState().compareTo("OnGoing")==0){
+                            jobState.setStyle("-fx-text-fill: #c38700");
+                            jobState.setText(jobGroupRI.getState());
+                        }else if(jobGroupRI.getState().compareTo("Finished")==0){
+                            jobState.setStyle("-fx-text-fill: #ff3232");
+                            jobState.setText(jobGroupRI.getState());
+                        }
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
@@ -175,7 +184,17 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                         }
                                     } else if (id != null && id.compareTo("tableWorkerState") == 0) {
                                         try {
-                                            ((Label) label).setText(worker.getState().getCurrentState());
+
+                                            if(worker.getState().getCurrentState().compareTo("Ongoing")==0){
+                                                ((Label) label).setStyle("-fx-text-fill: #0dbc00");
+                                                ((Label) label).setText(worker.getState().getCurrentState());
+                                            }else if(worker.getState().getCurrentState().compareTo("StandBy")==0){
+                                                ((Label) label).setStyle("-fx-text-fill: #c38700");
+                                                ((Label) label).setText(worker.getState().getCurrentState());
+                                            }else if(worker.getState().getCurrentState().compareTo("Stopped")==0){
+                                                ((Label) label).setStyle("-fx-text-fill: #ff3232");
+                                                ((Label) label).setText(worker.getState().getCurrentState());
+                                            }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
@@ -187,7 +206,12 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                         }
                                     } else if (id != null && id.compareTo("tableRewarded") == 0) {
                                         try {
-                                            ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
+                                            if(worker.getTotalRewarded()!=0){
+                                                ((Label) label).setStyle("-fx-text-fill: #0dbc00");
+                                                ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
+                                            }else {
+                                                ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
+                                            }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
@@ -218,7 +242,8 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         });
     }
 
-    public void handlerExit(MouseEvent mouseEvent) {
+    public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
+        this.client.userSessionRI.logout();
         Platform.exit();
         System.exit(0);
     }

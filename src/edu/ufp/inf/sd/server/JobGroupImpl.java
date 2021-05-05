@@ -106,6 +106,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
            // System.out.println("starting THREAD");
            // t.start();
             worker.setOperation(filePath);
+            updateList();
             return true;
         }
         return false;
@@ -123,6 +124,14 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             return String.valueOf(bestCombination.get(0).getBestMakespan());
         }
         return "-";
+    }
+
+    @Override
+    public WorkerRI getBestResult() throws RemoteException {
+        if(bestCombination.size()!=0){
+            return bestCombination.get(0);
+        }
+        return null;
     }
     @Override
     public Integer getTotalShares() throws RemoteException{

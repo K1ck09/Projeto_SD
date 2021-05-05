@@ -34,20 +34,21 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public TextField createJobName;
     public TextField createJobReward;
     public ChoiceBox<String> createJobStrategy;
-    private final ObservableList<String> stratTypes = FXCollections.observableArrayList("Choose Strategy", "TabuSearch", "Genetic Algorithm");
     public Label messageMenu;
-    public Label displayTotalJobsUser;
-    public Label displayAtiveWorkersUser;
-    public Label displayAtiveWorkers;
-    public Label displayTotalJobs;
-    public Label displayFinishJobs;
-    public Label displayPausedJobs;
-    public Label displayOnGoingJobs;
-    public Label displayFinishJobsUser;
-    public Label displayPausedJobsUser;
-    public Label displayOnGoingJobsUser;
     public TextField createTotalWorkload;
     public Button btnFile;
+    public Label displayTotalJobs;
+    public Label displayTotalRewarded;
+    public Label displayFinishJobs;
+    public Label displayAvailableJobs;
+    public Label displayOngoingJobs;
+    public Label displayAtiveWorkers;
+    public Label displayCreatedJobs;
+    public Label displayParticipation;
+    public Label displayCreditsClaimed;
+    public Label displayTotalActiveWorkers;
+
+    private final ObservableList<String> stratTypes = FXCollections.observableArrayList("Choose Strategy", "TabuSearch", "Genetic Algorithm");
     File file;
 
     private HashMap<String, String> item = new HashMap<>();
@@ -114,46 +115,6 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         updateStatistics();
     }
 
-    private void updateStatistics() throws RemoteException {
-        displayTotalJobs.setText(String.valueOf(jobGroups.size()));
-        displayTotalJobsUser.setText(String.valueOf(userJobsNumber()));
-        displayOnGoingJobs.setText(String.valueOf(onGoingJobsNumber()));
-        displayOnGoingJobs.setText(String.valueOf(onGoingJobsNumber()));
-
-    }
-
-    private int userJobsNumber() throws RemoteException {
-        int num = 0;
-        Collection<JobGroupRI> jobsList = jobGroups.values();
-        for (JobGroupRI jobGroupRI : jobsList) {
-            if (jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername()) == 0) {
-                num++;
-            }
-        }
-        return num;
-    }
-
-    private int onGoingJobsNumber() throws RemoteException {
-        int num = 0;
-        Collection<JobGroupRI> jobsList = jobGroups.values();
-        for (JobGroupRI jobGroupRI : jobsList) {
-            if (jobGroupRI.getJobState().getCurrentState().compareTo("Ongoing") == 0) {
-                num++;
-            }
-        }
-        return num;
-    }
-
-    private int onGoingJobsNumberUser() throws RemoteException {
-        int num = 0;
-        Collection<JobGroupRI> jobsList = jobGroups.values();
-        for (JobGroupRI jobGroupRI : jobsList) {
-            if (jobGroupRI.getJobState().getCurrentState().compareTo("Ongoing") == 0 && jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername()) == 0) {
-                num++;
-            }
-        }
-        return num;
-    }
 
     private boolean containsJustNumbers(String reward) {
         boolean hasNumber = false;
@@ -197,7 +158,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                                 messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
                                 messageMenu.setText("Job Created Sucessfully!");
                                 clearSelectionAndVariables();
-                                updateStatistics();
+                                this.client.userSessionRI.updateMenus();
                             }else{
                                 messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
                                 messageMenu.setText("Job Creation Unsuccessful. An Error must have occured. Please try Again");
@@ -331,7 +292,17 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                                     }
                                 } else if (id != null && id.compareTo("tableState") == 0) {
                                     try {
-                                        ((Label) label).setText(job.getState());
+                                        if((job.getState().compareTo("Available")==0))
+                                        {
+                                            ((Label) label).setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green  #ff3232 red
+                                            ((Label) label).setText(job.getState());
+                                        }else if ((job.getState().compareTo("OnGoing")==0)){
+                                            ((Label) label).setStyle("-fx-text-fill: #c38700"); //#0dbc00 green  #ff3232 red
+                                            ((Label) label).setText(job.getState());
+                                        }else if((job.getState().compareTo("Finished")==0)){
+                                            ((Label) label).setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green  #ff3232 red
+                                            ((Label) label).setText(job.getState());
+                                        }
                                     } catch (RemoteException e) {
                                         e.printStackTrace();
                                     }
@@ -366,7 +337,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public void handlerChoiceBox(MouseEvent mouseEvent) {
     }
 
-    public void handlerExit(MouseEvent mouseEvent) {
+    public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
+        this.client.userSessionRI.logout();
         Platform.exit();
         System.exit(0);
     }
@@ -393,6 +365,170 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         messageMenu.setText("");
     }
 
+    private void updateStatistics() throws RemoteException {
+        Platform.runLater(
+                () -> {
+                    displayTotalJobs.setText(String.valueOf(jobGroups.size()));
+                    try {
+                        displayTotalRewarded.setText(String.valueOf(totalRewardedNumber()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        displayFinishJobs.setText(String.valueOf(finishedNumber()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        displayAvailableJobs.setText(String.valueOf(availableNumber()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        displayOngoingJobs.setText(String.valueOf(onGoingJobsNumber()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        displayAtiveWorkers.setText(String.valueOf(ativeWorkersNumber()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        displayCreatedJobs.setText(String.valueOf(userJobsNumber()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        displayParticipation.setText(String.valueOf(userParticipationNumber()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        displayCreditsClaimed.setText(String.valueOf(userCreditsClaimed()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        displayTotalActiveWorkers.setText(String.valueOf(userTotalAtiveWorkers()));
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+    // Dá para Todas estas funções adicionando variaveis ao User
+    private int userParticipationNumber() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
+                if(w.getOwner()!=null){
+                    if(w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0){
+                        num++;
+                        break;
+                    }
+                }
+            }
+        }
+        return num;
+    }
+
+    private int userCreditsClaimed() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            if(jobGroupRI.getBestResult()!=null){
+                if (jobGroupRI.getBestResult().getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0
+                && jobGroupRI.getState().compareTo("Finished")==0){
+                    num+=Integer.parseInt(jobGroupRI.getJobReward());
+                }
+            }
+        }
+        return num;
+    }
+
+    private int userTotalAtiveWorkers() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
+                if(w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0
+                && w.getState().getCurrentState().compareTo("OnGoing")==0){
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
+
+    private int userJobsNumber() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            if (jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername()) == 0) {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    private int ativeWorkersNumber() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
+                if(w.getState().getCurrentState().compareTo("OnGoing")==0){
+                    num++;
+                }
+            }
+        }
+        return num;
+    }
+
+    private int totalRewardedNumber() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            if (jobGroupRI.getJobState().getCurrentState().compareTo("Finished") == 0) {
+               num+=Integer.parseInt(jobGroupRI.getJobReward());
+            }
+        }
+        return num;
+    }
+
+    private int onGoingJobsNumber() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            if (jobGroupRI.getJobState().getCurrentState().compareTo("OnGoing") == 0) {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    private int availableNumber() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            if (jobGroupRI.getJobState().getCurrentState().compareTo("Available") == 0) {
+                num++;
+            }
+        }
+        return num;
+    }
+
+    private int finishedNumber() throws RemoteException {
+        int num = 0;
+        Collection<JobGroupRI> jobsList = jobGroups.values();
+        for (JobGroupRI jobGroupRI : jobsList) {
+            if (jobGroupRI.getJobState().getCurrentState().compareTo("Finished") == 0) {
+                num++;
+            }
+        }
+        return num;
+    }
 
     @Override
     public void updateMenu() throws IOException {
@@ -400,5 +536,6 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         if (!jobGroups.isEmpty()) {
             insertItemsInTable();
         }
+        updateStatistics();
     }
 }
