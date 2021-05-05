@@ -269,17 +269,31 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     public void handlerDeleteJob(ActionEvent actionEvent) throws IOException {
-        this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName());
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
-        Parent menuParent = loader.load();
-        Scene menuScene = new Scene(menuParent);
-        Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        MenuController controller = loader.getController();
-        controller.MenuControllerInit(this.client);
-        app_stage.setScene(menuScene);
-        app_stage.setHeight(668.0);
-        app_stage.setWidth(1049.0);
-        app_stage.show();
+        if(jobGroupRI.getState().compareTo("OnGoing")!=0)
+        {
+            if(jobGroupRI.getState().compareTo("Available")==0)
+            {
+                int returnCredits= Integer.parseInt(this.jobGroupRI.getJobReward());
+                this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName()); // queria remover primeiro o job e so depois devolver os creditos
+                this.client.userSessionRI.setCredits(this.client.userSessionRI.getUser(), returnCredits);
+
+            }else if(jobGroupRI.getState().compareTo("Finished")==0){
+                this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName());
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
+            Parent menuParent = loader.load();
+            Scene menuScene = new Scene(menuParent);
+            Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            MenuController controller = loader.getController();
+            controller.MenuControllerInit(this.client,"Job removed with Success");
+            app_stage.setScene(menuScene);
+            app_stage.setHeight(668.0);
+            app_stage.setWidth(1049.0);
+            app_stage.show();
+        }else {
+            infoMessage.setStyle("-fx-text-fill: #ff3232");
+            infoMessage.setText("Job can't be removed if it's OnGoing!");
+        }
     }
 
     public void handlerMenuHome(MouseEvent mouseEvent) throws IOException {

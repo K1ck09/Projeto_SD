@@ -56,6 +56,35 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
 
     public MenuController() throws RemoteException {
     }
+    public void MenuControllerInit(JobShopClient client,String message) throws IOException{
+        this.client = client;
+        //Set user info
+        menuUsername.setText("Username: " + client.userSessionRI.getUsername());
+        menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
+        messageMenu.setStyle("-fx-text-fill: #0dbc00");
+        messageMenu.setText(message);
+        // Set Strat choicebox
+        createJobStrategy.setItems(stratTypes);
+        createJobStrategy.getSelectionModel().clearAndSelect(0);
+        createJobStrategy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
+                if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy") != 0) {
+                    item.put("strat", stratTypes.get(t1.intValue()));
+                } else if (item.containsKey("strat") && item.get("strat").compareTo(stratTypes.get(t1.intValue())) != 0) {
+                    item.replace("strat", stratTypes.get(t1.intValue()));
+                }
+            }
+        });
+        // Update Joblist
+        updateMenu();
+        /*jobGroups = client.userSessionRI.getJobList();
+        if (!jobGroups.isEmpty()) {
+            insertItemsInTable();
+        }*/
+        //Update
+        updateStatistics();
+    }
 
     public void MenuControllerInit(JobShopClient client) throws IOException {
         this.client = client;
