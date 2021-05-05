@@ -21,11 +21,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JobController {
+public class JobController extends UnicastRemoteObject implements JobControllerRI {
 
     public Label jobName;
     public Label jobOwner;
@@ -56,9 +57,13 @@ public class JobController {
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
 
+    public JobController() throws RemoteException {
+    }
+
     public void init(JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
         this.client = client;
         this.jobGroupRI = jobGroupRI;
+        this.jobGroupRI.addToList(this);
         updateJobItem();
         if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnsJob.setVisible(true);
@@ -297,6 +302,13 @@ public class JobController {
     }
 
     public void update() throws IOException {
+        updateJobItem();
+        updateJobWorkers();
+        insertWorkersInTable();
+        updateUser();
+    }
+    @Override
+    public void updateGUI() throws IOException {
         updateJobItem();
         updateJobWorkers();
         insertWorkersInTable();

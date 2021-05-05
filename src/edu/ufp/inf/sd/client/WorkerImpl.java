@@ -54,7 +54,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     @Override
     public void updateWorkerController() throws RemoteException, IOException {
         this.state.setCurrentState("Stopped");
-        this.controller.update();
+        //this.controller.update();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                 this. bestMakespan=this.currentMakespan;
             }
             this.state.setCurrentState("StandBy");
-            controller.update();
+            //controller.update();
             JobGroupRI.updateTotalShares(totalShares,this);
     }
 

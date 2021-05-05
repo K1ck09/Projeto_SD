@@ -1,6 +1,7 @@
 package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.JobController;
+import edu.ufp.inf.sd.client.JobControllerRI;
 import edu.ufp.inf.sd.client.JobShopClient;
 import edu.ufp.inf.sd.client.WorkerRI;
 
@@ -29,6 +30,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
    UserSessionRI client;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
+    private ArrayList<JobControllerRI> list=new ArrayList<>();
 
     protected JobGroupImpl(UserSessionRI client,String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
         this.client=client;
@@ -59,24 +61,34 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         //System.out.println("Shares - "+this.totalShares+" Workload - "+workLoad);
         if(this.totalShares<Integer.parseInt(this.workLoad) && worker.getState().getCurrentState().compareTo("StandBy")==0){
             this.totalShares++;
+            updateList();
             worker.setTotalShares(worker.getTotalShares()+1);
             worker.setOperation();
         }else{
             this.state.setCurrentState("Finished");
             if(!paid){
-                System.out.println("REWARD: "+this.reward+"USER CREDITS: "+bestCombination.get(0).getOwner().getCredits());
                 this.client.setCredits(bestCombination.get(0).getOwner(),Integer.parseInt(this.reward));
-                System.out.println("REWARD: "+this.reward+"USER NEW CREDITS: "+bestCombination.get(0).getOwner().getCredits());
                 this.paid=true;
             }
             notifyAllWorkers();
         }
     }
 
+    @Override
+    public void addToList(JobControllerRI jobController) throws IOException{
+        list.add(jobController);
+    }
+
+    private void updateList() throws IOException {
+        for(JobControllerRI j:list){
+            j.updateGUI();
+        }
+    }
     private void notifyAllWorkers() throws IOException {
         for(WorkerRI w :jobWorkers.values()){
             w.updateWorkerController();
         }
+        updateList();
     }
 
     @Override

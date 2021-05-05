@@ -1,5 +1,7 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.JobController;
+import edu.ufp.inf.sd.client.JobControllerRI;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.io.IOException;
@@ -27,4 +29,6 @@ public interface JobGroupRI extends Remote {
     void uploadFile(byte[] mydata) throws RemoteException, IOException;
     byte[] downloadFileFromServer(String serverpath) throws RemoteException, IOException;
     void updateTotalShares(int totalShares, WorkerRI worker)throws RemoteException, IOException;
+
+    void addToList(JobControllerRI jobController) throws IOException;
 }
