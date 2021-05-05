@@ -15,12 +15,18 @@ import java.util.logging.Logger;
 public class UserSessionImpl extends UnicastRemoteObject implements UserSessionRI {
     DBMockup db;
     User user;
+    private boolean error=false;
 
     public UserSessionImpl(DBMockup db, User user) throws RemoteException {
         super();
         this.user=user;
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Logged user : {0}", new Object[]{user.getUsername()});
         this.db=db;
+    }
+
+    public UserSessionImpl(boolean error) throws RemoteException {
+        super();
+        this.error=error;
     }
 
     public String getUsername() throws RemoteException{
@@ -87,5 +93,9 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     @Override
     public void addList(MenuControllerRI controller) throws IOException {
         this.db.addList(controller);
+    }
+
+    public boolean isError() throws RemoteException{
+        return error;
     }
 }

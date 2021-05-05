@@ -31,9 +31,11 @@ public class UserFactoryImpl extends UnicastRemoteObject implements UserFactoryR
             User user=db.getUser(username);
             if (!db.getSessions().containsKey(username)) {
                 this.db.addSessions(user);
+                Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Sessions Sent");
+                return new UserSessionImpl(this.db, user);
+            }else {
+               return new UserSessionImpl(true);
             }
-            Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Sessions Sent");
-            return new UserSessionImpl(this.db, user);
         }
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-User not found");
         return null;

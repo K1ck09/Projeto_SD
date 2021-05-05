@@ -61,8 +61,13 @@ public class LoginController implements Initializable {
         if (!username.isEmpty() && !password.isEmpty()) {
             UserSessionRI sessionRI = this.client.userFactoryRI.login(username, password);
             if (sessionRI != null) {
-                this.client.userSessionRI = sessionRI;
-                changeToMenuScene(actionEvent);
+                if(!sessionRI.isError())
+                {
+                    this.client.userSessionRI = sessionRI;
+                    changeToMenuScene(actionEvent);
+                }else{
+                    missingData.setText("Session already initiated, Please Logout first!");
+                }
             } else {
                 missingData.setText("Login didn't succeeded. " +
                         "Username doesn't exist or password doesn't match.");
