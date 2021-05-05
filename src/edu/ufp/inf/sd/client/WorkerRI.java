@@ -30,4 +30,5 @@ public interface WorkerRI extends Remote {
     void setOperation(String filePath) throws RemoteException, IOException;
     void updateWorkerController() throws RemoteException,IOException;
     public void setTotalShares(int totalShares)throws RemoteException;
+    void setTotalRewarded(int totalRewarded) throws RemoteException;
 }

@@ -69,6 +69,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             this.state.setCurrentState("Finished");
             if(!paid){
                 this.client.setCredits(bestCombination.get(0).getOwner(),Integer.parseInt(this.reward));
+                jobWorkers.get(bestCombination.get(0).getId()).setTotalRewarded(Integer.parseInt(this.reward));
                 this.paid=true;
             }
             notifyAllWorkers();

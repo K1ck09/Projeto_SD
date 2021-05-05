@@ -134,4 +134,8 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public int getTotalRewarded() {
         return totalRewarded;
     }
+
+    public void setTotalRewarded(int totalRewarded) throws RemoteException {
+        this.totalRewarded = totalRewarded;
+    }
 }
