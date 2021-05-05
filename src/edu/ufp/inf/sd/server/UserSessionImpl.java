@@ -69,8 +69,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         updateMenus();
         return db.getJobGroups();
     }
-
-    private void updateMenus() throws IOException {
+    @Override
+    public void updateMenus() throws IOException {
         for(MenuControllerRI c : db.getMenuList()){
             c.updateMenu();
         }

@@ -22,6 +22,6 @@ public interface UserSessionRI extends Remote {
     Map<Integer, WorkerRI> getWorkersMap(String jobGroupRI) throws RemoteException ;
     Map<String, JobGroupRI> createJob( UserSessionRI userSessionRI, HashMap<String, String> item) throws IOException;
     public User getUser()throws RemoteException;
-
+    public void updateMenus() throws IOException;
     void addList(MenuControllerRI controller) throws IOException;
 }
