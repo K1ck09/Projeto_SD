@@ -42,6 +42,11 @@
     -fx-font-size: 14px;
 }
 
+.removeBorders{
+    -fx-background-insets: 0 0 0 0,0,0;
+    -fx-padding: 0 0 0 0;
+}
+
 .lion:hover{
     -fx-background-color:
             rgba(0,0,0,0.08),

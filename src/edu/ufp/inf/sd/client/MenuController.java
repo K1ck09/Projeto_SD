@@ -77,7 +77,6 @@ public class MenuController extends LoadGUIClient {
         }
         //Update
         updateStatistics();
-        // client.userSessionRI.setCredtis(10);
     }
 
     private void updateStatistics() throws RemoteException {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
@@ -12,26 +13,43 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="1033.0" styleClass="bgc" stylesheets="@css/app.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.MenuController">
+<Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="631.0" prefWidth="1033.0" styleClass="bgc" stylesheets="@css/app.css" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.ufp.inf.sd.client.MenuController">
     <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="1033.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar" stylesheets="@css/app.css">
-        <Label fx:id="menuHome" alignment="CENTER" contentDisplay="CENTER" prefHeight="51.0" prefWidth="105.0" styleClass="lion" stylesheets="@css/app.css" text="Home" textAlignment="CENTER">
+        <Label fx:id="menuHome" alignment="CENTER" contentDisplay="CENTER" prefHeight="51.0" prefWidth="105.0" stylesheets="@css/app.css" text="Home" textAlignment="CENTER">
             <font>
                 <Font size="14.0" />
             </font>
+         <styleClass>
+            <String fx:value="removeBorders" />
+            <String fx:value="lion" />
+         </styleClass>
         </Label>
         <Label prefHeight="51.0" prefWidth="105.0" />
         <Label prefHeight="51.0" prefWidth="105.0" />
         <Label prefHeight="51.0" prefWidth="105.0" />
         <Label prefHeight="51.0" prefWidth="105.0" />
-        <Label prefHeight="51.0" prefWidth="105.0" />
-        <Label fx:id="menuUsername" prefHeight="31.0" prefWidth="121.0" />
+        <Label prefHeight="31.0" prefWidth="12.0" />
+        <Label fx:id="menuUsername" alignment="CENTER_RIGHT" contentDisplay="RIGHT" prefHeight="31.0" prefWidth="213.0" textAlignment="CENTER">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets right="4.0" />
+         </padding></Label>
         <Label fx:id="menuCredits" prefHeight="31.0" prefWidth="110.0" />
-        <Label id="btnLogout" fx:id="menuLogout" alignment="CENTER" onMouseClicked="#handlerLogout" prefHeight="31.0" prefWidth="92.0" styleClass="lion" stylesheets="@css/app.css" text="Logout">
+        <Label id="btnLogout" fx:id="menuLogout" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerLogout" prefHeight="31.0" prefWidth="92.0" stylesheets="@css/app.css" text="Logout" textAlignment="CENTER">
             <HBox.margin>
                 <Insets />
             </HBox.margin>
+         <font>
+            <Font size="14.0" />
+         </font>
+         <styleClass>
+            <String fx:value="removeBorders" />
+            <String fx:value="lion" />
+         </styleClass>
         </Label>
-        <Label id="btnMenuExit" fx:id="btnMenuExit" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerExit" prefHeight="31.0" prefWidth="81.0" style="-fx-padding: 0;" styleClass="lion" stylesheets="@css/app.css" text="Exit" textAlignment="CENTER">
+        <Label id="btnMenuExit" fx:id="btnMenuExit" alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#handlerExit" prefHeight="31.0" prefWidth="81.0" style="-fx-padding: 0;" styleClass="removeBorders" stylesheets="@css/app.css" text="Exit" textAlignment="CENTER">
             <HBox.margin>
                 <Insets />
             </HBox.margin>
