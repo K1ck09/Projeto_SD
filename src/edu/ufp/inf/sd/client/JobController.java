@@ -268,7 +268,18 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     public void handlerResumeJob(ActionEvent actionEvent) {
     }
 
-    public void handlerDeleteJob(ActionEvent actionEvent) {
+    public void handlerDeleteJob(ActionEvent actionEvent) throws IOException {
+        this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName());
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
+        Parent menuParent = loader.load();
+        Scene menuScene = new Scene(menuParent);
+        Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        MenuController controller = loader.getController();
+        controller.MenuControllerInit(this.client);
+        app_stage.setScene(menuScene);
+        app_stage.setHeight(668.0);
+        app_stage.setWidth(1049.0);
+        app_stage.show();
     }
 
     public void handlerMenuHome(MouseEvent mouseEvent) throws IOException {

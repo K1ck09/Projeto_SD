@@ -80,4 +80,8 @@ public class DBMockup {
     public ArrayList<MenuControllerRI> getMenuList() {
         return menuList;
     }
+
+    public void removeJob(String jobName) {
+        this.jobGroups.remove(jobName);
+    }
 }

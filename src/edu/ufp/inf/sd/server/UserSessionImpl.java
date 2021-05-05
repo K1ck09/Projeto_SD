@@ -95,6 +95,12 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         this.db.addList(controller);
     }
 
+    @Override
+    public void removeJob(String jobName) throws IOException {
+        this.db.removeJob(jobName);
+        updateMenus();
+    }
+
     public boolean isError() throws RemoteException{
         return error;
     }
