@@ -1,8 +1,10 @@
 package edu.ufp.inf.sd.server;
 
-import edu.ufp.inf.sd.client.JobShopClient;
+import edu.ufp.inf.sd.client.MenuController;
+import edu.ufp.inf.sd.client.MenuControllerRI;
 import edu.ufp.inf.sd.client.WorkerRI;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.HashMap;
@@ -61,10 +63,17 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
 
     @Override
-    public Map<String, JobGroupRI> createJob(UserSessionRI userSessionRI, HashMap<String, String> item) throws RemoteException {
+    public Map<String, JobGroupRI> createJob( UserSessionRI userSessionRI, HashMap<String, String> item) throws IOException {
         JobGroupRI jobGroup= new JobGroupImpl(userSessionRI,item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"));
         db.addJob(jobGroup);
+        updateMenus();
         return db.getJobGroups();
+    }
+
+    private void updateMenus() throws IOException {
+        for(MenuControllerRI c : db.getMenuList()){
+            c.updateMenu();
+        }
     }
 
     public JobGroupRI getJobGroup(String jobName){
@@ -73,5 +82,10 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
     public User getUser()throws RemoteException {
         return user;
+    }
+
+    @Override
+    public void addList(MenuControllerRI controller) throws IOException {
+        this.db.addList(controller);
     }
 }

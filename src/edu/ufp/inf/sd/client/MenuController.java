@@ -16,14 +16,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.*;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MenuController extends LoadGUIClient {
+public class MenuController extends UnicastRemoteObject implements MenuControllerRI {
 
     public VBox table;
     public Button btnCreateTask;
@@ -52,6 +54,9 @@ public class MenuController extends LoadGUIClient {
     private Map<String, JobGroupRI> jobGroups = new HashMap<>();
     public JobShopClient client;
 
+    public MenuController() throws RemoteException {
+    }
+
     public void MenuControllerInit(JobShopClient client) throws IOException {
         this.client = client;
         //Set user info
@@ -71,10 +76,11 @@ public class MenuController extends LoadGUIClient {
             }
         });
         // Update Joblist
-        jobGroups = client.userSessionRI.getJobList();
+        updateMenu();
+        /*jobGroups = client.userSessionRI.getJobList();
         if (!jobGroups.isEmpty()) {
             insertItemsInTable();
-        }
+        }*/
         //Update
         updateStatistics();
     }
@@ -136,7 +142,7 @@ public class MenuController extends LoadGUIClient {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-        file= fileChooser.showOpenDialog(stage);
+        file= fileChooser.showOpenDialog((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
         btnFile.setText(file.getName());
     }
 
@@ -240,11 +246,17 @@ public class MenuController extends LoadGUIClient {
     }
 
     private void insertItemsInTable() throws IOException {
+        Platform.runLater(
+                () -> {
         table.getChildren().clear();
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI job : jobsList) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
-            Parent menuParent = loader.load();
+            try {
+                Parent menuParent = loader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             ItemController controller = loader.getController();
             controller.setClient(this.client);
             Node node = loader.getRoot();
@@ -259,32 +271,66 @@ public class MenuController extends LoadGUIClient {
                             if (label instanceof Label) {
                                 String id = label.getId();
                                 if (id != null && id.compareTo("tableJob") == 0) {
-                                    ((Label) label).setText(job.getJobName());
+                                    try {
+                                        ((Label) label).setText(job.getJobName());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else if (id != null && id.compareTo("tableOwner") == 0) {
-                                    ((Label) label).setText(job.getJobOwner());
+                                    try {
+                                        ((Label) label).setText(job.getJobOwner());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else if (id != null && id.compareTo("tableStrat") == 0) {
-                                    ((Label) label).setText(job.getJobStrat());
+                                    try {
+                                        ((Label) label).setText(job.getJobStrat());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else if (id != null && id.compareTo("tableReward") == 0) {
-                                    ((Label) label).setText(job.getJobReward());
+                                    try {
+                                        ((Label) label).setText(job.getJobReward());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else if (id != null && id.compareTo("tableWorkers") == 0) {
-                                    ((Label) label).setText(job.getWorkersSize().toString());
+                                    try {
+                                        ((Label) label).setText(job.getWorkersSize().toString());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else if (id != null && id.compareTo("tableState") == 0) {
-                                    ((Label) label).setText(job.getState());
+                                    try {
+                                        ((Label) label).setText(job.getState());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
-                                    ((Label) label).setText(job.getTotalShares()+"/"+job.getWorkload());
+                                    try {
+                                        ((Label) label).setText(job.getTotalShares()+"/"+job.getWorkload());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 }else if (id != null && id.compareTo("tableBestResult") == 0) {
-                                    ((Label) label).setText(job.getBestResut());
+                                    try {
+                                        ((Label) label).setText(job.getBestResut());
+                                    } catch (RemoteException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
                             }
                     }
             }
             table.getChildren().add(node);
         }
+                });
     }
 
     public void handlerLogout(MouseEvent mouseEvent) throws IOException {
         this.client.userSessionRI.logout();
-        changeScene("layouts/login.fxml");
+        LoadGUIClient l=new LoadGUIClient();
+        l.changeScene("layouts/login.fxml");
 
     }
 
@@ -319,4 +365,11 @@ public class MenuController extends LoadGUIClient {
     }
 
 
+    @Override
+    public void updateMenu() throws IOException {
+        jobGroups = client.userSessionRI.getJobList();
+        if (!jobGroups.isEmpty()) {
+            insertItemsInTable();
+        }
+    }
 }

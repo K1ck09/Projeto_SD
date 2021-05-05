@@ -1,5 +1,7 @@
 package edu.ufp.inf.sd.server;
 
+import edu.ufp.inf.sd.client.MenuController;
+import edu.ufp.inf.sd.client.MenuControllerRI;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.rmi.RemoteException;
@@ -16,11 +18,13 @@ public class DBMockup {
 
     //job name and job object
     private Map<String, JobGroupRI> jobGroups;
+    private ArrayList<MenuControllerRI> menuList;
 
     public DBMockup() {
         this.users = new HashMap<>();
         this.sessions = new HashMap<>();
         this.jobGroups =new HashMap<>();
+        this.menuList = new ArrayList<>();
 
         User user = new User("a","a",10000);
         User user1 = new User("q","q",10000);
@@ -69,4 +73,11 @@ public class DBMockup {
         this.jobGroups.put(jobGroup.getJobName(),jobGroup);
     }
 
+    public void addList(MenuControllerRI controller) {
+        menuList.add(controller);
+    }
+
+    public ArrayList<MenuControllerRI> getMenuList() {
+        return menuList;
+    }
 }

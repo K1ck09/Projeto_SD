@@ -1,6 +1,8 @@
 package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.JobShopClient;
+import edu.ufp.inf.sd.client.MenuController;
+import edu.ufp.inf.sd.client.MenuControllerRI;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.io.File;
@@ -18,6 +20,8 @@ public interface UserSessionRI extends Remote {
     void logout() throws RemoteException;
     boolean isJobUnique(String jobName) throws RemoteException;
     Map<Integer, WorkerRI> getWorkersMap(String jobGroupRI) throws RemoteException ;
-    Map<String, JobGroupRI> createJob(UserSessionRI userSessionRI,HashMap<String, String> item) throws RemoteException;
+    Map<String, JobGroupRI> createJob( UserSessionRI userSessionRI, HashMap<String, String> item) throws IOException;
     public User getUser()throws RemoteException;
+
+    void addList(MenuControllerRI controller) throws IOException;
 }
