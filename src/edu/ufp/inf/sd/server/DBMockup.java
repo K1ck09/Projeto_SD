@@ -18,13 +18,13 @@ public class DBMockup {
 
     //job name and job object
     private Map<String, JobGroupRI> jobGroups;
-    private ArrayList<MenuControllerRI> menuList;
+    private HashMap<String,MenuControllerRI> menuList;
 
     public DBMockup() {
         this.users = new HashMap<>();
         this.sessions = new HashMap<>();
         this.jobGroups =new HashMap<>();
-        this.menuList = new ArrayList<>();
+        this.menuList = new HashMap<>();
 
         User user = new User("a","a",10000);
         User user1 = new User("q","q",10000);
@@ -59,7 +59,7 @@ public class DBMockup {
         this.sessions.put(user.getUsername(),user);
     }
 
-    public void removeSession(String username){
+    public void removeSession(String username) throws RemoteException {
         this.sessions.remove(username);
     }
     // JOB METHODS
@@ -73,15 +73,19 @@ public class DBMockup {
         this.jobGroups.put(jobGroup.getJobName(),jobGroup);
     }
 
-    public void addList(MenuControllerRI controller) {
-        menuList.add(controller);
+    public void addList(MenuControllerRI controller,String user) {
+        menuList.put(user,controller);
     }
 
-    public ArrayList<MenuControllerRI> getMenuList() {
+    public HashMap<String,MenuControllerRI> getMenuList() {
         return menuList;
     }
 
     public void removeJob(String jobName) {
         this.jobGroups.remove(jobName);
+    }
+
+    public void removeFromList(String username) {
+        this.menuList.remove(username);
     }
 }

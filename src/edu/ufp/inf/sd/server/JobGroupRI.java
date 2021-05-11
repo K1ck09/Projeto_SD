@@ -30,5 +30,7 @@ public interface JobGroupRI extends Remote {
     byte[] downloadFileFromServer(String serverpath) throws RemoteException, IOException;
     void updateTotalShares(int totalShares, WorkerRI worker)throws RemoteException, IOException;
     public WorkerRI getBestResult() throws RemoteException;
-    void addToList(JobControllerRI jobController) throws IOException;
+    void addToList(JobControllerRI jobController,String user) throws IOException;
+
+    void removeFromList(String username)throws RemoteException;
 }

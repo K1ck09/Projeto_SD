@@ -63,7 +63,8 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     public void init(JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
         this.client = client;
         this.jobGroupRI = jobGroupRI;
-        this.jobGroupRI.addToList(this);
+        this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
+        this.jobGroupRI.addToList(this,this.client.userSessionRI.getUsername());
         updateJobItem();
         if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnsJob.setVisible(true);
@@ -243,6 +244,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
+        this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
         Platform.exit();
         System.exit(0);
@@ -322,6 +324,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     public void handlerMenuHome(MouseEvent mouseEvent) throws IOException {
+        this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/Menu.fxml"));
         Parent menuParent = loader.load();
         Scene menuScene = new Scene(menuParent);

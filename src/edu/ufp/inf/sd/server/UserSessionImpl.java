@@ -54,7 +54,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     public void logout() throws RemoteException {
         this.db.removeSession(this.user.getUsername());
         Logger.getLogger(this.getClass().getName()).log(Level.INFO, "\n-Logged OUT : {0}", new Object[]{user.getUsername()});
-
+        this.user=null;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
     @Override
     public void updateMenus() throws IOException {
-        for(MenuControllerRI c : db.getMenuList()){
+        for(MenuControllerRI c : db.getMenuList().values()){
             c.updateMenu();
         }
     }
@@ -91,8 +91,13 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public void addList(MenuControllerRI controller) throws IOException {
-        this.db.addList(controller);
+    public void addList(MenuControllerRI controller,String user) throws IOException {
+        this.db.addList(controller,user);
+    }
+
+    @Override
+    public void removeFromList(String username) throws RemoteException {
+        this.db.removeFromList(username);
     }
 
     @Override

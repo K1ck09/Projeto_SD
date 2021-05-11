@@ -30,7 +30,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
    UserSessionRI client;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\server\\files\\";
-    private ArrayList<JobControllerRI> list=new ArrayList<>();
+    private HashMap<String,JobControllerRI> list=new HashMap<>();
 
     protected JobGroupImpl(UserSessionRI client,String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
         this.client=client;
@@ -62,7 +62,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         if(this.totalShares<Integer.parseInt(this.workLoad) && worker.getState().getCurrentState().compareTo("StandBy")==0){
             this.totalShares++;
             updateList();
-            //this.client.updateMenus();//deixar se não causar lag
+            this.client.updateMenus();//deixar se não causar lag
             worker.setTotalShares(worker.getTotalShares()+1);
             worker.setOperation();
         }else{
@@ -77,15 +77,21 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public void addToList(JobControllerRI jobController) throws IOException{
-        list.add(jobController);
+    public void addToList(JobControllerRI jobController,String user) throws IOException{
+        this.list.put(user,jobController);
+    }
+
+    @Override
+    public void removeFromList(String username) throws RemoteException {
+        this.list.remove(username);
     }
 
     private void updateList() throws IOException {
-        for(JobControllerRI j:list){
+        for(JobControllerRI j:list.values()){
             j.updateGUI();
         }
     }
+
     private void notifyAllWorkers() throws IOException {
         for(WorkerRI w :jobWorkers.values()){
             w.updateWorkerController();

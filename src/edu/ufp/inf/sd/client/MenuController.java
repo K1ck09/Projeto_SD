@@ -57,8 +57,10 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
 
     public MenuController() throws RemoteException {
     }
+
     public void MenuControllerInit(JobShopClient client,String message) throws IOException{
         this.client = client;
+        this.client.userSessionRI.addList(this,this.client.userSessionRI.getUsername());
         //Set user info
         menuUsername.setText("Username: " + client.userSessionRI.getUsername());
         menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
@@ -328,6 +330,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     public void handlerLogout(MouseEvent mouseEvent) throws IOException {
+        this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
         LoadGUIClient l=new LoadGUIClient();
         l.changeScene("layouts/login.fxml");
@@ -338,6 +341,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
+        this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
         Platform.exit();
         System.exit(0);
@@ -538,6 +542,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
             System.out.println("UPDATE MENU 4");
             insertItemsInTable();
         }
-        //updateStatistics();
+        updateStatistics();
     }
+
 }
