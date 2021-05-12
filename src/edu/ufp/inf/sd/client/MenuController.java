@@ -299,8 +299,13 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                                             ((Label) label).setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green  #ff3232 red
                                             ((Label) label).setText(job.getState());
                                         }else if ((job.getState().compareTo("OnGoing")==0)){
+                                            ((Label) label).setStyle("-fx-text-fill: #238f65"); //#0dbc00 green  #ff3232 red
+                                            ((Label) label).setText(job.getState());
+
+                                        }else if ((job.getState().compareTo("Paused")==0)){
                                             ((Label) label).setStyle("-fx-text-fill: #c38700"); //#0dbc00 green  #ff3232 red
                                             ((Label) label).setText(job.getState());
+
                                         }else if((job.getState().compareTo("Finished")==0)){
                                             ((Label) label).setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green  #ff3232 red
                                             ((Label) label).setText(job.getState());
@@ -343,6 +348,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
+        this.client=null;
+        this.jobGroups.clear();
         Platform.exit();
         System.exit(0);
     }
@@ -537,7 +544,9 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     @Override
     public void updateMenu() throws IOException {
         jobGroups = client.userSessionRI.getJobList();
-        insertItemsInTable();
+        if(!jobGroups.isEmpty()){
+            insertItemsInTable();
+        }
         updateStatistics();
     }
 

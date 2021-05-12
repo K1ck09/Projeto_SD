@@ -39,7 +39,7 @@ public interface WorkerRI extends Remote {
 
     void setTotalRewarded(int totalRewarded) throws RemoteException;
 
-    void changeState(String paused) throws IOException;
+    void changeState(String state) throws IOException;
 
-    void setState(String paused) throws IOException;
+    void setState(String state) throws IOException;
 }

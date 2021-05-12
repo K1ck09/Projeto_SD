@@ -40,13 +40,13 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public void changeState(String paused) {
-        this.state.setCurrentState(paused);
+    public void changeState(String state) {
+        this.state.setCurrentState(state);
     }
 
     @Override
-    public void setState(String paused) throws IOException {
-        this.state.setCurrentState(paused);
+    public void setState(String state) throws IOException {
+        this.state.setCurrentState(state);
         JobGroupRI.updateTotalShares(this);
     }
 

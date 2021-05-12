@@ -75,11 +75,11 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                     jobWorkers.get(bestCombination.get(0).getId()).setTotalRewarded(Integer.parseInt(this.reward));
                     this.paid = true;
                 }
-                notifyAllWorkers();
+                notifyAllWorkers("Stopped");
             }
         }else if(this.state.getCurrentState().compareTo("Paused")==0) {
             for (WorkerRI w : jobWorkers.values()) {
-                w.changeState("paused");
+                w.changeState("Paused");
             }
             updateList();
             this.client.updateMenus();
@@ -122,9 +122,30 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         return idSize;
     }
 
-    private void notifyAllWorkers() throws IOException {
+    @Override
+    public void setState(String state) throws IOException {
+        this.state.setCurrentState(state);
+        if(state.compareTo("OnGoing")==0){
+            for (WorkerRI w : jobWorkers.values()) {
+                w.setState("Ongoing");
+            }
+            updateList();
+            this.client.updateMenus();
+        }
+    }
+
+    @Override
+    public boolean removeAllWorkers() throws IOException {
+       this.state.setCurrentState("Deleted");
+        this.client.setCredits(bestCombination.get(0).getOwner(), Integer.parseInt(this.reward));
+        jobWorkers.get(bestCombination.get(0).getId()).setTotalRewarded(Integer.parseInt(this.reward));
+        this.paid = true;
+        return true;
+    }
+
+    private void notifyAllWorkers(String state) throws IOException {
         for (WorkerRI w : jobWorkers.values()) {
-            w.changeState("Stopped");
+            w.changeState(state);
         }
         updateList();
         this.client.updateMenus();
