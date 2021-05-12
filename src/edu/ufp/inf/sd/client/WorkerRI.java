@@ -10,23 +10,16 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface WorkerRI extends Remote {
-    void setOperation(String filename, JobThread jobThread) throws RemoteException, IOException;
 
-    void setOperation() throws RemoteException, IOException;
+    void setOperation() throws IOException;
 
-    void updateMakeSpan(int makespan) throws RemoteException, IOException;
+    void updateMakeSpan(int makespan) throws IOException;
 
     int getBestMakespan() throws RemoteException;
 
     int getTotalShares() throws RemoteException;
 
     int getCurrentMakespan() throws RemoteException;
-
-    void resumeWorker() throws RemoteException;
-
-    void pauseWorker() throws RemoteException;
-
-    void deleteWorker() throws RemoteException;
 
     Integer getId() throws RemoteException;
 
@@ -40,13 +33,13 @@ public interface WorkerRI extends Remote {
 
     int getTotalRewarded() throws RemoteException;
 
-    void setOperation(String filePath) throws RemoteException, IOException;
-
-    void updateWorkerController() throws RemoteException, IOException;
+    void setFile(String filePath) throws IOException;
 
     void setTotalShares(int totalShares) throws RemoteException;
 
     void setTotalRewarded(int totalRewarded) throws RemoteException;
+
+    void changeState(String paused) throws IOException;
 
     void setState(String paused) throws IOException;
 }

@@ -237,7 +237,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         }
     }
 
-    private void insertItemsInTable() throws IOException {
+    private void insertItemsInTable() {
         Platform.runLater(
                 () -> {
         table.getChildren().clear();

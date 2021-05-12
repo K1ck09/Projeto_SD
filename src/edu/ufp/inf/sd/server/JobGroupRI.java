@@ -18,7 +18,7 @@ public interface JobGroupRI extends Remote {
     State getJobState()throws RemoteException;
     Integer getWorkersSize()throws RemoteException;
     String getState() throws RemoteException;
-    boolean attachWorker(WorkerRI worker) throws RemoteException, IOException;
+    boolean attachWorker(WorkerRI worker) throws IOException;
     Map<Integer, WorkerRI> getJobWorkers()throws RemoteException;
     String getWorkload()throws RemoteException;
 
@@ -26,16 +26,16 @@ public interface JobGroupRI extends Remote {
 
     Integer getTotalShares() throws RemoteException;
 
-    void uploadFile(byte[] mydata) throws RemoteException, IOException;
-    byte[] downloadFileFromServer(String serverpath) throws RemoteException, IOException;
-    void updateTotalShares(WorkerRI worker)throws RemoteException, IOException;
+    void uploadFile(byte[] mydata) throws IOException;
+    byte[] downloadFileFromServer(String serverpath) throws IOException;
+    void updateTotalShares(WorkerRI worker)throws IOException;
     WorkerRI getBestResult() throws RemoteException;
     void addToList(JobControllerRI jobController,String user) throws IOException;
 
     void removeFromList(String username)throws RemoteException;
     void updateList() throws IOException;
 
-    void removeWorker(WorkerRI selectedWorker) throws RemoteException;
+    void removeWorker(WorkerRI selectedWorker) throws IOException;
 
     int getIdsSize() throws RemoteException;
 }

@@ -2,7 +2,6 @@ package edu.ufp.inf.sd.server;
 
 import edu.ufp.inf.sd.client.JobController;
 import edu.ufp.inf.sd.client.JobControllerRI;
-import edu.ufp.inf.sd.client.JobShopClient;
 import edu.ufp.inf.sd.client.WorkerRI;
 
 import java.io.*;
@@ -20,13 +19,10 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private State state;
     private String workLoad;
     private Integer totalShares = 0;
-    private File file;
     private String filePath;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
     ArrayList<WorkerRI> bestCombination = new ArrayList<>();
     private boolean paid = false;
-    JobController jobController = null;
-    // private JobThread jobThread;
     UserSessionRI client;
     Integer idSize=0;
 
@@ -51,6 +47,9 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     @Override
     public synchronized void updateTotalShares(WorkerRI worker) throws IOException {
         if(this.state.getCurrentState().compareTo("OnGoing")==0 || this.state.getCurrentState().compareTo("Available")==0){
+            if(worker.getState().getCurrentState().compareTo("Available") == 0){
+                worker.changeState("Ongoing");
+            }
             if (bestCombination.isEmpty() ) {
                 bestCombination.add(worker);
             } else {
@@ -80,11 +79,26 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             }
         }else if(this.state.getCurrentState().compareTo("Paused")==0) {
             for (WorkerRI w : jobWorkers.values()) {
-                w.setState("paused");
+                w.changeState("paused");
             }
             updateList();
             this.client.updateMenus();
         }
+    }
+
+    @Override
+    public boolean attachWorker(WorkerRI worker) throws IOException {
+        if (jobWorkers.size() == 0) {
+            this.state.setCurrentState("OnGoing");
+        }
+        if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0) {
+            jobWorkers.put(worker.getId(), worker);
+            idSize++;
+            worker.setFile(filePath);
+            updateList();
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -95,57 +109,35 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public void removeWorker(WorkerRI selectedWorker) throws RemoteException {
+    public void removeWorker(WorkerRI selectedWorker) throws IOException {
         if(bestCombination.get(0).getId().equals(selectedWorker.getId())){
             bestCombination.clear();
         }
         this.jobWorkers.remove(selectedWorker.getId());
+        updateList();
     }
 
     @Override
-    public int getIdsSize() throws RemoteException {
+    public int getIdsSize() {
         return idSize;
     }
 
     private void notifyAllWorkers() throws IOException {
         for (WorkerRI w : jobWorkers.values()) {
-            w.updateWorkerController();
+            w.changeState("Stopped");
         }
         updateList();
         this.client.updateMenus();
     }
 
     @Override
-    public void addToList(JobControllerRI jobController, String user) throws IOException {
+    public void addToList(JobControllerRI jobController, String user) {
         this.list.put(user, jobController);
     }
 
     @Override
-    public void removeFromList(String username) throws RemoteException {
+    public void removeFromList(String username) {
         this.list.remove(username);
-    }
-
-    @Override
-    public boolean attachWorker(WorkerRI worker) throws RemoteException, IOException {
-        if (jobWorkers.size() == 0) {
-            this.state.setCurrentState("OnGoing");
-        }
-        if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0) {
-            jobWorkers.put(worker.getId(), worker);
-            idSize++;
-            //Job Threadvariaveis todas a 0/null;
-            // Thread t=new Thread(jobThread);
-            // System.out.println("starting THREAD");
-            // t.start();
-            worker.setOperation(filePath);
-            updateList();
-            return true;
-        }
-        return false;
-    }
-
-    public String getFilePath() {
-        return filePath;
     }
 
     public void setTotalShares(Integer totalShares) {
@@ -161,7 +153,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public WorkerRI getBestResult() throws RemoteException {
+    public WorkerRI getBestResult() {
         if (bestCombination.size() != 0) {
             return bestCombination.get(0);
         }
@@ -169,7 +161,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public Integer getTotalShares() throws RemoteException {
+    public Integer getTotalShares() {
         return totalShares;
     }
 
@@ -177,11 +169,8 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     public void uploadFile(byte[] mydata) throws IOException {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH_mm_ss");
         LocalDateTime now = LocalDateTime.now();
-        file = new File(FILE_PATH + getJobOwner() + jobName + dtf.format(now));
+        File file = new File(FILE_PATH + getJobOwner() + jobName + dtf.format(now));
         filePath = file.getAbsolutePath();
-
-        //creates a file ||
-        //               vv
         FileOutputStream out = new FileOutputStream(file);
         out.write(mydata);
         out.flush();
@@ -189,7 +178,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public byte[] downloadFileFromServer(String serverpath) throws RemoteException, IOException {
+    public byte[] downloadFileFromServer(String serverpath) throws IOException {
         byte[] mydata;
 
         File serverpathfile = new File(serverpath);
@@ -207,7 +196,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public String getWorkload() throws RemoteException {
+    public String getWorkload() {
         return workLoad;
     }
 

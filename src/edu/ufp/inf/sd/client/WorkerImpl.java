@@ -1,7 +1,6 @@
 package edu.ufp.inf.sd.client;
 
 import edu.ufp.inf.sd.server.JobGroupRI;
-import edu.ufp.inf.sd.server.JobThread;
 import edu.ufp.inf.sd.server.State;
 import edu.ufp.inf.sd.server.User;
 
@@ -19,49 +18,30 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private int totalShares=0;
     private int currentMakespan;
     private int totalRewarded=0;
-    private JobGroupRI JobGroupRI;
-    private Operations op;
+    private final JobGroupRI JobGroupRI;
     private static final String PATH_FILE="C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\client\\temp\\";
     private File file;
-    private JobController controller;
-    private JobThread jobThread;
 
-    protected WorkerImpl( JobShopClient client,Integer id,User jobOwner, State state,String jobGroupName,JobController controller) throws RemoteException {
+
+    protected WorkerImpl( JobShopClient client,Integer id,User jobOwner, State state,String jobGroupName) throws RemoteException {
         this.id=id;
         this.owner=jobOwner;
         this.client=client;
         this.state=state;
         this.jobGroupName = jobGroupName;
         this.JobGroupRI=client.userSessionRI.getJobList().get(jobGroupName);
-        this.controller=controller;
     }
 
     @Override
-    public void setOperation(String filepath, JobThread jobThread) throws RemoteException,IOException {
-        this.jobThread=jobThread;
-        // Usar quando implemntar JobThead
-    }
-
-    @Override
-    public void setOperation(String filePath)throws RemoteException,IOException {
-        downloadFile(filePath);
-        op= new Operations(file.getAbsolutePath(),this);
-        this.state.setCurrentState("Ongoing");
-        JobGroupRI.updateTotalShares(this);
-    }
-
-    @Override
-    public void updateWorkerController() throws RemoteException, IOException {
-        this.state.setCurrentState("Stopped");
-        //this.controller.update();
-    }
-
-    @Override
-    public void setOperation()throws RemoteException,IOException {
-        op= new Operations(file.getAbsolutePath(),this);
-        this.state.setCurrentState("Ongoing");
+    public void setOperation() {
+        Operations op = new Operations(file.getAbsolutePath(), this);
         Thread t=new Thread(op);
         t.start();
+    }
+
+    @Override
+    public void changeState(String paused) {
+        this.state.setCurrentState(paused);
     }
 
     @Override
@@ -71,7 +51,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
+    public synchronized void updateMakeSpan(int makespan) throws IOException {
             this.currentMakespan=makespan;
             //System.out.println("["+id+"] -> "+currentMakespan);
             if(this.bestMakespan>this.currentMakespan){
@@ -81,7 +61,13 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             JobGroupRI.updateTotalShares(this);
     }
 
-    private void downloadFile( String filepath) throws RemoteException,IOException {
+    @Override
+    public void setFile(String filePath)throws IOException {
+        downloadFile(filePath);
+        JobGroupRI.updateTotalShares(this);
+    }
+
+    private void downloadFile( String filepath) throws IOException {
         byte [] data = JobGroupRI.downloadFileFromServer(filepath);
         this.file=new File(PATH_FILE+this.id+"_"+owner.getUsername()+"_"+jobGroupName);
         FileOutputStream out = new FileOutputStream(this.file);
@@ -89,36 +75,26 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         out.flush();
         out.close();
     }
-    public int getCurrentMakespan()throws RemoteException {
+
+    public int getCurrentMakespan() {
         return currentMakespan;
     }
-    public int getBestMakespan() throws RemoteException{
+    public int getBestMakespan() {
         return bestMakespan;
     }
-    public int getTotalShares() throws RemoteException{
+    public int getTotalShares() {
         return totalShares;
     }
-    public void setTotalShares(int totalShares)throws RemoteException {
+    public void setTotalShares(int totalShares) {
         this.totalShares = totalShares;
     }
-    @Override
-    public void resumeWorker() throws RemoteException{
 
-    }
     @Override
-    public void pauseWorker() throws RemoteException{
-
-    }
-    @Override
-    public void deleteWorker() throws RemoteException{
-
-    }
-    @Override
-    public Integer getId() throws RemoteException{
+    public Integer getId() {
         return id;
     }
     @Override
-    public State getState() throws RemoteException{
+    public State getState() {
         return state;
     }
     @Override
@@ -139,7 +115,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         return totalRewarded;
     }
 
-    public void setTotalRewarded(int totalRewarded) throws RemoteException {
+    public void setTotalRewarded(int totalRewarded) {
         this.totalRewarded = totalRewarded;
     }
 }

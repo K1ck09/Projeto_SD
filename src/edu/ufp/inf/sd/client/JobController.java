@@ -34,7 +34,6 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     public Label jobReward;
     public Label jobWorkers;
     public Label jobState;
-    public ScrollPane tableWorkers;
     public Button btnAddWorkers;
     public TextField workersNum;
     public Label menuUsername;
@@ -77,7 +76,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
-    private void updateUser() throws RemoteException {
+    private void updateUser() {
         Platform.runLater(
                 () -> {
                     try {
@@ -93,7 +92,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                 } );
     }
 
-    private void updateJobItem() throws RemoteException {
+    private void updateJobItem() {
         Platform.runLater(
                 () -> {
                     try {
@@ -126,7 +125,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                             jobState.setStyle("-fx-text-fill: #0dbc00");
                             jobState.setText(jobGroupRI.getState());
                         }else if(jobGroupRI.getState().compareTo("OnGoing")==0){
-                            jobState.setStyle("-fx-text-fill: #c38700");
+                            jobState.setStyle("-fx-text-fill: #238f65");
                             jobState.setText(jobGroupRI.getState());
                         }else if(jobGroupRI.getState().compareTo("Finished")==0){
                             jobState.setStyle("-fx-text-fill: #ff3232");
@@ -149,7 +148,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         );
     }
 
-    private void insertWorkersInTable() throws IOException {
+    private void insertWorkersInTable() {
         Platform.runLater(() -> {
             table.getChildren().clear();
 /*            try {
@@ -191,7 +190,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                                 ((Label) label).setStyle("-fx-text-fill: #0dbc00");
                                                 ((Label) label).setText(worker.getState().getCurrentState());
                                             }else if(worker.getState().getCurrentState().compareTo("Paused")==0){
-                                                ((Label) label).setStyle("-fx-text-fill: #238f65");
+                                                ((Label) label).setStyle("-fx-text-fill: #c38700"); //238f65
                                                 ((Label) label).setText(worker.getState().getCurrentState());
                                             }else if(worker.getState().getCurrentState().compareTo("Stopped")==0){
                                                 ((Label) label).setStyle("-fx-text-fill: #ff3232");
@@ -256,7 +255,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         if (num > 0) {
             for (int i = 0; i < num; i++) {
                 WorkerRI worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                        new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(), this);
+                        new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
                 //System.out.println(worker);
                 if (jobGroupRI.attachWorker(worker)) {
                     infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
@@ -384,12 +383,6 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
-    public void update() throws IOException {
-        updateJobItem();
-        updateJobWorkers();
-        insertWorkersInTable();
-        updateUser();
-    }
     @Override
     public void updateGUI() throws IOException {
         updateJobItem();

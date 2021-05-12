@@ -25,7 +25,7 @@ public class JobThread extends JobGroupImpl implements Runnable {
             try {
                 System.out.println(w.getOwner()+"-"+w.getId());
                 if(w.getState().getCurrentState().compareTo("Available")==0){
-                    w.setOperation(this.getFilePath(),this);
+                    //w.setFile(this.getFilePath(),this);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
