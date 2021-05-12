@@ -47,8 +47,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         downloadFile(filePath);
         op= new Operations(file.getAbsolutePath(),this);
         this.state.setCurrentState("Ongoing");
-        Thread t=new Thread(op);
-        t.start();
+        JobGroupRI.updateTotalShares(this);
     }
 
     @Override
@@ -66,15 +65,20 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
+    public void setState(String paused) throws IOException {
+        this.state.setCurrentState(paused);
+        JobGroupRI.updateTotalShares(this);
+    }
+
+    @Override
     public synchronized void updateMakeSpan(int makespan) throws RemoteException,IOException {
             this.currentMakespan=makespan;
             //System.out.println("["+id+"] -> "+currentMakespan);
             if(this.bestMakespan>this.currentMakespan){
                 this. bestMakespan=this.currentMakespan;
             }
-            this.state.setCurrentState("StandBy");
             //controller.update();
-            JobGroupRI.updateTotalShares(totalShares,this);
+            JobGroupRI.updateTotalShares(this);
     }
 
     private void downloadFile( String filepath) throws RemoteException,IOException {
@@ -85,7 +89,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         out.flush();
         out.close();
     }
-
     public int getCurrentMakespan()throws RemoteException {
         return currentMakespan;
     }
@@ -130,6 +133,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public JobShopClient getClient() {
         return client;
     }
+
     @Override
     public int getTotalRewarded() {
         return totalRewarded;

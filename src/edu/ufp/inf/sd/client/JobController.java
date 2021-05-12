@@ -56,6 +56,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
+    private WorkerRI selectedWorker=null;
 
     public JobController() throws RemoteException {
     }
@@ -189,8 +190,8 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                             if(worker.getState().getCurrentState().compareTo("Ongoing")==0){
                                                 ((Label) label).setStyle("-fx-text-fill: #0dbc00");
                                                 ((Label) label).setText(worker.getState().getCurrentState());
-                                            }else if(worker.getState().getCurrentState().compareTo("StandBy")==0){
-                                                ((Label) label).setStyle("-fx-text-fill: #c38700");
+                                            }else if(worker.getState().getCurrentState().compareTo("Paused")==0){
+                                                ((Label) label).setStyle("-fx-text-fill: #238f65");
                                                 ((Label) label).setText(worker.getState().getCurrentState());
                                             }else if(worker.getState().getCurrentState().compareTo("Stopped")==0){
                                                 ((Label) label).setStyle("-fx-text-fill: #ff3232");
@@ -254,7 +255,8 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         int num = Integer.parseInt(workersNum.getText());
         if (num > 0) {
             for (int i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client, jobGroupRI.getWorkersSize() + 1, client.userSessionRI.getUser(), new State("Available", String.valueOf(jobGroupRI.getWorkersSize() + 1)), jobGroupRI.getJobName(), this);
+                WorkerRI worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                        new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(), this);
                 //System.out.println(worker);
                 if (jobGroupRI.attachWorker(worker)) {
                     infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
@@ -280,13 +282,40 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         workersMap = client.userSessionRI.getWorkersMap(jobGroupRI.getJobName());
     }
 
-    public void handlerPauseWorker(ActionEvent actionEvent) {
+    public void handlerPauseWorker(ActionEvent actionEvent) throws IOException {
+        if(selectedWorker!=null){
+            selectedWorker.setState("Paused");
+            infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
+            try {
+                infoMessage.setText("Worker ["+selectedWorker.getId()+"] Paused");
+            } catch (RemoteException e) {
+                infoMessage.setText("Worker Paused");
+            }
+        }
     }
 
-    public void handlerResumeWorker(ActionEvent actionEvent) {
+    public void handlerResumeWorker(ActionEvent actionEvent) throws IOException {
+        if(selectedWorker!=null){
+            selectedWorker.setState("Ongoing");
+            infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
+            try {
+                infoMessage.setText("Worker ["+selectedWorker.getId()+"] Resumed");
+            } catch (RemoteException e) {
+                infoMessage.setText("Worker Resumed");
+            }
+        }
     }
 
-    public void handlerDeleteWorker(ActionEvent actionEvent) {
+    public void handlerDeleteWorker(ActionEvent actionEvent) throws RemoteException {
+        if(selectedWorker!=null){
+            this.jobGroupRI.removeWorker(selectedWorker);
+            infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+            try {
+                infoMessage.setText("Worker ["+selectedWorker.getId()+"] Deleted");
+            } catch (RemoteException e) {
+                infoMessage.setText("Worker Deleted");
+            }
+        }
     }
 
     public void handlerPauseJob(ActionEvent actionEvent) {
@@ -340,6 +369,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     public void showWorkerbuttons(int workerID) throws RemoteException {
         if (jobGroupRI.getJobWorkers().get(workerID).getOwner().getUsername().compareTo(client.userSessionRI.getUsername()) == 0) {
             btnsWorkers.setVisible(true);
+            this.selectedWorker=this.jobGroupRI.getJobWorkers().get(workerID);
         }
     }
 

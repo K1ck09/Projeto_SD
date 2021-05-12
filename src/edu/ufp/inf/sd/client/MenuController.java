@@ -537,11 +537,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     @Override
     public void updateMenu() throws IOException {
         jobGroups = client.userSessionRI.getJobList();
-        System.out.println("JOBS"+jobGroups.size());
-        if (!jobGroups.isEmpty()) {
-            System.out.println("UPDATE MENU 4");
-            insertItemsInTable();
-        }
+        insertItemsInTable();
         updateStatistics();
     }
 
