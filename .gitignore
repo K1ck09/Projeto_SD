@@ -1,4 +1,7 @@
-src/edu/ufp/inf/sd/runscripts_rmi/setenv.bat
+src/edu/ufp/inf/sd/rmi/runscripts_rmi/setenv.bat
+src/edu/ufp/inf/sd/rmq/runscripts_rmi/setenv.bat
 out/
-src/edu/ufp/inf/sd/server/files/*
-src/edu/ufp/inf/sd/client/temp/*
+src/edu/ufp/inf/sd/rmi/server/files/*
+src/edu/ufp/inf/sd/rmi/client/temp/*
+src/edu/ufp/inf/sd/rmq/server/files/*
+src/edu/ufp/inf/sd/rmq/client/temp/*
