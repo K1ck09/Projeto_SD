@@ -163,11 +163,6 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     private void insertWorkersInTable() {
         Platform.runLater(() -> {
             table.getChildren().clear();
-/*            try {
-                printHashMap(workersMap);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }*/
             Collection<WorkerRI> workerList = workersMap.values();
             for (WorkerRI worker : workerList) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableWorker.fxml"));
@@ -362,35 +357,6 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
             infoMessage.setStyle("-fx-text-fill: #ff3232");
             infoMessage.setText("An Error occurred deleting the job");
         }
-        /*if(jobGroupRI.getState().compareTo("OnGoing")!=0 || jobGroupRI.getState().compareTo("Paused")!=0)
-        {
-            if(jobGroupRI.getState().compareTo("Available")==0)
-            {
-                int returnCredits= Integer.parseInt(this.jobGroupRI.getJobReward());
-                this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName()); // queria remover primeiro o job e so depois devolver os creditos
-                this.client.userSessionRI.setCredits(this.client.userSessionRI.getUser(), returnCredits);
-
-            }else if(jobGroupRI.getState().compareTo("Finished")==0){
-                this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName());
-            }else{
-                infoMessage.setStyle("-fx-text-fill: #ff3232");
-                infoMessage.setText("Dunno what happened");
-                return;
-            }
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
-            Parent menuParent = loader.load();
-            Scene menuScene = new Scene(menuParent);
-            Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            MenuController controller = loader.getController();
-            controller.MenuControllerInit(this.client,"Job removed with Success");
-            app_stage.setScene(menuScene);
-            app_stage.setHeight(668.0);
-            app_stage.setWidth(1049.0);
-            app_stage.show();
-        }else {
-            infoMessage.setStyle("-fx-text-fill: #ff3232");
-            infoMessage.setText("Job can't be removed if it's OnGoing!");
-        }*/
     }
 
     public void handlerMenuHome(MouseEvent mouseEvent) throws IOException {

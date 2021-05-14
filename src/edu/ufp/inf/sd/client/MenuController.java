@@ -109,11 +109,6 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         });
         // Update Joblist
         updateMenu();
-        /*jobGroups = client.userSessionRI.getJobList();
-        if (!jobGroups.isEmpty()) {
-            insertItemsInTable();
-        }*/
-        //Update
         updateStatistics();
     }
 

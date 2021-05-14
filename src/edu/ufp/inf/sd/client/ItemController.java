@@ -33,7 +33,6 @@ public class ItemController {
 
     public void handlerInsideJob(ActionEvent actionEvent) throws IOException {
         this.thisJob=this.client.userSessionRI.getJobList().get(tableJob.getText());
-        //insertItens();
         changeToMenuScene(actionEvent);
     }
 
@@ -43,7 +42,6 @@ public class ItemController {
         Scene menuScene = new Scene(menuParent);
         Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         JobController controller = loader.getController();
-        //JobGroupRI jobGroupRI = this.client.userSessionRI.getJobList().get(item.get("job"));
         controller.init(this.client,thisJob);
         app_stage.setScene(menuScene);
         app_stage.setHeight(668.0);
@@ -51,24 +49,6 @@ public class ItemController {
         app_stage.show();
     }
 
-    void insertItens(){
-        item.put("job", tableJob.getText());
-        item.put("owner",tableOwner.getText());
-        item.put("strat",tableStrat.getText());
-        item.put("reward", tableReward.getText());
-        item.put("workers",tableWorkers.getText());
-        item.put("State",tableState.getText());
-        item.put("load",tableWorkLoad.getText());
-        item.put("shares",tableBestResult.getText());
-    }
 
-    void clearItemMap(){
-        item.clear();
-    }
 
-    public void printHashMap(HashMap<String, String> hashMap) {
-        for (String value : hashMap.values()) {
-            System.out.println("value: " + value);
-        }
-    }
 }

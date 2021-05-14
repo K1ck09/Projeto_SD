@@ -29,24 +29,24 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         this.error=error;
     }
 
-    public String getUsername() throws RemoteException{
+    public String getUsername() {
         return user.getUsername();
     }
 
     @Override
-    public String getCredits() throws RemoteException {
+    public String getCredits() {
         user = db.getUser(user.getUsername());
         return String.valueOf(user.getCredits());
     }
 
     @Override
-    public void setCredits(User user,int credits) throws RemoteException{
+    public void setCredits(User user,int credits) {
         user.addCredits(credits);
         db.updateUser(user);
     }
 
     @Override
-    public Map<String, JobGroupRI> getJobList() throws RemoteException {
+    public Map<String, JobGroupRI> getJobList() {
         return db.getJobGroups();
     }
 

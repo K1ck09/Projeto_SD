@@ -57,7 +57,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             if(this.bestMakespan>this.currentMakespan){
                 this. bestMakespan=this.currentMakespan;
             }
-            //controller.update();
             JobGroupRI.updateTotalShares(this);
     }
 

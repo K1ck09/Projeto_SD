@@ -31,17 +31,12 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
     protected JobGroupImpl(UserSessionRI client, String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
         this.client = client;
-        //this.jobThread=new JobThread();
         this.jobName = jobName;
         this.owner = owner;
         this.strat = strat;
         this.reward = reward;
         this.state = new State("Available", this.jobName);
         this.workLoad = workLoad;
-    }
-
-    public JobGroupImpl() throws RemoteException {
-        super();
     }
 
     @Override
@@ -159,10 +154,6 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     @Override
     public void removeFromList(String username) {
         this.list.remove(username);
-    }
-
-    public void setTotalShares(Integer totalShares) {
-        this.totalShares = totalShares;
     }
 
     @Override

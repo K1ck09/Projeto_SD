@@ -1,7 +1,5 @@
 package edu.ufp.inf.sd.client;
 
-import edu.ufp.inf.sd.server.JobGroupRI;
-import edu.ufp.inf.sd.server.JobThread;
 import edu.ufp.inf.sd.server.State;
 import edu.ufp.inf.sd.server.User;
 
