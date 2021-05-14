@@ -42,6 +42,7 @@ public class JobShopClient {
     public JobShopClient() {
         try {
             //List ans set args
+            //System.out.println(System.setProperty("java.rmi.server.hostname","172.19.224.1"));
             String registryIP = "localhost";
             String registryPort = "4010";
             String serviceName = "JobShopService";
