@@ -1,9 +1,13 @@
 package edu.ufp.inf.sd.rmq.producer;
 
+import com.rabbitmq.client.BuiltinExchangeType;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import edu.ufp.inf.sd.rmi.util.tabusearch.TabuSearchJSSP;
+import edu.ufp.inf.sd.rmq.util.RabbitUtils;
 import edu.ufp.inf.sd.rmq.util.geneticalgorithm.CrossoverStrategies;
+import edu.ufp.inf.sd.rmq.util.geneticalgorithm.GeneticAlgorithmJSSP;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
@@ -31,47 +35,52 @@ import java.util.logging.Logger;
 public class Producer {
 
     /*+ name of the queue */
-    public final static String QUEUE_NAME="jssp_ga";
+    //public final static String QUEUE_NAME="hello_queue";
 
-    public static void main(String[] argv) {
-        //Connection connection=null;
-        //Channel channel=null;
+    /**
+     * Run publisher Send several times from terminal (will send msg "hello world" to Recv):
+     * $ ./runproducer
+     *
+     * Challenge: concatenate several words from command line args (args[3].. args[n]):
+     * $ ./runcnsumer hello world again (will concatenate msg "hello world again" to send)
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        RabbitUtils.printArgs(args);
 
-        /* Create a connection to the server (abstracts the socket connection,
-           protocol version negotiation and authentication, etc.) */
-        ConnectionFactory factory=new ConnectionFactory();
-        factory.setHost("localhost");
-        factory.setUsername("guest");
-        factory.setPassword("guest");
-        //factory.setPassword("guest4rabbitmq");
+        //Read args passed via shell command
+        String host=args[0];
+        int port=Integer.parseInt(args[1]);
+        //String queueName=args[2];
+        String exchangeName=args[2];
 
-        /* try-with-resources\. will close resources automatically in reverse order... avoids finally */
-        try (//Create a channel, which is where most of the API resides
-             Connection connection=factory.newConnection();
-             Channel channel=connection.createChannel()
-        ) {
-            /* We must declare a queue to send to; this is idempotent, i.e.,
-            it will only be created if it doesn't exist already;
-            then we can publish a message to the queue; The message content is a
-            byte array (can encode whatever we need). */
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+        /* try-with-resources will close resources automatically in reverse order... avoids finally */
+        try (Connection connection= RabbitUtils.newConnection2Server(host, port, "guest", "guest");
+             Channel channel= RabbitUtils.createChannel2Server(connection)) {
+            // Declare a queue where to send msg (idempotent, i.e., it will only be created if it doesn't exist);
+            //channel.queueDeclare(queueName, false, false, false, null);
             //channel.queueDeclare(QUEUE_NAME, true, false, false, null);
+            //String message="Hello World!";
 
-            // Change strategy to CrossoverStrategies.TWO
-            sendMessage(channel, String.valueOf(CrossoverStrategies.TWO.strategy));
-            Thread.currentThread().sleep(2000);
+            //
 
-            // Change strategy to CrossoverStrategies.THREE
-            sendMessage(channel, String.valueOf(CrossoverStrategies.THREE.strategy));
-            Thread.currentThread().sleep(2000);
+            TabuSearchJSSP tabuSearchJSSP = new TabuSearchJSSP()
+            GeneticAlgorithmJSSP geneticAlgorithmJSSP = new GeneticAlgorithmJSSP();
+            System.out.println(" [x] Declare exchange: '" + exchangeName + "' of type" + BuiltinExchangeType.FANOUT.toString());
+            // Publish a message to the queue (content is byte array encoded with UTF-8)
+            channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
+            String message = RabbitUtils.getMessage(args,3);
 
-            // Stop the GA
-            sendMessage(channel, "stop");
+            String routingKey="";
+            channel.basicPublish(exchangeName,routingKey,null,message.getBytes("UTF-8"));
+            System.out.println(" [x] Sent: '" + message + "'");
 
-        } catch (IOException | TimeoutException | InterruptedException e) {
+        } catch (IOException | TimeoutException e) {
             Logger.getLogger(Producer.class.getName()).log(Level.INFO, e.toString());
-        } /* The try-with-resources will close resources automatically in reverse order
-            finally {
+        }
+        /* try-with-resources will close resources automatically in reverse order, thus avoiding finally clause.
+          finally {
             try {
                 // Lastly, we close the channel and the connection
                 if (channel != null) { channel.close(); }
@@ -79,11 +88,7 @@ public class Producer {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } */
-    }
-
-    public static void sendMessage(Channel channel, String message) throws IOException {
-        channel.basicPublish("", QUEUE_NAME, null, message.getBytes("UTF-8"));
-        System.out.println(" [x] Sent '" + message + "'");
+        }
+        */
     }
 }

@@ -29,56 +29,83 @@ package edu.ufp.inf.sd.rmq.consumer;
  * @author rui
  */
 
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.DeliverCallback;
+import com.rabbitmq.client.*;
 import edu.ufp.inf.sd.rmq.producer.Producer;
+import edu.ufp.inf.sd.rmq.util.RabbitUtils;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class Consumer {
 
-    //private final static String QUEUE_NAME = "helloqueue";
-
-    public static void main(String[] argv) throws Exception {
+    /**
+     * Run consumer Recv that keeps running, waiting for messages from publisher Send (Use Ctrl-C to stop):
+     * $ ./runconsumer
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
         try {
-            /* Open a connection and a channel, and declare the queue from which to consume.
-            Declare the queue here, as well, because we might start the client before the publisher. */
-            ConnectionFactory factory = new ConnectionFactory();
-            factory.setHost("localhost");
-            //Use same username/passwd as the for accessing Management UI @ http://localhost:15672/
-            //Default credentials are: guest/guest (change accordingly)
-            factory.setUsername("guest");
-            factory.setPassword("guest");
-            //factory.setPassword("guest4rabbitmq");
-            Connection connection=factory.newConnection();
-            Channel channel=connection.createChannel();
+            RabbitUtils.printArgs(args);
 
-            String resultsQueue = Producer.QUEUE_NAME + "_results";
+            //Read args passed via shell command
+            String host=args[0];
+            int port=Integer.parseInt(args[1]);
+            //String queueName=args[2];
+            String exchangeName=args[2];
 
-            channel.queueDeclare(resultsQueue, false, false, false, null);
-            //channel.queueDeclare(Producer.QUEUE_NAME, true, false, false, null);
+            // Open a connection and a channel to rabbitmq broker/server
+            Connection connection=RabbitUtils.newConnection2Server(host, port, "guest", "guest");
+            Channel channel=RabbitUtils.createChannel2Server(connection);
+
+            //Declare queue from which to consume (declare it also here, because consumer may start before publisher)
+            //channel.queueDeclare(queueName, false, false, false, null);
+            //channel.queueDeclare(Send.QUEUE_NAME, true, false, false, null);
+
+            /* Use the Exchange FANOUT type: broadcasts all messages to all queues */
+
+            channel.exchangeDeclare(exchangeName, BuiltinExchangeType.FANOUT);
+
+            /*Create a non-durable, exclusive,autodelete queue with a generated name. */
+            String queueName=channel.queueDeclare().getQueue();
+
+            /*Create binding: tell exchange to send messages to a queue; */
+            String routingKey="";
+            channel.queueBind(queueName,exchangeName,routingKey);
+
+            Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Will create Deliver Callback...");
             System.out.println(" [*] Waiting for messages. To exit press CTRL+C");
 
-            /* The server pushes messages asynchronously, hence we provide a
-            DefaultConsumer callback that will buffer the messages until we're ready to use them.
-            Consumer client = new DefaultConsumer(channel) {
+            // Publisher pushes messages asynchronously, hence use DefaultConsumer callback
+            //   that buffers messages until consumer is ready to handle them.
+            /*Consumer client = new DefaultConsumer(channel) {
                 @Override
                 public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                     String message=new String(body, "UTF-8");
                     System.out.println(" [x] Received '" + message + "'");
                 }
             };
-            channel.basicConsume(Producer.QUEUE_NAME, true, client    );
+            channel.basicConsume(queueName, true, client);
             */
 
-            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
-                String message = new String(delivery.getBody(), "UTF-8");
-                System.out.println(" [x] Received '" + message + "'");
-            };
-            channel.basicConsume(resultsQueue, true, deliverCallback, consumerTag -> { });
 
-        } catch (Exception e){
+            boolean run = true;
+
+            //DeliverCallback is an handler callback (lambda method) to consume messages pushed by the sender.
+            //Create an handler callback to receive messages from queue
+            DeliverCallback deliverCallback=(consumerTag, delivery) -> {
+                String message=new String(delivery.getBody(), "UTF-8");
+                Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
+                System.out.println(" [x] Consumer Tag [ " + consumerTag + "] - Received '" + message + "'");
+            };
+            CancelCallback cancelCallback=(consumerTag) -> {
+                System.out.println(" [x] Consumer Tag [ " + consumerTag + "] - Cancel Callback invoked'");
+            };
+            //Associate callback with channel queue
+            channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+
+        } catch (Exception e) {
             //Logger.getLogger(Recv.class.getName()).log(Level.INFO, e.toString());
             e.printStackTrace();
         }

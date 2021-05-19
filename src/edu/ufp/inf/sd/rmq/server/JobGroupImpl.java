@@ -1,8 +1,13 @@
 package edu.ufp.inf.sd.rmq.server;
 
+import com.rabbitmq.client.BuiltinExchangeType;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
 import edu.ufp.inf.sd.rmq.client.JobController;
 import edu.ufp.inf.sd.rmq.client.JobControllerRI;
 import edu.ufp.inf.sd.rmq.client.WorkerRI;
+import edu.ufp.inf.sd.rmq.producer.Producer;
+import edu.ufp.inf.sd.rmq.util.RabbitUtils;
 
 import java.io.*;
 import java.rmi.RemoteException;
@@ -10,6 +15,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String jobName;
@@ -26,7 +34,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     UserSessionRI client;
     Integer idSize=0;
 
-    private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\server\\files\\";
+    private static final String FILE_PATH = "C:\\Users\\xDMAN\\Desktop\\Universidade\\Sistemas Distribuidos\\PL\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\server\\files\\";
     private HashMap<String, JobControllerRI> list = new HashMap<>();
 
     protected JobGroupImpl(UserSessionRI client, String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
@@ -87,11 +95,31 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             this.state.setCurrentState("OnGoing");
         }
         if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0) {
-            jobWorkers.put(worker.getId(), worker);
-            idSize++;
-            worker.setFile(filePath);
-            updateList();
-            return true;
+            if(this.strat.compareTo("TabuSearch")==0) {
+                jobWorkers.put(worker.getId(), worker);
+                idSize++;
+                worker.setFile(filePath);
+                updateList();
+                return true;
+            }
+            else if(this.strat.compareTo("Genetic Algorithm")==0){
+                String host = "localhost";
+                int port = 5672;
+                String exchangeName = "logs_exchange";
+                try (Connection connection=RabbitUtils.newConnection2Server(host, port, "guest", "guest");
+                     Channel channel=RabbitUtils.createChannel2Server(connection)) {
+
+                    channel.exchangeDeclare(exchangeName, BuiltinExchangeType.FANOUT);
+                    String message=RabbitUtils.getMessage(args,3);
+                    String routingKey="";
+                    // Publish a message to the queue (content is byte array encoded with UTF-8)
+                    channel.basicPublish(exchangeName, routingKey,null, message.getBytes("UTF-8"));
+                    System.out.println(" [x] Sent '" + message + "'");
+
+                } catch (IOException | TimeoutException e) {
+                    Logger.getLogger(EmitLogs.class.getName()).log(Level.INFO, e.toString());
+                }
+            }
         }
         return false;
     }

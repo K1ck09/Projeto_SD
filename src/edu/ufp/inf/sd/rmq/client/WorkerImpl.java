@@ -19,7 +19,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private int currentMakespan;
     private int totalRewarded=0;
     private final JobGroupRI JobGroupRI;
-    private static final String PATH_FILE="C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\client\\temp\\";
+    private static final String PATH_FILE="C:\\Users\\xDMAN\\Desktop\\Universidade\\Sistemas Distribuidos\\PL\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\client\\temp\\";
     private File file;
 
 
