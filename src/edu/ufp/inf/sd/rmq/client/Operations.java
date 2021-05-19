@@ -1,5 +1,6 @@
 package edu.ufp.inf.sd.rmq.client;
 
+import edu.ufp.inf.sd.rmq.util.geneticalgorithm.CrossoverStrategies;
 import edu.ufp.inf.sd.rmq.util.tabusearch.TabuSearchJSSP;
 
 import java.io.IOException;
@@ -12,6 +13,10 @@ public class Operations implements Runnable {
     public Operations(String filepath, WorkerImpl worker) {
         ts=new TabuSearchJSSP(filepath);
         this.worker=worker;
+    }
+
+    public Operations(String filepath, WorkerImpl worker, CrossoverStrategies crossoverStrategies){
+
     }
 
     @Override

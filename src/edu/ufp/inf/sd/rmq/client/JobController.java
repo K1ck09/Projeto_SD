@@ -265,9 +265,15 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         int num = Integer.parseInt(workersNum.getText());
         if (num > 0) {
             for (int i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                        new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
-                //System.out.println(worker);
+                WorkerRI worker = null;
+                if(this.jobGroupRI.getJobStrat().compareTo("TabuSearch")==0){
+                     worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                            new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
+                }else if(this.jobGroupRI.getJobStrat().compareTo("Genetic Algorithm")==0){
+                    worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                            new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(),true);
+                }
+                assert worker!=null;
                 if (jobGroupRI.attachWorker(worker)) {
                     infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
                     infoMessage.setText("Workers were attached to job successfully!");

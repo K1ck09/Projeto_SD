@@ -201,6 +201,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         item.put("workers", "0");
         item.put("state", "Ongoing");
         item.put("load",createTotalWorkload.getText()); // min shares 10!
+        item.put("crossStrat","1");
     }
 
     private void uploadFileToJob(JobGroupRI currentJob) {

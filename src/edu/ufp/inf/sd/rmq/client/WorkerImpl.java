@@ -1,12 +1,18 @@
 package edu.ufp.inf.sd.rmq.client;
 
+import com.rabbitmq.client.*;
 import edu.ufp.inf.sd.rmq.server.JobGroupRI;
 import edu.ufp.inf.sd.rmq.server.State;
 import edu.ufp.inf.sd.rmq.server.User;
+import edu.ufp.inf.sd.rmq.util.RabbitUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     Integer id;
@@ -21,6 +27,10 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private final JobGroupRI JobGroupRI;
     private static final String PATH_FILE="C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\client\\temp\\";
     private File file;
+    private static final String HOST="localhost";
+    private static final int PORT=5672;
+    private static final String ROUTING_KEY="";
+    private Channel channel;
 
 
     protected WorkerImpl( JobShopClient client,Integer id,User jobOwner, State state,String jobGroupName) throws RemoteException {
@@ -30,6 +40,43 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         this.state=state;
         this.jobGroupName = jobGroupName;
         this.JobGroupRI=client.userSessionRI.getJobList().get(jobGroupName);
+    }
+
+    protected WorkerImpl(JobShopClient client,Integer id,User jobOwner, State state,String jobGroupName,boolean var) throws RemoteException {
+        this.id=id;
+        this.owner=jobOwner;
+        this.client=client;
+        this.state=state;
+        this.jobGroupName = jobGroupName;
+        this.JobGroupRI=client.userSessionRI.getJobList().get(jobGroupName);
+        Connection connection = null;
+        try {
+            connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
+            assert connection != null;
+            this.channel = RabbitUtils.createChannel2Server(connection);
+            String exchangeName = String.valueOf(id)+owner+JobGroupRI.getJobName();
+            channel.exchangeDeclare(exchangeName, "");
+
+            String queueName=channel.queueDeclare().getQueue();
+
+            String routingKey="";
+            channel.queueBind(queueName,exchangeName,routingKey);
+
+            DeliverCallback deliverCallback=(consumerTag, delivery) -> {
+                String message=new String(delivery.getBody(), StandardCharsets.UTF_8);
+                String[] args= message.split(",");
+
+                Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
+                System.out.println(" [x] Received '" + args[1] + "'");
+            };
+            CancelCallback cancelCallback=(consumerTag) ->{
+                System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
+            };
+            channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+
+        } catch (IOException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
