@@ -87,10 +87,14 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             this.state.setCurrentState("OnGoing");
         }
         if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0) {
-            jobWorkers.put(worker.getId(), worker);
-            idSize++;
-            worker.setFile(filePath);
-            updateList();
+            if(this.strat.compareTo("TabuSearch")==0){
+                jobWorkers.put(worker.getId(), worker);
+                idSize++;
+                worker.setFile(filePath);
+                updateList();
+            }else if (this.strat.compareTo("Genetic Algorithm")==0){
+
+            }
             return true;
         }
         return false;
