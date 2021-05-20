@@ -114,12 +114,12 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                         System.out.println("JOB DELETED");
                         // e.printStackTrace();
                     }
-                    try {
+                   /* try {
                         jobReward.setText(jobGroupRI.getJobReward());
                     } catch (RemoteException e) {
                         System.out.println("JOB DELETED");
                        // e.printStackTrace();
-                    }
+                    }*/
                     try {
                         jobWorkers.setText(String.valueOf(jobGroupRI.getWorkersSize()));
                     } catch (RemoteException e) {
