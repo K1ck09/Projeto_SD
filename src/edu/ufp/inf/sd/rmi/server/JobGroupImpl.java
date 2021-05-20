@@ -58,6 +58,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 updateList();
                 this.client.updateMenus();//deixar se não causar lag
                 worker.setTotalShares(worker.getTotalShares() + 1);
+                worker.setTotalRewarded(1);
                 worker.setOperation();
             } else if (this.totalShares < Integer.parseInt(this.workLoad) && worker.getState().getCurrentState().compareTo("Paused") == 0) {
                 updateList();
@@ -65,6 +66,8 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 this.state.setCurrentState("Finished");
                 if (!paid) {
                     this.client.setCredits(bestCombination.get(0).getOwner(), 10);
+                    System.out.println("[USER] "+this.client.findUser(bestCombination.get(0).getOwner().getUsername()).getUsername()+
+                            " [CREDITS] "+this.client.findUser(bestCombination.get(0).getOwner().getUsername()).getCredits());
                     jobWorkers.get(bestCombination.get(0).getId()).setTotalRewarded(10);
                     this.paid = true;
                 }
@@ -106,6 +109,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         if(bestCombination.get(0).getId().equals(selectedWorker.getId())){
             bestCombination.clear();
         }
+        this.client.setCredits(this.client.getUser(),selectedWorker.getTotalShares());
         this.jobWorkers.remove(selectedWorker.getId());
         updateList();
     }
@@ -130,8 +134,8 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     @Override
     public boolean removeAllWorkers() throws IOException {
        this.state.setCurrentState("Deleted");
-        this.client.setCredits(bestCombination.get(0).getOwner(), bestCombination.get(0).getTotalShares()+10);
-        jobWorkers.get(bestCombination.get(0).getId()).setTotalRewarded(bestCombination.get(0).getTotalShares()+10);
+        this.client.setCredits(bestCombination.get(0).getOwner(), bestCombination.get(0).getTotalShares());
+        jobWorkers.get(bestCombination.get(0).getId()).setTotalRewarded(bestCombination.get(0).getTotalShares());
         this.paid = true;
         return true;
     }
@@ -139,6 +143,8 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private void notifyAllWorkers(String state) throws IOException {
         for (WorkerRI w : jobWorkers.values()) {
             this.client.setCredits(w.getOwner(),w.getTotalShares());
+            System.out.println("[USER] "+this.client.findUser(w.getOwner().getUsername()).getUsername()+
+                    " [CREDITS] "+this.client.findUser(w.getOwner().getUsername()).getCredits());
             w.changeState(state);
         }
         updateList();

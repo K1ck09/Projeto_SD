@@ -115,6 +115,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     public void setTotalRewarded(int totalRewarded) {
-        this.totalRewarded =+ totalRewarded;
+        this.totalRewarded += totalRewarded;
     }
 }

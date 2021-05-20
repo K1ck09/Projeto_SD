@@ -148,7 +148,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                             if(currentJob!=null) {
                                 uploadFileToJob(currentJob);
                                 // decidir se tira o dinheiro so no fim ou no inicio e depois devolve se não encontrar nada
-                                int newBalance =-Integer.parseInt(item.get("load"))+10;
+                                int newBalance = -Integer.parseInt(item.get("load"))-10;
                                 client.userSessionRI.setCredits(this.client.userSessionRI.getUser(),newBalance);
                                 menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
                                 insertItemsInTable();

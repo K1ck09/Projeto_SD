@@ -40,8 +40,9 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
     @Override
     public void setCredits(User user,int credits) {
-        user.addCredits(credits);
-        db.updateUser(user);
+        User u=db.getUser(user.getUsername());
+        u.addCredits(credits);
+        db.updateUser(u);
     }
 
     @Override
@@ -97,6 +98,11 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     @Override
     public void removeFromList(String username) throws RemoteException {
         this.db.removeFromList(username);
+    }
+
+    @Override
+    public User findUser(String username) throws RemoteException {
+        return db.getUser(username);
     }
 
     @Override
