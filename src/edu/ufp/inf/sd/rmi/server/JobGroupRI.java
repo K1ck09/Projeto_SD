@@ -40,4 +40,6 @@ public interface JobGroupRI extends Remote {
     void setState(String state) throws IOException;
 
     boolean removeAllWorkers() throws IOException;
+
+    String getJobReward() throws RemoteException;
 }

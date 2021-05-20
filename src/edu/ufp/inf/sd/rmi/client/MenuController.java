@@ -32,7 +32,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public Label menuUsername;
     public Label menuCredits;
     public TextField createJobName;
-    public TextField createJobReward;
+
     public ChoiceBox<String> createJobStrategy;
     public Label messageMenu;
     public TextField createTotalWorkload;
@@ -171,12 +171,10 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                         messageMenu.setText("Job name need to be unique, Please enter another name");
                     }
                 } else {
-                    createJobReward.clear();
                     messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
                     messageMenu.setText("You don't have enough credits for the amount of shares inserted");
                 }
             } else {
-                createJobReward.clear();
                 messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
                 messageMenu.setText("You can only enter Numbers in Reward Field");
             }
@@ -187,7 +185,6 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     private void clearSelectionAndVariables() {
-        createJobReward.clear();
         createJobName.clear();
         createTotalWorkload.clear();
         createJobStrategy.getSelectionModel().clearAndSelect(0);
@@ -196,6 +193,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     private void insertDataInItem() throws RemoteException {
+        int reward= Integer.parseInt(createTotalWorkload.getText())+10;
+        item.put("reward", String.valueOf(reward));
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
         item.put("state", "Ongoing");
@@ -274,13 +273,13 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                                     } catch (RemoteException e) {
                                         e.printStackTrace();
                                     }
-                                } /*else if (id != null && id.compareTo("tableReward") == 0) {
+                                } else if (id != null && id.compareTo("tableReward") == 0) {
                                     try {
                                         ((Label) label).setText(job.getJobReward());
                                     } catch (RemoteException e) {
                                         e.printStackTrace();
                                     }
-                                }*/ else if (id != null && id.compareTo("tableWorkers") == 0) {
+                                } else if (id != null && id.compareTo("tableWorkers") == 0) {
                                     try {
                                         ((Label) label).setText(job.getWorkersSize().toString());
                                     } catch (RemoteException e) {
@@ -446,7 +445,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
             if(jobGroupRI.getBestResult()!=null){
                 if (jobGroupRI.getBestResult().getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0
                 && jobGroupRI.getState().compareTo("Finished")==0){
-                    num+=0;
+                    num+=Integer.parseInt(jobGroupRI.getJobReward());
                 }
             }
         }
@@ -544,4 +543,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         updateStatistics();
     }
 
+    public void handlerRefresh(ActionEvent actionEvent) throws IOException {
+        updateMenu();
+    }
 }
