@@ -251,9 +251,9 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
+        this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
-        this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         this.jobGroupRI=null;
         this.workersMap.clear();
         this.client=null;

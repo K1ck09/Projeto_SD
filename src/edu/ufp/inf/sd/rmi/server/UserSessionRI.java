@@ -40,4 +40,6 @@ public interface UserSessionRI extends Remote {
     void removeJob(String jobName) throws IOException;
 
     void removeFromList(String username)throws  RemoteException;
+
+    User findUser(String username)throws  RemoteException;
 }

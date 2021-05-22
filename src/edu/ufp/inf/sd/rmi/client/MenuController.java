@@ -32,7 +32,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public Label menuUsername;
     public Label menuCredits;
     public TextField createJobName;
-    public TextField createJobReward;
+
     public ChoiceBox<String> createJobStrategy;
     public Label messageMenu;
     public TextField createTotalWorkload;
@@ -134,11 +134,11 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
-        if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
-            if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createTotalWorkload.getText())) {
-                int inputReward = Integer.parseInt(createJobReward.getText());
+        if (createJobName.getText() != null && item.containsKey("strat")) {
+            if (containsJustNumbers(createTotalWorkload.getText())) {
+                int inputReward = Integer.parseInt(createTotalWorkload.getText());
                 int clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
-                if (inputReward <= clientCredits && inputReward > 0) {
+                if (inputReward+10 <= clientCredits && clientCredits > 0) {
                     item.put("job", createJobName.getText());
                     if (!client.userSessionRI.isJobUnique(item.get("job"))) {
                         insertDataInItem();
@@ -148,7 +148,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                             if(currentJob!=null) {
                                 uploadFileToJob(currentJob);
                                 // decidir se tira o dinheiro so no fim ou no inicio e depois devolve se não encontrar nada
-                                int newBalance =-Integer.parseInt(item.get("reward"));
+                                int newBalance = -Integer.parseInt(item.get("load"))-10;
                                 client.userSessionRI.setCredits(this.client.userSessionRI.getUser(),newBalance);
                                 menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
                                 insertItemsInTable();
@@ -171,12 +171,10 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                         messageMenu.setText("Job name need to be unique, Please enter another name");
                     }
                 } else {
-                    createJobReward.clear();
                     messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-                    messageMenu.setText("Please verify is you have enough credits. Reward can't be '0Cr'");
+                    messageMenu.setText("You don't have enough credits for the amount of shares inserted");
                 }
             } else {
-                createJobReward.clear();
                 messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
                 messageMenu.setText("You can only enter Numbers in Reward Field");
             }
@@ -187,7 +185,6 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     private void clearSelectionAndVariables() {
-        createJobReward.clear();
         createJobName.clear();
         createTotalWorkload.clear();
         createJobStrategy.getSelectionModel().clearAndSelect(0);
@@ -196,7 +193,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     private void insertDataInItem() throws RemoteException {
-        item.put("reward", createJobReward.getText());
+        int reward= Integer.parseInt(createTotalWorkload.getText())+10;
+        item.put("reward", String.valueOf(reward));
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
         item.put("state", "Ongoing");
@@ -497,7 +495,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobState().getCurrentState().compareTo("Finished") == 0) {
-               num+=Integer.parseInt(jobGroupRI.getJobReward());
+               num+=Integer.parseInt(jobGroupRI.getWorkload())+10;
             }
         }
         return num;
@@ -545,4 +543,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         updateStatistics();
     }
 
+    public void handlerRefresh(ActionEvent actionEvent) throws IOException {
+        updateMenu();
+    }
 }
