@@ -20,15 +20,15 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private State state;
     private final User owner;
     private final String jobGroupName;
-    private int bestMakespan= Integer.MAX_VALUE;
-    private int totalShares=0;
-    private int currentMakespan;
-    private int totalRewarded=0;
+    private Integer bestMakespan= Integer.MAX_VALUE;
+    private Integer totalShares=0;
+    private Integer currentMakespan;
+    private Integer totalRewarded=0;
     private final JobGroupRI JobGroupRI;
     private static final String PATH_FILE="C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\client\\temp\\";
     private File file;
     private static final String HOST="localhost";
-    private static final int PORT=5672;
+    private static final Integer PORT=5672;
     private static final String ROUTING_KEY="";
     private Channel channel;
 
@@ -98,7 +98,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public synchronized void updateMakeSpan(int makespan) throws IOException {
+    public synchronized void updateMakeSpan(Integer makespan) throws IOException {
             this.currentMakespan=makespan;
             //System.out.println("["+id+"] -> "+currentMakespan);
             if(this.bestMakespan>this.currentMakespan){
@@ -122,16 +122,16 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         out.close();
     }
 
-    public int getCurrentMakespan() {
+    public Integer getCurrentMakespan() {
         return currentMakespan;
     }
-    public int getBestMakespan() {
+    public Integer getBestMakespan() {
         return bestMakespan;
     }
-    public int getTotalShares() {
+    public Integer getTotalShares() {
         return totalShares;
     }
-    public void setTotalShares(int totalShares) {
+    public void setTotalShares(Integer totalShares) {
         this.totalShares = totalShares;
     }
 
@@ -157,11 +157,11 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     @Override
-    public int getTotalRewarded() {
+    public Integer getTotalRewarded() {
         return totalRewarded;
     }
 
-    public void setTotalRewarded(int totalRewarded) {
+    public void setTotalRewarded(Integer totalRewarded) {
         this.totalRewarded = totalRewarded;
     }
 }

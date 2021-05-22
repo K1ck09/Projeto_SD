@@ -1,11 +1,8 @@
 package edu.ufp.inf.sd.rmi.server;
 
-import edu.ufp.inf.sd.rmi.client.JobShopClient;
-import edu.ufp.inf.sd.rmi.client.MenuController;
 import edu.ufp.inf.sd.rmi.client.MenuControllerRI;
 import edu.ufp.inf.sd.rmi.client.WorkerRI;
 
-import java.io.File;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -17,7 +14,7 @@ public interface UserSessionRI extends Remote {
 
     String getCredits() throws RemoteException;
 
-    void setCredits(User user, int credits) throws RemoteException;
+    void setCredits(User user, Integer credits) throws RemoteException;
 
     Map<String, JobGroupRI> getJobList() throws RemoteException;
 

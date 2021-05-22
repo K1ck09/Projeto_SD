@@ -38,7 +38,7 @@ public interface JobGroupRI extends Remote {
 
     void removeWorker(WorkerRI selectedWorker) throws IOException;
 
-    int getIdsSize() throws RemoteException;
+    Integer getIdsSize() throws RemoteException;
 
     void setState(String state) throws IOException;
 

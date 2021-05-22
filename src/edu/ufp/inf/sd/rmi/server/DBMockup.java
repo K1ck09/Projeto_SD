@@ -12,8 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DBMockup {
-
-    private HashMap<String, User> users;// = new ArrayList();
+    private HashMap<String, User> users;
     private HashMap<String, User> sessions;
 
     //job name and job object
@@ -31,6 +30,8 @@ public class DBMockup {
         users.put(user.getUsername(),user);
         users.put(user1.getUsername(),user1);
     }
+
+
     // USERS METHODS
     public boolean existsUser(String u, String p) {
         return users.containsKey(u) && users.get(u).getPassword().compareTo(p)==0;
@@ -62,8 +63,8 @@ public class DBMockup {
     public void removeSession(String username) throws RemoteException {
         this.sessions.remove(username);
     }
-    // JOB METHODS
 
+    // JOB METHODS
     public Map<String, JobGroupRI> getJobGroups() {
         return jobGroups;
     }

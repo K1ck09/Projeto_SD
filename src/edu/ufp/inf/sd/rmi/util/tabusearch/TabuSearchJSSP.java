@@ -24,7 +24,7 @@ public class TabuSearchJSSP {
      * Run the Tabu Search
      * @return The makespan value found
      */
-    public int run(){
+    public Integer run(){
 
         try {
 
@@ -37,7 +37,7 @@ public class TabuSearchJSSP {
 
             process.waitFor();
 
-            int makespan = Integer.valueOf(firstLine);
+            Integer makespan = Integer.valueOf(firstLine);
 
 
             output.close();

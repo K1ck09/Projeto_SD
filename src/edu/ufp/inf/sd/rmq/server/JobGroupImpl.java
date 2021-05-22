@@ -33,7 +33,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     UserSessionRI client;
     Integer idSize = 0;
     private static final String HOST="localhost";
-    private static final int PORT=5672;
+    private static final Integer PORT=5672;
     private static final String ROUTING_KEY="";
     private Channel channel;
 
@@ -166,7 +166,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public int getIdsSize() {
+    public Integer getIdsSize() {
         return idSize;
     }
 

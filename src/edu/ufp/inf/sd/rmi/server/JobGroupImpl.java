@@ -1,6 +1,5 @@
 package edu.ufp.inf.sd.rmi.server;
 
-import edu.ufp.inf.sd.rmi.client.JobController;
 import edu.ufp.inf.sd.rmi.client.JobControllerRI;
 import edu.ufp.inf.sd.rmi.client.WorkerRI;
 
@@ -20,11 +19,12 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String workLoad;
     private Integer totalShares = 0;
     private String filePath;
+    private boolean paid = false;
+    Integer idSize = 0;
+    UserSessionRI client;
+
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
     ArrayList<WorkerRI> bestCombination = new ArrayList<>();
-    private boolean paid = false;
-    UserSessionRI client;
-    Integer idSize=0;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmi\\server\\files\\";
     private HashMap<String, JobControllerRI> list = new HashMap<>();
@@ -117,7 +117,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public int getIdsSize() {
+    public Integer getIdsSize() {
         return idSize;
     }
 
@@ -243,7 +243,6 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     public String getJobStrat() {
         return strat;
     }
-
 
     @Override
     public State getJobState() {

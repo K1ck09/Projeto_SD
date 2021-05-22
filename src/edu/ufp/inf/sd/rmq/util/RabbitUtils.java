@@ -15,7 +15,7 @@ public class RabbitUtils {
      * Create a connection to the rabbitmq server/broker
      * (abstracts the socket connection, protocol version negotiation and authentication, etc.)
      */
-    public static Connection newConnection2Server(String host, int port, String username, String passwd) throws IOException, TimeoutException {
+    public static Connection newConnection2Server(String host, Integer port, String username, String passwd) throws IOException, TimeoutException {
         Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName() + "->newConnection2Server(): host=" + host+", port="+port);
         //Create a factory for connection establishment
         ConnectionFactory factory=new ConnectionFactory();
@@ -44,7 +44,7 @@ public class RabbitUtils {
      * @param routingKeyIndex
      * @return
      */
-    public static String getRouting(String[] setOfKeys, int routingKeyIndex) {
+    public static String getRouting(String[] setOfKeys, Integer routingKeyIndex) {
         if (setOfKeys.length < routingKeyIndex) {
             return "anonymous.info";
         }
@@ -58,7 +58,7 @@ public class RabbitUtils {
      * @param messageIndex
      * @return
      */
-    public static String getMessage(String[] messages, int messageIndex) {
+    public static String getMessage(String[] messages, Integer messageIndex) {
         if (messages.length < messageIndex) {
             return "Array Size less than MessageIndex";
         }
@@ -66,7 +66,7 @@ public class RabbitUtils {
     }
 
     public static void printArgs(String[] args) {
-        for (int i=0; i<args.length; i++) {
+        for (Integer i=0; i<args.length; i++) {
             Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName() + "->printArgs(): args[" + i + "]="+args[i]);
         }
     }
@@ -79,15 +79,15 @@ public class RabbitUtils {
      * @param startMsgIndex
      * @return
      */
-    public static String joinStrings(String[] strings, String delimiter, int startMsgIndex) {
-        int length=strings.length;
+    public static String joinStrings(String[] strings, String delimiter, Integer startMsgIndex) {
+        Integer length=strings.length;
         Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName() + "->joinStrings(): strings.length=" + length);
 
         if (length < startMsgIndex) {
             return "";
         }
         StringBuilder words=new StringBuilder(strings[startMsgIndex]);
-        for (int i=startMsgIndex + 1; i < length; i++) {
+        for (Integer i=startMsgIndex + 1; i < length; i++) {
             words.append(delimiter).append(strings[i]);
         }
         Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName() + "->joinStrings(): words = " + words.toString());

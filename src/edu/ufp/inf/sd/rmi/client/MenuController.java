@@ -136,8 +136,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
         if (createJobName.getText() != null && item.containsKey("strat")) {
             if (containsJustNumbers(createTotalWorkload.getText())) {
-                int inputReward = Integer.parseInt(createTotalWorkload.getText());
-                int clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
+                Integer inputReward = Integer.parseInt(createTotalWorkload.getText());
+                Integer clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
                 if (inputReward+10 <= clientCredits && clientCredits > 0) {
                     item.put("job", createJobName.getText());
                     if (!client.userSessionRI.isJobUnique(item.get("job"))) {
@@ -148,7 +148,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                             if(currentJob!=null) {
                                 uploadFileToJob(currentJob);
                                 // decidir se tira o dinheiro so no fim ou no inicio e depois devolve se não encontrar nada
-                                int newBalance = -Integer.parseInt(item.get("load"))-10;
+                                Integer newBalance = -Integer.parseInt(item.get("load"))-10;
                                 client.userSessionRI.setCredits(this.client.userSessionRI.getUser(),newBalance);
                                 menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
                                 insertItemsInTable();
@@ -193,7 +193,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     private void insertDataInItem() throws RemoteException {
-        int reward= Integer.parseInt(createTotalWorkload.getText())+10;
+        Integer reward= Integer.parseInt(createTotalWorkload.getText())+10;
         item.put("reward", String.valueOf(reward));
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
@@ -422,8 +422,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                 });
     }
     // Dá para Todas estas funções adicionando variaveis ao User
-    private int userParticipationNumber() throws RemoteException {
-        int num = 0;
+    private Integer userParticipationNumber() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
@@ -438,8 +438,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int userCreditsClaimed() throws RemoteException {
-        int num = 0;
+    private Integer userCreditsClaimed() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if(jobGroupRI.getBestResult()!=null){
@@ -452,8 +452,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int userTotalAtiveWorkers() throws RemoteException {
-        int num = 0;
+    private Integer userTotalAtiveWorkers() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
@@ -466,8 +466,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int userJobsNumber() throws RemoteException {
-        int num = 0;
+    private Integer userJobsNumber() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobOwner().compareTo(client.userSessionRI.getUsername()) == 0) {
@@ -477,8 +477,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int ativeWorkersNumber() throws RemoteException {
-        int num = 0;
+    private Integer ativeWorkersNumber() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
@@ -490,8 +490,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int totalRewardedNumber() throws RemoteException {
-        int num = 0;
+    private Integer totalRewardedNumber() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobState().getCurrentState().compareTo("Finished") == 0) {
@@ -501,8 +501,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int onGoingJobsNumber() throws RemoteException {
-        int num = 0;
+    private Integer onGoingJobsNumber() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobState().getCurrentState().compareTo("OnGoing") == 0) {
@@ -512,8 +512,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int availableNumber() throws RemoteException {
-        int num = 0;
+    private Integer availableNumber() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobState().getCurrentState().compareTo("Available") == 0) {
@@ -523,8 +523,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         return num;
     }
 
-    private int finishedNumber() throws RemoteException {
-        int num = 0;
+    private Integer finishedNumber() throws RemoteException {
+        Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobState().getCurrentState().compareTo("Finished") == 0) {

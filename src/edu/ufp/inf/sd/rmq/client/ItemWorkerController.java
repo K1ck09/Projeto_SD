@@ -30,7 +30,7 @@ public class ItemWorkerController {
     }
 
     public void handlerWorkerSelect(ActionEvent actionEvent) throws RemoteException {
-        int workerID = Integer.parseInt(tableWorkerID.getText());
+        Integer workerID = Integer.parseInt(tableWorkerID.getText());
         jobController.showWorkerbuttons(workerID);
      }
 

@@ -40,7 +40,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public void setCredits(User user,int credits) {
+    public void setCredits(User user,Integer credits) {
         user.addCredits(credits);
         db.updateUser(user);
     }

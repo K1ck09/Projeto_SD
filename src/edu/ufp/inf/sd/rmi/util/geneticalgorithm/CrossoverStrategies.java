@@ -6,9 +6,9 @@ public enum CrossoverStrategies {
                         //   in the population. The most fit individual survives (elitism).
     THREE(3);   // Two parents generate a child that will substitute the worst individual of the population.
 
-    public final int strategy;
+    public final Integer strategy;
 
-    CrossoverStrategies(int strategy) {
+    CrossoverStrategies(Integer strategy) {
         this.strategy = strategy;
     }
 }

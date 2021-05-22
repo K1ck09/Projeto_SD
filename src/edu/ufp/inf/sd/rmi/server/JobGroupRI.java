@@ -16,12 +16,12 @@ public interface JobGroupRI extends Remote {
     State getJobState()throws RemoteException;
     Integer getWorkersSize()throws RemoteException;
     String getState() throws RemoteException;
+
     boolean attachWorker(WorkerRI worker) throws IOException;
     Map<Integer, WorkerRI> getJobWorkers()throws RemoteException;
+
     String getWorkload()throws RemoteException;
-
     String getBestResut() throws RemoteException;
-
     Integer getTotalShares() throws RemoteException;
 
     void uploadFile(byte[] mydata) throws IOException;
@@ -35,7 +35,7 @@ public interface JobGroupRI extends Remote {
 
     void removeWorker(WorkerRI selectedWorker) throws IOException;
 
-    int getIdsSize() throws RemoteException;
+    Integer getIdsSize() throws RemoteException;
 
     void setState(String state) throws IOException;
 
