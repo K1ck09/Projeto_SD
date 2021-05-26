@@ -54,7 +54,9 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
             assert connection != null;
             this.channel = RabbitUtils.createChannel2Server(connection);
+            //Mudar para dinamico so entre jobgroups igual para todos os workers
             String exchangeName = String.valueOf(id)+owner+JobGroupRI.getJobName();
+            //BuiltinExchangeType.FANOUT
             channel.exchangeDeclare(exchangeName, "");
 
             String queueName=channel.queueDeclare().getQueue();
