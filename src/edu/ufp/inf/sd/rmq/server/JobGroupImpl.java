@@ -104,8 +104,10 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     public void updateTotalShares(String queueName) throws IOException {
         DeliverCallback deliverCallback=(consumerTag, delivery) -> {
             String message=new String(delivery.getBody(), "UTF-8");
-            Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
-            System.out.println(" [x] Received '" + message + "'");
+            System.out.println("HEREEEEEEEEEEEEEEE");
+            System.out.println(message);
+            /*Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
+            System.out.println(" [x] Received '" + message + "'");*/
         };
         CancelCallback cancelCallback=(consumerTag) ->{
             System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
@@ -125,24 +127,19 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 worker.setFile(filePath);
                 updateList();
             } else if (this.strat.compareTo("Genetic Algorithm") == 0) {
-                String exchangeName = String.valueOf(worker.getId())+worker.getOwner()+jobName;
+                String exchangeName = String.valueOf(jobName);
+
                 // Connection
-                /*try (Connection connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
-                     Channel channel = RabbitUtils.createChannel2Server(connection)) {
-*/
-                channel.exchangeDeclare(exchangeName, "");
+                channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
 
                 //Get queue name and Bind to Exchange
                 String queueName = channel.queueDeclare().getQueue();
                 channel.queueBind(queueName, exchangeName, ROUTING_KEY);
+
                 //file, CrossStrat,
                 String msg = filePath + "," + crossStrat;
                 channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
                 updateTotalShares(queueName);
-
-               /* } catch (IOException | TimeoutException e) {
-
-                }*/
             }
             return true;
         }
