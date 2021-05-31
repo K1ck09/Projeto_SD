@@ -62,8 +62,8 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
 
     /**
      * Initialize Job variables to show in GUI
-     * @param client
-     * @param jobGroupRI
+     * @param client - JobShopClient
+     * @param jobGroupRI - Instance of JobGroupRI
      * @throws IOException
      */
     public void init(JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
@@ -83,7 +83,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     /**
-     * Updates User credits and and username and display in GUI
+     * Updates User credits, username and display in GUI
      */
     private void updateUser() {
         Platform.runLater(
@@ -104,7 +104,6 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     /**
      * Updates Job variables and display in GUI
      */
-
     private void updateJobItem() {
         Platform.runLater(
                 () -> {
@@ -174,10 +173,9 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     /**
-     * For loop through all workers to get their information create a
+     * For loop through all workers to get their information then creates a
      * ItemWorkerController and append it to the scroll panel in Job GUI
      */
-
     private void insertWorkersInTable() {
         Platform.runLater(() -> {
             table.getChildren().clear();
@@ -270,10 +268,9 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
 
     /**
      * Cleans all remote variables and finish programs
-     * @param mouseEvent
+     * @param mouseEvent - An mouse event
      * @throws RemoteException
      */
-
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
         this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
@@ -286,12 +283,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     /**
-     * Reads input and creates the number of workers asked
-     * and attaches workers to job
-     * @param actionEvent
+     * Reads input, creates the number of workers asked
+     * and then attaches workers to job
+     * @param actionEvent - An event action
      * @throws IOException
      */
-
     public void handlerAttachWorkers(ActionEvent actionEvent) throws IOException {
         Integer num = Integer.parseInt(workersNum.getText());
         if (num > 0) {
@@ -319,10 +315,19 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Gets workers map from database and updates the workers in the Job
+     * @throws IOException
+     */
     private void updateJobWorkers() throws IOException {
         workersMap = client.userSessionRI.getWorkersMap(jobGroupRI.getJobName());
     }
 
+    /**
+     * Pauses a worker
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerPauseWorker(ActionEvent actionEvent) throws IOException {
         if (selectedWorker != null) {
             selectedWorker.setState("Paused");
@@ -335,6 +340,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Resumes a worker
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerResumeWorker(ActionEvent actionEvent) throws IOException {
         if (selectedWorker != null) {
             selectedWorker.setState("Ongoing");
@@ -347,6 +357,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Deletes a worker
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerDeleteWorker(ActionEvent actionEvent) throws IOException {
         if (selectedWorker != null) {
             this.jobGroupRI.removeWorker(selectedWorker);
@@ -359,15 +374,29 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Pauses a job
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerPauseJob(ActionEvent actionEvent) throws IOException {
         jobGroupRI.setState("Paused");
     }
 
+    /**
+     * Resumes a job
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerResumeJob(ActionEvent actionEvent) throws IOException {
         jobGroupRI.setState("OnGoing");
     }
 
-
+    /**
+     * Deletes a job
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerDeleteJob(ActionEvent actionEvent) throws IOException {
         if (jobGroupRI.removeAllWorkers()) {
             this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName());
@@ -390,6 +419,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Returns to home menu GUI
+     * @param mouseEvent - An mouse event
+     * @throws IOException
+     */
     public void handlerMenuHome(MouseEvent mouseEvent) throws IOException {
         this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/Menu.fxml"));
@@ -404,6 +438,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         app_stage.show();
     }
 
+    /**
+     * Shows buttons related to a worker
+     * @param workerID - ID of a worker
+     * @throws RemoteException
+     */
     public void showWorkerbuttons(Integer workerID) throws RemoteException {
         if (jobGroupRI.getJobWorkers().get(workerID).getOwner().getUsername().compareTo(client.userSessionRI.getUsername()) == 0) {
             btnsWorkers.setVisible(true);

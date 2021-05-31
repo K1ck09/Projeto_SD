@@ -35,10 +35,11 @@ public class JobShopClient {
      */
 
     public UserFactoryRI userFactoryRI;
-
     public UserSessionRI userSessionRI;
 
-
+    /**
+     * Starts JobShopClient service
+     */
     public JobShopClient() {
         try {
             //List ans set args
@@ -53,6 +54,10 @@ public class JobShopClient {
         }
     }
 
+    /**
+     * Starts the lookupService
+     * @return an UserFactoryRI
+     */
     public Remote lookupService() {
         try {
             //Get proxy MAIL_TO_ADDR rmiregistry

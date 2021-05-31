@@ -25,10 +25,19 @@ public class ItemWorkerController {
     public Label tableWorkerID;
     private JobController jobController;
 
+    /**
+     * Initialize a JobController
+     * @param jobController - JobController
+     */
     public void setJobController(JobController jobController){
         this.jobController=jobController;
     }
 
+    /**
+     * Gets worker ID and calls ShowWorkerButtons
+     * @param actionEvent - An action event
+     * @throws RemoteException
+     */
     public void handlerWorkerSelect(ActionEvent actionEvent) throws RemoteException {
         Integer workerID = Integer.parseInt(tableWorkerID.getText());
         jobController.showWorkerbuttons(workerID);
