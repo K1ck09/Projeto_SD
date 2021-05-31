@@ -262,12 +262,18 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     }
 
     public void handlerAttachWorkers(ActionEvent actionEvent) throws IOException {
-        int num = Integer.parseInt(workersNum.getText());
+        Integer num = Integer.parseInt(workersNum.getText());
         if (num > 0) {
-            for (int i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                        new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
-                //System.out.println(worker);
+            for (Integer i = 0; i < num; i++) {
+                WorkerRI worker = null;
+                if(this.jobGroupRI.getJobStrat().compareTo("TabuSearch")==0){
+                     worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                            new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
+                }else if(this.jobGroupRI.getJobStrat().compareTo("Genetic Algorithm")==0){
+                    worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                            new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(),true);
+                }
+                assert worker!=null;
                 if (jobGroupRI.attachWorker(worker)) {
                     infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
                     infoMessage.setText("Workers were attached to job successfully!");
@@ -373,7 +379,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         app_stage.show();
     }
 
-    public void showWorkerbuttons(int workerID) throws RemoteException {
+    public void showWorkerbuttons(Integer workerID) throws RemoteException {
         if (jobGroupRI.getJobWorkers().get(workerID).getOwner().getUsername().compareTo(client.userSessionRI.getUsername()) == 0) {
             btnsWorkers.setVisible(true);
             this.selectedWorker=this.jobGroupRI.getJobWorkers().get(workerID);

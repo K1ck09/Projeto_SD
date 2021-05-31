@@ -11,13 +11,13 @@ public interface WorkerRI extends Remote {
 
     void setOperation() throws IOException;
 
-    void updateMakeSpan(int makespan) throws IOException;
+    void updateMakeSpan(Integer makespan) throws IOException;
 
-    int getBestMakespan() throws RemoteException;
+    Integer getBestMakespan() throws RemoteException;
 
-    int getTotalShares() throws RemoteException;
+    Integer getTotalShares() throws RemoteException;
 
-    int getCurrentMakespan() throws RemoteException;
+    Integer getCurrentMakespan() throws RemoteException;
 
     Integer getId() throws RemoteException;
 
@@ -29,13 +29,13 @@ public interface WorkerRI extends Remote {
 
     JobShopClient getClient() throws RemoteException;
 
-    int getTotalRewarded() throws RemoteException;
+    Integer getTotalRewarded() throws RemoteException;
 
     void setFile(String filePath) throws IOException;
 
-    void setTotalShares(int totalShares) throws RemoteException;
+    void setTotalShares(Integer totalShares) throws RemoteException;
 
-    void setTotalRewarded(int totalRewarded) throws RemoteException;
+    void setTotalRewarded(Integer totalRewarded) throws RemoteException;
 
     void changeState(String state) throws IOException;
 

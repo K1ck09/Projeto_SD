@@ -1,15 +1,13 @@
 package edu.ufp.inf.sd.rmq.server;
 
-import com.rabbitmq.client.BuiltinExchangeType;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.*;
 import edu.ufp.inf.sd.rmq.client.JobController;
 import edu.ufp.inf.sd.rmq.client.JobControllerRI;
 import edu.ufp.inf.sd.rmq.client.WorkerRI;
-import edu.ufp.inf.sd.rmq.producer.Producer;
 import edu.ufp.inf.sd.rmq.util.RabbitUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.time.LocalDateTime;
@@ -23,6 +21,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String jobName;
     private String owner;
     private String strat;
+    private String crossStrat;
     private String reward;
     private State state;
     private String workLoad;
@@ -32,12 +31,16 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     ArrayList<WorkerRI> bestCombination = new ArrayList<>();
     private boolean paid = false;
     UserSessionRI client;
-    Integer idSize=0;
+    Integer idSize = 0;
+    private static final String HOST="localhost";
+    private static final Integer PORT=5672;
+    private static final String ROUTING_KEY="";
+    private Channel channel;
 
-    private static final String FILE_PATH = "C:\\Users\\xDMAN\\Desktop\\Universidade\\Sistemas Distribuidos\\PL\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\server\\files\\";
+    private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\server\\files\\";
     private HashMap<String, JobControllerRI> list = new HashMap<>();
 
-    protected JobGroupImpl(UserSessionRI client, String jobName, String owner, String strat, String reward, String workLoad) throws RemoteException {
+    protected JobGroupImpl(UserSessionRI client, String jobName, String owner, String strat, String reward, String workLoad, String crossStrat) throws RemoteException {
         this.client = client;
         this.jobName = jobName;
         this.owner = owner;
@@ -45,15 +48,23 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         this.reward = reward;
         this.state = new State("Available", this.jobName);
         this.workLoad = workLoad;
+        this.crossStrat=crossStrat;
+        Connection connection = null;
+        try {
+            connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
+            assert connection != null;
+            this.channel = RabbitUtils.createChannel2Server(connection);
+        } catch (IOException | TimeoutException e) {
+            e.printStackTrace();
+        }
     }
-
-    @Override
+        @Override
     public synchronized void updateTotalShares(WorkerRI worker) throws IOException {
-        if(this.state.getCurrentState().compareTo("OnGoing")==0 || this.state.getCurrentState().compareTo("Available")==0){
-            if(worker.getState().getCurrentState().compareTo("Available") == 0){
+        if (this.state.getCurrentState().compareTo("OnGoing") == 0 || this.state.getCurrentState().compareTo("Available") == 0) {
+            if (worker.getState().getCurrentState().compareTo("Available") == 0) {
                 worker.changeState("Ongoing");
             }
-            if (bestCombination.isEmpty() ) {
+            if (bestCombination.isEmpty()) {
                 bestCombination.add(worker);
             } else {
                 if (bestCombination.get(0).getBestMakespan() > worker.getBestMakespan()) {
@@ -80,7 +91,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 }
                 notifyAllWorkers("Stopped");
             }
-        }else if(this.state.getCurrentState().compareTo("Paused")==0) {
+        } else if (this.state.getCurrentState().compareTo("Paused") == 0) {
             for (WorkerRI w : jobWorkers.values()) {
                 w.changeState("Paused");
             }
@@ -90,36 +101,47 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
+    public void updateTotalShares(String queueName) throws IOException {
+        DeliverCallback deliverCallback=(consumerTag, delivery) -> {
+            String message=new String(delivery.getBody(), "UTF-8");
+            System.out.println("HEREEEEEEEEEEEEEEE");
+            System.out.println(message);
+            /*Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
+            System.out.println(" [x] Received '" + message + "'");*/
+        };
+        CancelCallback cancelCallback=(consumerTag) ->{
+            System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
+        };
+        channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+    }
+
+    @Override
     public boolean attachWorker(WorkerRI worker) throws IOException {
         if (jobWorkers.size() == 0) {
             this.state.setCurrentState("OnGoing");
         }
         if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0) {
-            if(this.strat.compareTo("TabuSearch")==0) {
+            if (this.strat.compareTo("TabuSearch") == 0) {
                 jobWorkers.put(worker.getId(), worker);
                 idSize++;
                 worker.setFile(filePath);
                 updateList();
-                return true;
-            }
-            else if(this.strat.compareTo("Genetic Algorithm")==0){
-                String host = "localhost";
-                int port = 5672;
-                String exchangeName = "logs_exchange";
-                try (Connection connection=RabbitUtils.newConnection2Server(host, port, "guest", "guest");
-                     Channel channel=RabbitUtils.createChannel2Server(connection)) {
+            } else if (this.strat.compareTo("Genetic Algorithm") == 0) {
+                String exchangeName = String.valueOf(jobName);
 
-                    channel.exchangeDeclare(exchangeName, BuiltinExchangeType.FANOUT);
-                    String message=RabbitUtils.getMessage(args,3);
-                    String routingKey="";
-                    // Publish a message to the queue (content is byte array encoded with UTF-8)
-                    channel.basicPublish(exchangeName, routingKey,null, message.getBytes("UTF-8"));
-                    System.out.println(" [x] Sent '" + message + "'");
+                // Connection
+                channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
 
-                } catch (IOException | TimeoutException e) {
-                    Logger.getLogger(EmitLogs.class.getName()).log(Level.INFO, e.toString());
-                }
+                //Get queue name and Bind to Exchange
+                String queueName = channel.queueDeclare().getQueue();
+                channel.queueBind(queueName, exchangeName, ROUTING_KEY);
+
+                //file, CrossStrat,
+                String msg = filePath + "," + crossStrat;
+                channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
+                updateTotalShares(queueName);
             }
+            return true;
         }
         return false;
     }
@@ -133,7 +155,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
     @Override
     public void removeWorker(WorkerRI selectedWorker) throws IOException {
-        if(bestCombination.get(0).getId().equals(selectedWorker.getId())){
+        if (bestCombination.get(0).getId().equals(selectedWorker.getId())) {
             bestCombination.clear();
         }
         this.jobWorkers.remove(selectedWorker.getId());
@@ -141,14 +163,14 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public int getIdsSize() {
+    public Integer getIdsSize() {
         return idSize;
     }
 
     @Override
     public void setState(String state) throws IOException {
         this.state.setCurrentState(state);
-        if(state.compareTo("OnGoing")==0){
+        if (state.compareTo("OnGoing") == 0) {
             for (WorkerRI w : jobWorkers.values()) {
                 w.setState("Ongoing");
             }
@@ -159,7 +181,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
     @Override
     public boolean removeAllWorkers() throws IOException {
-       this.state.setCurrentState("Deleted");
+        this.state.setCurrentState("Deleted");
         this.client.setCredits(bestCombination.get(0).getOwner(), Integer.parseInt(this.reward));
         jobWorkers.get(bestCombination.get(0).getId()).setTotalRewarded(Integer.parseInt(this.reward));
         this.paid = true;

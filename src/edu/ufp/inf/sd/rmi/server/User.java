@@ -6,9 +6,9 @@ public class User implements Serializable {
 
     private final String username;
     private final String password;
-    private int credits;
+    private Integer credits;
 
-    public User(String username, String password, int credits) {
+    public User(String username, String password, Integer credits) {
         this.username = username;
         this.password = password;
         this.credits=credits;
@@ -27,15 +27,15 @@ public class User implements Serializable {
         return password;
     }
 
-    public int getCredits() {
+    public Integer getCredits() {
         return credits;
     }
 
-    public void setCredits(int credits) {
+    public void setCredits(Integer credits) {
         this.credits = credits;
     }
 
-    public void addCredits(int plus){
+    public void addCredits(Integer plus){
         this.credits+=plus;
     }
 

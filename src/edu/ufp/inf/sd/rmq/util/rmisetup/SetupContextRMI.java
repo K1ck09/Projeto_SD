@@ -21,7 +21,7 @@ public class SetupContextRMI {
 
     private final Class subsystemClass;
     private final String registryHostIP;
-    private final int registryHostPort;
+    private final Integer registryHostPort;
     private final String serviceNames[];
     private final String serviceUrls[];
     private final Logger logger;
@@ -43,7 +43,7 @@ public class SetupContextRMI {
         logger.log(Level.INFO, "serviceNames.length = {0}", serviceNames.length);
         this.serviceNames = new String[serviceNames.length];
         System.arraycopy(serviceNames, 0, this.serviceNames, 0, serviceNames.length);
-        for (int i = 0; i < serviceNames.length; i++) {
+        for (Integer i = 0; i < serviceNames.length; i++) {
             logger.log(Level.INFO, "serviceNames[{0}] = {1}", new Object[]{i, serviceNames[i]});
         }
 
@@ -60,7 +60,7 @@ public class SetupContextRMI {
 
         this.serviceUrls = new String[this.serviceNames.length];
         logger.log(Level.INFO, "serviceUrls.length = {0}", this.serviceUrls.length);
-        for (int i = 0; i < this.serviceUrls.length; i++) {
+        for (Integer i = 0; i < this.serviceUrls.length; i++) {
             serviceUrls[i] = "rmi://" + this.registryHostIP + ":" + this.registryHostPort + "/" + this.serviceNames[i];
             logger.log(Level.INFO, "serviceUrls[{0}] = {1}", new Object[]{i, serviceUrls[i]});
         }
@@ -72,7 +72,7 @@ public class SetupContextRMI {
         setupRegistryContext(registryHostIP, registryHostIP);
     }
 
-    public String getServicesUrl(int i) {
+    public String getServicesUrl(Integer i) {
         return (i < this.serviceUrls.length ? serviceUrls[i] : null);
     }
 
@@ -135,7 +135,7 @@ public class SetupContextRMI {
             String[] registriesList = registry.list();
             logger.log(Level.INFO, "registriesList.length = {0}", new Object[]{registriesList.length});
 
-            for (int i = 0; i < registriesList.length; i++) {
+            for (Integer i = 0; i < registriesList.length; i++) {
                 logger.log(Level.INFO, "registriesList[{0}] = {1}", new Object[]{i, registriesList[i]});
             }
         } else {
@@ -146,7 +146,7 @@ public class SetupContextRMI {
     }
 
     public static void printArgs(String classname, String args[]) {
-        for (int i = 0; args != null && i < args.length; i++) {
+        for (Integer i = 0; args != null && i < args.length; i++) {
             //String t = Thread.currentThread().getName();
             //Logger.getLogger(this.getClass().getName()).log(Level.INFO, "args[{0}] = {1}", new Object[]{i, args[i]});
             Logger.getLogger(classname).log(Level.INFO, "args[{0}] = {1}", new Object[]{i, args[i]});

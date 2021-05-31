@@ -80,7 +80,7 @@ def genetic(times, machines, n, population_number, iterations, rate, target, opt
 			if (not global_best or best_result < global_best):
 				global_best = best_result
 				global_best_ind = copy.deepcopy(best_ind)
-			# We print the progress so far and the time elapsed
+			# We prInteger the progress so far and the time elapsed
 			printProgress(best_result, i, time.time() - start_time)
 			# We check the diversity, in case the diversity percentage is very low we delete a number of the population and we add randome members
 			checkDiversity(population, diffPercentage, n, machine_number)

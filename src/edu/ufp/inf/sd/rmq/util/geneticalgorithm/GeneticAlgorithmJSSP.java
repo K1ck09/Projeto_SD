@@ -32,7 +32,7 @@ public class GeneticAlgorithmJSSP {
     public void run(){
 
         try {
-            ProcessBuilder builder = new ProcessBuilder("python3",
+            ProcessBuilder builder = new ProcessBuilder("py",
                     SCRIPT_NAME,
                     jsspInstance,
                     queue,
@@ -56,6 +56,4 @@ public class GeneticAlgorithmJSSP {
         }
 
     }
-
-
 }

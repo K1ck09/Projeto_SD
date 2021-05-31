@@ -17,7 +17,7 @@ public interface UserSessionRI extends Remote {
 
     String getCredits() throws RemoteException;
 
-    void setCredits(User user, int credits) throws RemoteException;
+    void setCredits(User user, Integer credits) throws RemoteException;
 
     Map<String, JobGroupRI> getJobList() throws RemoteException;
 

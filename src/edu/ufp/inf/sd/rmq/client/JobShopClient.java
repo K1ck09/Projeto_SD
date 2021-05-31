@@ -79,7 +79,7 @@ public class JobShopClient {
         try {
             //============ Call TS remote service ============
             String jsspInstancePath = "edu/ufp/inf/sd/data/la01.txt";
-            int makespan = this.jobShopRI.runTS(jsspInstancePath);
+            Integer makespan = this.jobShopRI.runTS(jsspInstancePath);
             Logger.getLogger(this.getClass().getName()).log(Level.INFO,
                     "[TS] Makespan for {0} = {1}",
                     new Object[]{jsspInstancePath,String.valueOf(makespan)});

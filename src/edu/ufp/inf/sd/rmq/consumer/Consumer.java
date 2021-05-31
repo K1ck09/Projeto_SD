@@ -1,7 +1,7 @@
 package edu.ufp.inf.sd.rmq.consumer;
 
 /**
- * Consumer will keep running to listen for messages from queue and print them out.
+ * Consumer will keep running to listen for messages from queue and prInteger them out.
  * 
  * DefaultConsumer is a class implementing the Consumer interface, used to buffer 
  * the messages pushed to us by the server.
@@ -18,7 +18,7 @@ package edu.ufp.inf.sd.rmq.consumer;
  * java -cp $CP Producer
  * java -cp %CP% Producer
  * 
- * The client will print the message it gets from the publisher via RabbitMQ.
+ * The client will prInteger the message it gets from the publisher via RabbitMQ.
  * The client will keep running, waiting for messages (Use Ctrl-C to stop it).
  * Try running the publisher from another terminal.
  *

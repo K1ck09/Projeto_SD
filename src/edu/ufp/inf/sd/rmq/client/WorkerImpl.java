@@ -1,12 +1,19 @@
 package edu.ufp.inf.sd.rmq.client;
 
+import com.rabbitmq.client.*;
 import edu.ufp.inf.sd.rmq.server.JobGroupRI;
 import edu.ufp.inf.sd.rmq.server.State;
 import edu.ufp.inf.sd.rmq.server.User;
+import edu.ufp.inf.sd.rmq.util.RabbitUtils;
+import edu.ufp.inf.sd.rmq.util.geneticalgorithm.CrossoverStrategies;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     Integer id;
@@ -14,28 +21,94 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private State state;
     private final User owner;
     private final String jobGroupName;
-    private int bestMakespan= Integer.MAX_VALUE;
-    private int totalShares=0;
+    private int bestMakespan = Integer.MAX_VALUE;
+    private int totalShares = 0;
     private int currentMakespan;
-    private int totalRewarded=0;
+    private int totalRewarded = 0;
     private final JobGroupRI JobGroupRI;
-    private static final String PATH_FILE="C:\\Users\\xDMAN\\Desktop\\Universidade\\Sistemas Distribuidos\\PL\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\client\\temp\\";
+    private static final String PATH_FILE = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\client\\temp\\";
     private File file;
+    private static final String HOST = "localhost";
+    private static final int PORT = 5672;
+    private static final String ROUTING_KEY = "";
+    private Channel channel;
+    private CrossoverStrategies crossoverStra;
 
 
-    protected WorkerImpl( JobShopClient client,Integer id,User jobOwner, State state,String jobGroupName) throws RemoteException {
-        this.id=id;
-        this.owner=jobOwner;
-        this.client=client;
-        this.state=state;
+    protected WorkerImpl(JobShopClient client, Integer id, User jobOwner, State state, String jobGroupName) throws RemoteException {
+        this.id = id;
+        this.owner = jobOwner;
+        this.client = client;
+        this.state = state;
         this.jobGroupName = jobGroupName;
-        this.JobGroupRI=client.userSessionRI.getJobList().get(jobGroupName);
+        this.JobGroupRI = client.userSessionRI.getJobList().get(jobGroupName);
     }
+
+    protected WorkerImpl(JobShopClient client, Integer id, User jobOwner, State state, String jobGroupName, boolean var) throws RemoteException {
+        this.id = id;
+        this.owner = jobOwner;
+        this.client = client;
+        this.state = state;
+        this.jobGroupName = jobGroupName;
+        this.JobGroupRI = client.userSessionRI.getJobList().get(jobGroupName);
+        Connection connection = null;
+        try {
+            connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
+            assert connection != null;
+            this.channel = RabbitUtils.createChannel2Server(connection);
+            //Mudar para dinamico so entre jobgroups igual para todos os workers
+            String exchangeName = JobGroupRI.getJobName()+id+owner;
+
+            channel.exchangeDeclare(exchangeName, BuiltinExchangeType.FANOUT);
+
+            String queueName = channel.queueDeclare().getQueue();
+
+            String routingKey = "";
+            channel.queueBind(queueName, exchangeName, routingKey);
+
+            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+                String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+                String[] args = message.split(",");
+
+                downloadFile(args[0]);
+                crossoverStra = setCrossStrat(Integer.parseInt(args[1]));
+                if(crossoverStra!=null){
+                    setGaOperation(String.valueOf(id), crossoverStra);
+                }
+
+               /* Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
+                System.out.println(" [x] Received '"+ args[1]+ "'");*/
+            };
+            CancelCallback cancelCallback = (consumerTag) -> {
+                System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
+            };
+            channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+
+        } catch (IOException | TimeoutException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private CrossoverStrategies setCrossStrat(int num) {
+        return switch (num) {
+            case 1 -> CrossoverStrategies.ONE;
+            case 2 -> CrossoverStrategies.TWO;
+            case 3 -> CrossoverStrategies.THREE;
+            default -> null;
+        };
+    }
+
+    public void setGaOperation(String queue, CrossoverStrategies crossoverStrategies) {
+        Operations op = new Operations(file.getAbsolutePath(), this, queue, crossoverStrategies);
+        Thread t = new Thread(op);
+        t.start();
+    }
+
 
     @Override
     public void setOperation() {
         Operations op = new Operations(file.getAbsolutePath(), this);
-        Thread t=new Thread(op);
+        Thread t = new Thread(op);
         t.start();
     }
 
@@ -52,38 +125,41 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
     @Override
     public synchronized void updateMakeSpan(int makespan) throws IOException {
-            this.currentMakespan=makespan;
-            //System.out.println("["+id+"] -> "+currentMakespan);
-            if(this.bestMakespan>this.currentMakespan){
-                this. bestMakespan=this.currentMakespan;
-            }
-            JobGroupRI.updateTotalShares(this);
+        this.currentMakespan = makespan;
+        //System.out.println("["+id+"] -> "+currentMakespan);
+        if (this.bestMakespan > this.currentMakespan) {
+            this.bestMakespan = this.currentMakespan;
+        }
+        JobGroupRI.updateTotalShares(this);
     }
 
     @Override
-    public void setFile(String filePath)throws IOException {
+    public void setFile(String filePath) throws IOException {
         downloadFile(filePath);
         JobGroupRI.updateTotalShares(this);
     }
 
-    private void downloadFile( String filepath) throws IOException {
-        byte [] data = JobGroupRI.downloadFileFromServer(filepath);
-        this.file=new File(PATH_FILE+this.id+"_"+owner.getUsername()+"_"+jobGroupName);
+    private void downloadFile(String filepath) throws IOException {
+        byte[] data = JobGroupRI.downloadFileFromServer(filepath);
+        this.file = new File(PATH_FILE + this.id + "_" + owner.getUsername() + "_" + jobGroupName);
         FileOutputStream out = new FileOutputStream(this.file);
         out.write(data);
         out.flush();
         out.close();
     }
 
-    public int getCurrentMakespan() {
+    public Integer getCurrentMakespan() {
         return currentMakespan;
     }
+
     public int getBestMakespan() {
         return bestMakespan;
     }
+
     public int getTotalShares() {
         return totalShares;
     }
+
     public void setTotalShares(int totalShares) {
         this.totalShares = totalShares;
     }
@@ -92,29 +168,33 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public Integer getId() {
         return id;
     }
+
     @Override
     public State getState() {
         return state;
     }
+
     @Override
     public User getOwner() {
         return owner;
     }
+
     @Override
     public String getJobGroupName() {
         return jobGroupName;
     }
+
     @Override
     public JobShopClient getClient() {
         return client;
     }
 
     @Override
-    public int getTotalRewarded() {
+    public Integer getTotalRewarded() {
         return totalRewarded;
     }
 
-    public void setTotalRewarded(int totalRewarded) {
+    public void setTotalRewarded(Integer totalRewarded) {
         this.totalRewarded = totalRewarded;
     }
 }

@@ -1,5 +1,4 @@
 package edu.ufp.inf.sd.rmi.server;
-import edu.ufp.inf.sd.rmi.client.MenuController;
 import edu.ufp.inf.sd.rmi.client.MenuControllerRI;
 import edu.ufp.inf.sd.rmi.client.WorkerRI;
 
@@ -14,7 +13,7 @@ import java.util.logging.Logger;
 public class UserSessionImpl extends UnicastRemoteObject implements UserSessionRI {
     DBMockup db;
     User user;
-    private boolean error=false;
+    private boolean error = false;
 
     public UserSessionImpl(DBMockup db, User user) throws RemoteException {
         super();
@@ -28,6 +27,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         this.error=error;
     }
 
+    @Override
     public String getUsername() {
         return user.getUsername();
     }
@@ -39,9 +39,10 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
-    public void setCredits(User user,int credits) {
-        user.addCredits(credits);
-        db.updateUser(user);
+    public void setCredits(User user, Integer credits) {
+        User u=db.getUser(user.getUsername());
+        u.addCredits(credits);
+        db.updateUser(u);
     }
 
     @Override
@@ -66,7 +67,6 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         return db.getJobGroups().get(jobGroupRI).getJobWorkers();
     }
 
-
     @Override
     public Map<String, JobGroupRI> createJob( UserSessionRI userSessionRI, HashMap<String, String> item) throws IOException {
         JobGroupRI jobGroup= new JobGroupImpl(userSessionRI,item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"));
@@ -74,6 +74,7 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         updateMenus();
         return db.getJobGroups();
     }
+
     @Override
     public void updateMenus() throws IOException {
         for(MenuControllerRI c : db.getMenuList().values()){
@@ -85,7 +86,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
         return db.getJobGroups().get(jobName);
     }
 
-    public User getUser()throws RemoteException {
+    @Override
+    public User getUser() throws RemoteException {
         return user;
     }
 
@@ -100,11 +102,17 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     }
 
     @Override
+    public User findUser(String username) throws RemoteException {
+        return db.getUser(username);
+    }
+
+    @Override
     public void removeJob(String jobName) throws IOException {
         this.db.removeJob(jobName);
         updateMenus();
     }
 
+    @Override
     public boolean isError() throws RemoteException{
         return error;
     }
