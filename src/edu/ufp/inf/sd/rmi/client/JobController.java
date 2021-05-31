@@ -60,6 +60,12 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     public JobController() throws RemoteException {
     }
 
+    /**
+     * Initialize Job variables to show in GUI
+     * @param client
+     * @param jobGroupRI
+     * @throws IOException
+     */
     public void init(JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
         this.client = client;
         this.jobGroupRI = jobGroupRI;
@@ -76,6 +82,9 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Updates User credits and and username and display in GUI
+     */
     private void updateUser() {
         Platform.runLater(
                 () -> {
@@ -91,6 +100,10 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                     }
                 });
     }
+
+    /**
+     * Updates Job variables and display in GUI
+     */
 
     private void updateJobItem() {
         Platform.runLater(
@@ -159,6 +172,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                 }
         );
     }
+
+    /**
+     * For loop through all workers to get their information create a
+     * ItemWorkerController and append it to the scroll panel in Job GUI
+     */
 
     private void insertWorkersInTable() {
         Platform.runLater(() -> {
@@ -250,6 +268,12 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         });
     }
 
+    /**
+     * Cleans all remote variables and finish programs
+     * @param mouseEvent
+     * @throws RemoteException
+     */
+
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
         this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
@@ -260,6 +284,13 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         Platform.exit();
         System.exit(0);
     }
+
+    /**
+     * Reads input and creates the number of workers asked
+     * and attaches workers to job
+     * @param actionEvent
+     * @throws IOException
+     */
 
     public void handlerAttachWorkers(ActionEvent actionEvent) throws IOException {
         Integer num = Integer.parseInt(workersNum.getText());
