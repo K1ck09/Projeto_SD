@@ -1,0 +1,13 @@
+edu.ufp.inf.sd.rmi.client
+edu.ufp.inf.sd.rmi.server
+edu.ufp.inf.sd.rmi.util.geneticalgorithm
+edu.ufp.inf.sd.rmi.util.rmisetup
+edu.ufp.inf.sd.rmi.util.tabusearch
+edu.ufp.inf.sd.rmq.client
+edu.ufp.inf.sd.rmq.consumer
+edu.ufp.inf.sd.rmq.producer
+edu.ufp.inf.sd.rmq.server
+edu.ufp.inf.sd.rmq.util
+edu.ufp.inf.sd.rmq.util.geneticalgorithm
+edu.ufp.inf.sd.rmq.util.rmisetup
+edu.ufp.inf.sd.rmq.util.tabusearch
