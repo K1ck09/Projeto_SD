@@ -130,7 +130,12 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 updateList();
             } else if (this.strat.compareTo("Genetic Algorithm") == 0) {
                 String exchangeName = String.valueOf(jobName);
-
+                /* servidor publica exchange,
+                    worker vai buscar uma queue desse exchange e consume
+                    workercria uma queue para falar com o GA_ e consume da Queue id_results
+                    worker declara outra queue para falar com o servidor
+                    e enviar os resultados
+                 */
                 // Connection
                 channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
                 
