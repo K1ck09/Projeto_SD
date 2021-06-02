@@ -101,10 +101,10 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public void updateTotalShares() throws IOException {
-        //deliveryCall back é o nome da função
+    public void updateTotalShares(String queueName) throws IOException {
         DeliverCallback deliverCallback=(consumerTag, delivery) -> {
             String message=new String(delivery.getBody(), "UTF-8");
+            System.out.println("HEREEEEEEEEEEEEEEE");
             System.out.println(message);
             /*Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
             System.out.println(" [x] Received '" + message + "'");*/
@@ -112,9 +112,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         CancelCallback cancelCallback=(consumerTag) ->{
             System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
         };
-
-        //o nome da queue é o que junta a queue a callback
-        channel.basicConsume("", true, deliverCallback, cancelCallback);
+        channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
     }
 
     @Override
@@ -133,11 +131,15 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
                 // Connection
                 channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
-                
+
+                //Get queue name and Bind to Exchange
+                String queueName = channel.queueDeclare().getQueue();
+                channel.queueBind(queueName, exchangeName, ROUTING_KEY);
+
                 //file, CrossStrat,
                 String msg = filePath + "," + crossStrat;
                 channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
-                updateTotalShares();
+                updateTotalShares(queueName);
             }
             return true;
         }
