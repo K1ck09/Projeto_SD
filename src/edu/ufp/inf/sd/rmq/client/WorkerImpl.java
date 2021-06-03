@@ -66,23 +66,23 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             String routingKey = "";
             channel.queueBind(queueName, exchangeName, routingKey);
 
-            DeliverCallback deliverCallback = (consumerTag, delivery) -> {
+            DeliverCallback downloadFile = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 String[] args = message.split(",");
 
                 downloadFile(args[0]);
-                crossoverStra = setCrossStrat(Integer.parseInt(args[1]));
+          /*      crossoverStra = setCrossStrat(Integer.parseInt(args[1]));
                 if(crossoverStra!=null){
                     setGaOperation(String.valueOf(id), crossoverStra);
                 }
-
+*/
                /* Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
                 System.out.println(" [x] Received '"+ args[1]+ "'");*/
             };
             CancelCallback cancelCallback = (consumerTag) -> {
                 System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
             };
-            channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+            channel.basicConsume(queueName, true, downloadFile, cancelCallback);
 
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
@@ -139,6 +139,8 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         JobGroupRI.updateTotalShares(this);
     }
 
+
+
     private void downloadFile(String filepath) throws IOException {
         byte[] data = JobGroupRI.downloadFileFromServer(filepath);
         this.file = new File(PATH_FILE + this.id + "_" + owner.getUsername() + "_" + jobGroupName);
@@ -152,15 +154,16 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         return currentMakespan;
     }
 
-    public int getBestMakespan() {
+    public Integer getBestMakespan() {
         return bestMakespan;
     }
 
-    public int getTotalShares() {
+    public Integer getTotalShares() {
         return totalShares;
     }
-
-    public void setTotalShares(int totalShares) {
+    
+    @Override
+    public void setTotalShares(Integer totalShares) throws RemoteException {
         this.totalShares = totalShares;
     }
 
