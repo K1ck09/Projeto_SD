@@ -138,7 +138,6 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                  */
                 // Connection
                 channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
-                
                 //file, CrossStrat,
                 String msg = filePath + "," + crossStrat;
                 channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));

@@ -71,6 +71,8 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                 String[] args = message.split(",");
 
                 downloadFile(args[0]);
+
+                //inicia o thread GA
           /*      crossoverStra = setCrossStrat(Integer.parseInt(args[1]));
                 if(crossoverStra!=null){
                     setGaOperation(String.valueOf(id), crossoverStra);
@@ -161,7 +163,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public Integer getTotalShares() {
         return totalShares;
     }
-    
+
     @Override
     public void setTotalShares(Integer totalShares) throws RemoteException {
         this.totalShares = totalShares;
