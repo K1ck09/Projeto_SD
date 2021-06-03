@@ -5,3 +5,6 @@ src/edu/ufp/inf/sd/rmi/server/files/*
 src/edu/ufp/inf/sd/rmi/client/temp/*
 src/edu/ufp/inf/sd/rmq/server/files/*
 src/edu/ufp/inf/sd/rmq/client/temp/*
+/.idea/libraries/
+.idea/Projeto_SD.iml
+.idea/libraries/javafx.xml

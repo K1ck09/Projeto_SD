@@ -17,6 +17,9 @@ public class LoadGUIClient extends Application {
         launch(args);
     }
 
+    /**
+     * Starts GUI Client
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         stage=primaryStage;
@@ -27,6 +30,11 @@ public class LoadGUIClient extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Changes scene
+     * @param fxml - Scene to be loaded
+     * @throws IOException
+     */
     public void changeScene(String fxml)throws IOException{
         Parent pane = FXMLLoader.load(getClass().getResource(fxml));
         stage.getScene().setRoot(pane);

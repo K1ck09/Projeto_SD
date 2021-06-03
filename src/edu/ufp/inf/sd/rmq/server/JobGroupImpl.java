@@ -101,10 +101,10 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     }
 
     @Override
-    public void updateTotalShares(String queueName) throws IOException {
+    public void updateTotalShares() throws IOException {
+        //deliveryCall back é o nome da função
         DeliverCallback deliverCallback=(consumerTag, delivery) -> {
             String message=new String(delivery.getBody(), "UTF-8");
-            System.out.println("HEREEEEEEEEEEEEEEE");
             System.out.println(message);
             /*Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
             System.out.println(" [x] Received '" + message + "'");*/
@@ -112,7 +112,9 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         CancelCallback cancelCallback=(consumerTag) ->{
             System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
         };
-        channel.basicConsume(queueName, true, deliverCallback, cancelCallback);
+
+        //o nome da queue é o que junta a queue a callback
+        channel.basicConsume("", true, deliverCallback, cancelCallback);
     }
 
     @Override
@@ -128,18 +130,18 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 updateList();
             } else if (this.strat.compareTo("Genetic Algorithm") == 0) {
                 String exchangeName = String.valueOf(jobName);
-
+                /* servidor publica exchange,
+                    worker vai buscar uma queue desse exchange e consume
+                    workercria uma queue para falar com o GA_ e consume da Queue id_results
+                    worker declara outra queue para falar com o servidor
+                    e enviar os resultados
+                 */
                 // Connection
                 channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
-
-                //Get queue name and Bind to Exchange
-                String queueName = channel.queueDeclare().getQueue();
-                channel.queueBind(queueName, exchangeName, ROUTING_KEY);
-
                 //file, CrossStrat,
                 String msg = filePath + "," + crossStrat;
                 channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
-                updateTotalShares(queueName);
+                updateTotalShares();
             }
             return true;
         }

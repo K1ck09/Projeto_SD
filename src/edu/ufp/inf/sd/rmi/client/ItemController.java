@@ -25,15 +25,29 @@ public class ItemController {
     private JobShopClient client;
     private JobGroupRI thisJob;
 
+    /**
+     * Initialize a client
+     * @param client - JobShopClient
+     */
     public void setClient(JobShopClient client) {
         this.client = client;
     }
 
+    /**
+     * Handles Job click and redirect to the Job Menu
+     * @param actionEvent - An action event
+     * @throws IOException
+     */
     public void handlerInsideJob(ActionEvent actionEvent) throws IOException {
         this.thisJob = this.client.userSessionRI.getJobList().get(tableJob.getText());
         changeToMenuScene(actionEvent);
     }
 
+    /**
+     * Changes to the Job Menu Scene
+     * @param actionEvent - An action event
+     * @throws IOException
+     */
     private void changeToMenuScene(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/jobMenu.fxml"));
         Parent menuParent = loader.load();

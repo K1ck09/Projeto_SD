@@ -11,7 +11,7 @@ public interface WorkerRI extends Remote {
 
     void setOperation() throws IOException;
 
-    void updateMakeSpan(Integer makespan) throws IOException;
+    void updateMakeSpan(int makespan) throws IOException;
 
     Integer getBestMakespan() throws RemoteException;
 

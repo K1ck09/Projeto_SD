@@ -36,6 +36,11 @@ public class LoginController implements Initializable {
 
     private JobShopClient client;
 
+    /**
+     * Tries to create a RMI Session
+     * @param url - an URL
+     * @param resourceBundle - an ResourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
@@ -45,15 +50,29 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * Checks login
+     * @param actionEvent - An action event
+     * @throws IOException
+     */
     public void userLogin(ActionEvent actionEvent) throws IOException {
         checkLogin(actionEvent);
     }
 
+    /**
+     * Creates an RMI Session
+     * @throws RemoteException
+     */
     private void clientConnection() throws RemoteException {
         this.client = new JobShopClient();
         this.client.lookupService();
     }
 
+    /**
+     * Checks login values
+     * @param actionEvent - An action event
+     * @throws IOException
+     */
     private void checkLogin(ActionEvent actionEvent) throws IOException {
         String username = usernameLogin.getText();
         String password = passwordLogin.getText();
@@ -77,6 +96,11 @@ public class LoginController implements Initializable {
         }
     }
 
+    /**
+     * Changes to the Job Menu Scene
+     * @param actionEvent - An action event
+     * @throws IOException
+     */
     private void changeToMenuScene(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
         Parent menuParent = loader.load();
@@ -90,11 +114,20 @@ public class LoginController implements Initializable {
         app_stage.show();
     }
 
+    /**
+     * Creates an account
+     * @param mouseEvent - A mouse event
+     * @throws IOException
+     */
     public void createAccount(MouseEvent mouseEvent) throws IOException {
         LoadGUIClient m = new LoadGUIClient();
         m.changeScene("layouts/register.fxml");
     }
 
+    /**
+     * Handles the exit
+     * @param mouseEvent - A mouse event
+     */
     public void handlerExit(MouseEvent mouseEvent) {
         Platform.exit();
         System.exit(0);
