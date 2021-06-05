@@ -68,7 +68,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 public void run(){
                     assert timer != null;
                     try {
-                        Thread.sleep(Integer.parseInt(timer)* 100L);
+                        Thread.sleep(Integer.parseInt(timer)* 1000L);
                         jobStart();
                     } catch (InterruptedException e) {
                         e.printStackTrace();

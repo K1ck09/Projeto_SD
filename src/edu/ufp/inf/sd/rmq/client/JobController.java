@@ -55,16 +55,22 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
     private JobShopClient client;
     private JobGroupRI jobGroupRI;
     private Map<Integer, WorkerRI> workersMap = new HashMap<>();
-    private WorkerRI selectedWorker=null;
+    private WorkerRI selectedWorker = null;
 
     public JobController() throws RemoteException {
     }
 
+    /**
+     * Initialize Job variables to show in GUI
+     * @param client - JobShopClient
+     * @param jobGroupRI - Instance of JobGroupRI
+     * @throws IOException
+     */
     public void init(JobShopClient client, JobGroupRI jobGroupRI) throws IOException {
         this.client = client;
         this.jobGroupRI = jobGroupRI;
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
-        this.jobGroupRI.addToList(this,this.client.userSessionRI.getUsername());
+        this.jobGroupRI.addToList(this, this.client.userSessionRI.getUsername());
         updateJobItem();
         if (this.client.userSessionRI.getUsername().compareTo(jobGroupRI.getJobOwner()) == 0) {
             btnsJob.setVisible(true);
@@ -76,6 +82,9 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Updates User credits, username and display in GUI
+     */
     private void updateUser() {
         Platform.runLater(
                 () -> {
@@ -89,77 +98,91 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-                } );
+                });
     }
 
+    /**
+     * Updates Job variables and display in GUI
+     */
     private void updateJobItem() {
         Platform.runLater(
                 () -> {
                     try {
                         jobName.setText(jobGroupRI.getJobName());
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-                       // e.printStackTrace();
+                        e.printStackTrace();
                     }
                     try {
                         jobOwner.setText(jobGroupRI.getJobOwner());
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-
-                        //e.printStackTrace();
+                        e.printStackTrace();
                     }
                     try {
                         jobStrat.setText(jobGroupRI.getJobStrat());
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-                        // e.printStackTrace();
+                        e.printStackTrace();
                     }
                     try {
-                        jobReward.setText(jobGroupRI.getJobReward());
+                        if(jobStrat.getText().compareTo("TabuSearch")==0){
+                            jobReward.setText(jobGroupRI.getJobReward());
+                        } else {
+                            if(jobGroupRI.getJobReward()!=null){
+                                jobReward.setText(jobGroupRI.getJobReward());
+                            }else{
+                                jobReward.setText("-");
+                            }
+                        }
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-                       // e.printStackTrace();
+                        e.printStackTrace();
                     }
                     try {
                         jobWorkers.setText(String.valueOf(jobGroupRI.getWorkersSize()));
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-//                        e.printStackTrace();
+                        e.printStackTrace();
                     }
                     try {
-                        if(jobGroupRI.getState().compareTo("Available")==0){
+                        if (jobGroupRI.getState().compareTo("Available") == 0) {
                             jobState.setStyle("-fx-text-fill: #0dbc00");
                             jobState.setText(jobGroupRI.getState());
-                        }else if(jobGroupRI.getState().compareTo("OnGoing")==0){
+                        } else if (jobGroupRI.getState().compareTo("OnGoing") == 0) {
                             jobState.setStyle("-fx-text-fill: #238f65");
                             jobState.setText(jobGroupRI.getState());
-                        }else if(jobGroupRI.getState().compareTo("Paused")==0){
+                        } else if (jobGroupRI.getState().compareTo("Paused") == 0) {
                             jobState.setStyle("-fx-text-fill: #c38700");
                             jobState.setText(jobGroupRI.getState());
-                        }else if(jobGroupRI.getState().compareTo("Finished")==0){
+                        } else if (jobGroupRI.getState().compareTo("Finished") == 0) {
                             jobState.setStyle("-fx-text-fill: #ff3232");
+                            jobState.setText(jobGroupRI.getState());
+                        }else if (jobGroupRI.getState().compareTo("Waiting") == 0) {
+                            jobState.setStyle("-fx-text-fill: #de7426");
                             jobState.setText(jobGroupRI.getState());
                         }
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-//                        e.printStackTrace();
+                        e.printStackTrace();
                     }
                     try {
-                        jobWorkload.setText(jobGroupRI.getWorkload());
+                        if(jobStrat.getText().compareTo("TabuSearch")==0){
+                            jobWorkload.setText(jobGroupRI.getWorkload());
+                        } else {
+                            jobWorkload.setText("-");
+                        }
+
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-//                        e.printStackTrace();
+                        e.printStackTrace();
                     }
                     try {
                         jobBestResult.setText(jobGroupRI.getBestResut());
                     } catch (RemoteException e) {
-                        System.out.println("JOB DELETED");
-//                        e.printStackTrace();
+                        e.printStackTrace();
                     }
                 }
         );
     }
 
+    /**
+     * For loop through all workers to get their information then creates a
+     * ItemWorkerController and append it to the scroll panel in Job GUI
+     */
     private void insertWorkersInTable() {
         Platform.runLater(() -> {
             table.getChildren().clear();
@@ -192,14 +215,13 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                         }
                                     } else if (id != null && id.compareTo("tableWorkerState") == 0) {
                                         try {
-
-                                            if(worker.getState().getCurrentState().compareTo("Ongoing")==0){
+                                            if (worker.getState().getCurrentState().compareTo("Ongoing") == 0) {
                                                 ((Label) label).setStyle("-fx-text-fill: #0dbc00");
                                                 ((Label) label).setText(worker.getState().getCurrentState());
-                                            }else if(worker.getState().getCurrentState().compareTo("Paused")==0){
+                                            } else if (worker.getState().getCurrentState().compareTo("Paused") == 0) {
                                                 ((Label) label).setStyle("-fx-text-fill: #c38700"); //238f65
                                                 ((Label) label).setText(worker.getState().getCurrentState());
-                                            }else if(worker.getState().getCurrentState().compareTo("Stopped")==0){
+                                            } else if (worker.getState().getCurrentState().compareTo("Stopped") == 0) {
                                                 ((Label) label).setStyle("-fx-text-fill: #ff3232");
                                                 ((Label) label).setText(worker.getState().getCurrentState());
                                             }
@@ -214,10 +236,10 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                         }
                                     } else if (id != null && id.compareTo("tableRewarded") == 0) {
                                         try {
-                                            if(worker.getTotalRewarded()!=0){
+                                            if (worker.getTotalRewarded() != 0) {
                                                 ((Label) label).setStyle("-fx-text-fill: #0dbc00");
                                                 ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
-                                            }else {
+                                            } else {
                                                 ((Label) label).setText(String.valueOf(worker.getTotalRewarded()));
                                             }
                                         } catch (RemoteException e) {
@@ -250,30 +272,35 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         });
     }
 
+    /**
+     * Cleans all remote variables and finish programs
+     * @param mouseEvent - An mouse event
+     * @throws RemoteException
+     */
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
+        this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
-        this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
-        this.jobGroupRI=null;
+        this.jobGroupRI = null;
         this.workersMap.clear();
-        this.client=null;
+        this.client = null;
         Platform.exit();
         System.exit(0);
     }
 
+    /**
+     * Reads input, creates the number of workers asked
+     * and then attaches workers to job
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerAttachWorkers(ActionEvent actionEvent) throws IOException {
         Integer num = Integer.parseInt(workersNum.getText());
         if (num > 0) {
             for (Integer i = 0; i < num; i++) {
-                WorkerRI worker = null;
-                if(this.jobGroupRI.getJobStrat().compareTo("TabuSearch")==0){
-                     worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                            new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
-                }else if(this.jobGroupRI.getJobStrat().compareTo("Genetic Algorithm")==0){
-                    worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                            new State("Available",String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(),true);
-                }
-                assert worker!=null;
+                WorkerRI worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                        new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
+                //System.out.println(worker);
                 if (jobGroupRI.attachWorker(worker)) {
                     infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
                     infoMessage.setText("Workers were attached to job successfully!");
@@ -294,77 +321,115 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         }
     }
 
+    /**
+     * Gets workers map from database and updates the workers in the Job
+     * @throws IOException
+     */
     private void updateJobWorkers() throws IOException {
         workersMap = client.userSessionRI.getWorkersMap(jobGroupRI.getJobName());
     }
 
+    /**
+     * Pauses a worker
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerPauseWorker(ActionEvent actionEvent) throws IOException {
-        if(selectedWorker!=null){
+        if (selectedWorker != null) {
             selectedWorker.setState("Paused");
             infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
             try {
-                infoMessage.setText("Worker ["+selectedWorker.getId()+"] Paused");
+                infoMessage.setText("Worker [" + selectedWorker.getId() + "] Paused");
             } catch (RemoteException e) {
                 infoMessage.setText("Worker Paused");
             }
         }
     }
 
+    /**
+     * Resumes a worker
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerResumeWorker(ActionEvent actionEvent) throws IOException {
-        if(selectedWorker!=null){
+        if (selectedWorker != null) {
             selectedWorker.setState("Ongoing");
             infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
             try {
-                infoMessage.setText("Worker ["+selectedWorker.getId()+"] Resumed");
+                infoMessage.setText("Worker [" + selectedWorker.getId() + "] Resumed");
             } catch (RemoteException e) {
                 infoMessage.setText("Worker Resumed");
             }
         }
     }
 
+    /**
+     * Deletes a worker
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerDeleteWorker(ActionEvent actionEvent) throws IOException {
-        if(selectedWorker!=null){
+        if (selectedWorker != null) {
             this.jobGroupRI.removeWorker(selectedWorker);
             infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
             try {
-                infoMessage.setText("Worker ["+selectedWorker.getId()+"] Deleted");
+                infoMessage.setText("Worker [" + selectedWorker.getId() + "] Deleted");
             } catch (RemoteException e) {
                 infoMessage.setText("Worker Deleted");
             }
         }
     }
 
+    /**
+     * Pauses a job
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerPauseJob(ActionEvent actionEvent) throws IOException {
         jobGroupRI.setState("Paused");
     }
 
+    /**
+     * Resumes a job
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerResumeJob(ActionEvent actionEvent) throws IOException {
         jobGroupRI.setState("OnGoing");
     }
 
-
+    /**
+     * Deletes a job
+     * @param actionEvent - An event action
+     * @throws IOException
+     */
     public void handlerDeleteJob(ActionEvent actionEvent) throws IOException {
-        if(jobGroupRI.removeAllWorkers()){
+        if (jobGroupRI.removeAllWorkers()) {
             this.client.userSessionRI.removeJob(this.jobGroupRI.getJobName());
-            this.jobGroupRI=null;
+            this.jobGroupRI = null;
             this.workersMap.clear();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/menu.fxml"));
             Parent menuParent = loader.load();
             Scene menuScene = new Scene(menuParent);
             Stage app_stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             MenuController controller = loader.getController();
-            controller.MenuControllerInit(this.client,"Job removed with Success");
-            this.client=null;
+            controller.MenuControllerInit(this.client, "Job removed with Success");
+            this.client = null;
             app_stage.setScene(menuScene);
             app_stage.setHeight(668.0);
             app_stage.setWidth(1049.0);
             app_stage.show();
-        }else{
+        } else {
             infoMessage.setStyle("-fx-text-fill: #ff3232");
             infoMessage.setText("An Error occurred deleting the job");
         }
     }
 
+    /**
+     * Returns to home menu GUI
+     * @param mouseEvent - An mouse event
+     * @throws IOException
+     */
     public void handlerMenuHome(MouseEvent mouseEvent) throws IOException {
         this.jobGroupRI.removeFromList(this.client.userSessionRI.getUsername());
         FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/Menu.fxml"));
@@ -379,10 +444,15 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         app_stage.show();
     }
 
+    /**
+     * Shows buttons related to a worker
+     * @param workerID - ID of a worker
+     * @throws RemoteException
+     */
     public void showWorkerbuttons(Integer workerID) throws RemoteException {
         if (jobGroupRI.getJobWorkers().get(workerID).getOwner().getUsername().compareTo(client.userSessionRI.getUsername()) == 0) {
             btnsWorkers.setVisible(true);
-            this.selectedWorker=this.jobGroupRI.getJobWorkers().get(workerID);
+            this.selectedWorker = this.jobGroupRI.getJobWorkers().get(workerID);
         }
     }
 
@@ -405,4 +475,3 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
         updateUser();
     }
 }
-
