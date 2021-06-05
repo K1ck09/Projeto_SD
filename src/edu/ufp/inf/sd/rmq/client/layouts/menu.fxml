@@ -14,7 +14,7 @@
 
 <Pane fx:id="menuPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="631.0" prefWidth="1033.0" styleClass="bgc" stylesheets="@css/app.css"
-      xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
+      xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="edu.ufp.inf.sd.rmq.client.MenuController">
     <HBox layoutY="-1.0" prefHeight="31.0" prefWidth="1033.0" style="-fx-background-radius: 5,5,4;" styleClass="menuBar"
           stylesheets="@css/app.css">
@@ -68,7 +68,7 @@
             </font>
         </Label>
     </HBox>
-    <HBox layoutX="15.0" layoutY="146.0" prefHeight="42.0" prefWidth="731.0" style="-fx-background-radius: 5,5,4;"
+    <HBox layoutX="15.0" layoutY="146.0" prefHeight="42.0" prefWidth="821.0" style="-fx-background-radius: 5,5,4;"
           styleClass="tableBar" stylesheets="@css/app.css">
         <children>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="88.0"
@@ -83,19 +83,20 @@
                    styleClass="tableButton" stylesheets="@css/app.css" text="Workers" textAlignment="CENTER"/>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="88.0"
                    styleClass="tableButton" stylesheets="@css/app.css" text="State" textAlignment="CENTER"/>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="90.0"
+                   styleClass="tableButton" stylesheets="@css/app.css" text="Timer" textAlignment="CENTER"/>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="100.0"
                    styleClass="tableButton" stylesheets="@css/app.css" text="Shares Limit" textAlignment="CENTER"/>
             <Label alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" prefHeight="42.0" prefWidth="102.0"
                    styleClass="tableButton" stylesheets="@css/app.css" text="Best Result" textAlignment="CENTER"/>
         </children>
     </HBox>
-    <HBox layoutX="14.0" layoutY="56.0" prefHeight="25.0" prefWidth="850.0" spacing="5.0">
+    <HBox layoutX="14.0" layoutY="53.0" prefHeight="25.0" prefWidth="713.0" spacing="5.0">
         <children>
             <TextField fx:id="createJobName" promptText="Enter Job Name"/>
-            <TextField fx:id="createJobReward" prefHeight="25.0" prefWidth="149.0" promptText="Enter Job Reward"/>
             <ChoiceBox fx:id="createJobStrategy" onMouseClicked="#handlerChoiceBox" prefWidth="150.0"
                        styleClass="menuBar" stylesheets="@css/app.css"/>
-            <TextField fx:id="createTotalWorkload" alignment="TOP_LEFT" promptText="Number max of Shares"/>
+            <TextField fx:id="createOptional" alignment="TOP_LEFT"/>
             <Button fx:id="btnFile" mnemonicParsing="false" onAction="#handleFile" prefHeight="25.0" prefWidth="110.0"
                     styleClass="glass-grey" stylesheets="@css/app.css" text="Choose a file">
                 <HBox.margin>
@@ -232,7 +233,7 @@
             </HBox>
         </children>
     </VBox>
-    <VBox layoutX="825.0" layoutY="146.0" spacing="5.0">
+    <VBox layoutX="868.0" layoutY="66.0" spacing="5.0">
         <children>
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="129.0"
                    style="-fx-font-weight: bold;" text="My Statistics" textAlignment="CENTER" textFill="WHITE">
@@ -274,9 +275,11 @@
                    text="Total Active Workers" textAlignment="CENTER" textFill="WHITE"/>
         </children>
     </VBox>
-    <ScrollPane layoutX="15.0" layoutY="198.0" prefHeight="404.0" prefWidth="731.0">
+    <ScrollPane layoutX="15.0" layoutY="198.0" prefHeight="404.0" prefWidth="821.0">
         <content>
-            <VBox fx:id="table" prefHeight="404.0" prefWidth="730.0"/>
+            <VBox fx:id="table" prefHeight="404.0" prefWidth="820.0"/>
         </content>
     </ScrollPane>
+    <Button fx:id="btnRefresh" layoutX="776.0" layoutY="110.0" mnemonicParsing="false" onAction="#handlerRefresh"
+            prefHeight="25.0" prefWidth="60.0" styleClass="green" stylesheets="@css/app.css" text="Refresh"/>
 </Pane>

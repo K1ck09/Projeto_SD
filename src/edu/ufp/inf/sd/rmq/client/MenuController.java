@@ -27,6 +27,7 @@ import java.util.Map;
 
 public class MenuController extends UnicastRemoteObject implements MenuControllerRI {
 
+    private static final int MAX_TIMER = 30;
     public VBox table;
     public Button btnCreateTask;
     public Label menuUsername;
@@ -35,7 +36,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public TextField createJobReward;
     public ChoiceBox<String> createJobStrategy;
     public Label messageMenu;
-    public TextField createTotalWorkload;
+    public TextField createOptional;
     public Button btnFile;
     public Label displayTotalJobs;
     public Label displayTotalRewarded;
@@ -58,9 +59,9 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public MenuController() throws RemoteException {
     }
 
-    public void MenuControllerInit(JobShopClient client,String message) throws IOException{
+    public void MenuControllerInit(JobShopClient client, String message) throws IOException {
         this.client = client;
-        this.client.userSessionRI.addList(this,this.client.userSessionRI.getUsername());
+        this.client.userSessionRI.addList(this, this.client.userSessionRI.getUsername());
         //Set user info
         menuUsername.setText("Username: " + client.userSessionRI.getUsername());
         menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
@@ -100,10 +101,28 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         createJobStrategy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy") != 0) {
+                //NEW VERSION
+ /*               if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy") != 0) {
                     item.put("strat", stratTypes.get(t1.intValue()));
+                    createOptional.promptTextProperty().setValue("Number max of shares");
                 } else if (item.containsKey("strat") && item.get("strat").compareTo(stratTypes.get(t1.intValue())) != 0) {
                     item.replace("strat", stratTypes.get(t1.intValue()));
+                    createOptional.promptTextProperty().setValue("Waiting time");
+                }*/
+                if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy") != 0) {
+                    item.put("strat", stratTypes.get(t1.intValue()));
+                    if(stratTypes.get(t1.intValue()).compareTo("TabuSearch") == 0){
+                        createOptional.promptTextProperty().setValue("Number max of shares");
+                    }else{
+                        createOptional.promptTextProperty().setValue("Waiting time");
+                    }
+                }
+                else if(item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("TabuSearch") == 0){
+                    item.replace("strat", stratTypes.get(t1.intValue()));
+                    createOptional.promptTextProperty().setValue("Number max of shares");
+                }else if (item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Genetic Algorithm") == 0){
+                    item.replace("strat", stratTypes.get(t1.intValue()));
+                    createOptional.promptTextProperty().setValue("Waiting time");
                 }
             }
         });
@@ -129,84 +148,120 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-        file= fileChooser.showOpenDialog((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+        file = fileChooser.showOpenDialog((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
         btnFile.setText(file.getName());
     }
-
+    //NEW VERSION
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
-        if (createJobName.getText() != null && createJobReward.getText() != null && item.containsKey("strat")) {
-            if (containsJustNumbers(createJobReward.getText()) && containsJustNumbers(createTotalWorkload.getText())) {
-                Integer inputReward = Integer.parseInt(createJobReward.getText());
-                Integer clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
-                if (inputReward <= clientCredits && inputReward > 0) {
-                    item.put("job", createJobName.getText());
-                    if (!client.userSessionRI.isJobUnique(item.get("job"))) {
-                        insertDataInItem();
-                        if(file!=null){
-                            jobGroups = client.userSessionRI.createJob(this.client.userSessionRI, item);
-                            JobGroupRI currentJob= jobGroups.get(item.get("job"));
-                            if(currentJob!=null) {
-                                uploadFileToJob(currentJob);
-                                // decidir se tira o dinheiro so no fim ou no inicio e depois devolve se não encontrar nada
-                                Integer newBalance =-Integer.parseInt(item.get("reward"));
-                                client.userSessionRI.setCredits(this.client.userSessionRI.getUser(),newBalance);
-                                menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
-                                insertItemsInTable();
-                                messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
-                                messageMenu.setText("Job Created Sucessfully!");
-                                clearSelectionAndVariables();
-                                this.client.userSessionRI.updateMenus();
-                            }else{
-                                messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-                                messageMenu.setText("Job Creation Unsuccessful. An Error must have occured. Please try Again");
-                            }
-                        }else{
-                            btnFile.setText("Choose file");
+        boolean newJob = false;
+        if (allFieldFilled()) {
+            if (file != null) {
+                if (!client.userSessionRI.isJobUnique(item.get("job"))) {
+                    if (validateOptional()) {
+                        if (item.get("strat").compareTo("TabuSearch") == 0) {
+                            newJob = createTSjob();
+                        } else if (item.get("strat").compareTo("Genetic Algorithm") == 0) {
+                            newJob = createGAjob();
+                        }
+                        if (newJob) {
+                            insertItemsInTable();
+                            messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
+                            messageMenu.setText("Job Created Sucessfully!");
+                            clearSelectionAndVariables();
+                            this.client.userSessionRI.updateMenus();
+                        } else {
                             messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-                            messageMenu.setText("Please select job file");
+                            messageMenu.setText("Job Creation Unsuccessful. An Error must have occured. Please try Again");
                         }
                     } else {
-                        createJobName.clear();
+                        createOptional.clear();
                         messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-                        messageMenu.setText("Job name need to be unique, Please enter another name");
+                        messageMenu.setText("Optional only accepts numbers higher than 0 (if it's timer needs to be" +
+                                " less than" + MAX_TIMER + ").");
                     }
                 } else {
-                    createJobReward.clear();
+                    createJobName.clear();
                     messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-                    messageMenu.setText("Please verify is you have enough credits. Reward can't be '0Cr'");
+                    messageMenu.setText("Job name need to be unique, Please enter another name");
                 }
             } else {
-                createJobReward.clear();
+                btnFile.setText("Choose file");
                 messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-                messageMenu.setText("You can only enter Numbers in Reward Field");
+                messageMenu.setText("Please select job file");
             }
         } else {
             messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
             messageMenu.setText("Please make sure you fill all the fields.");
         }
     }
+    //NEW VERSION
+    private boolean createGAjob() throws IOException {
+        insertDataInItem();
+        jobGroups = client.userSessionRI.createJob(this.client.userSessionRI, item);
+        JobGroupRI currentJob = jobGroups.get(item.get("job"));
+        if(currentJob != null) {
+            uploadFileToJob(currentJob);
+            return true;
+        }
+        return false;
+    }
+    //NEW VERSION
+    private boolean createTSjob() throws IOException {
+        int inputReward = Integer.parseInt(createOptional.getText());
+        int clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
+        if (inputReward + 10 <= clientCredits && clientCredits > 0) {
+            insertDataInItem();
+            jobGroups = client.userSessionRI.createJob(this.client.userSessionRI, item);
+            JobGroupRI currentJob = jobGroups.get(item.get("job"));
+            if(currentJob != null) {
+                uploadFileToJob(currentJob);
+                Integer newBalance =- Integer.parseInt(item.get("load")) - 10;
+                client.userSessionRI.setCredits(this.client.userSessionRI.getUser(), newBalance);
+                menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
+                return true;
+            }
+        } else {
+            messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+            messageMenu.setText("You don't have enough credits for the amount of shares inserted");
+        }
+        return false;
+    }
+    //NEW VERSION
+    private boolean validateOptional() {
+        if (item.get("strat").compareTo("TabuSearch") == 0) {
+            return containsJustNumbers(createOptional.getText()) && Integer.parseInt(createOptional.getText()) > 0;
+        }
+        if (item.get("strat").compareTo("Genetic Algorithm") == 0) {
+            return containsJustNumbers(createOptional.getText()) && Integer.parseInt(createOptional.getText()) > 0
+                    && Integer.parseInt(createOptional.getText()) <= MAX_TIMER;
+        }
+        return false;
+    }
+    //NEW VERSION
+    private boolean allFieldFilled() {
+        return createJobName.getText() != null && item.containsKey("strat")
+                && createOptional.getText() != null;
+    }
 
     private void clearSelectionAndVariables() {
-        createJobReward.clear();
         createJobName.clear();
-        createTotalWorkload.clear();
+        createOptional.clear();
         createJobStrategy.getSelectionModel().clearAndSelect(0);
         btnFile.setText("Choose File");
         item.clear();
     }
-
+    //NEW VERSION
     private void insertDataInItem() throws RemoteException {
-        item.put("reward", createJobReward.getText());
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
         item.put("state", "Ongoing");
-        item.put("load",createTotalWorkload.getText()); // min shares 10!
-        item.put("crossStrat","1");
+        item.put("load", createOptional.getText()); // Can be number of shares or Timer
+        item.put("job", createJobName.getText());
     }
 
     private void uploadFileToJob(JobGroupRI currentJob) {
-        if(file!=null){
-            byte [] dataToSend= new byte[(int) file.length()];
+        if (file != null) {
+            byte[] dataToSend = new byte[(int) file.length()];
             FileInputStream in;
             try {
                 in = new FileInputStream(file);
@@ -236,104 +291,118 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     private void insertItemsInTable() {
         Platform.runLater(
                 () -> {
-        table.getChildren().clear();
-        Collection<JobGroupRI> jobsList = jobGroups.values();
-        for (JobGroupRI job : jobsList) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
-            try {
-                Parent menuParent = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ItemController controller = loader.getController();
-            controller.setClient(this.client);
-            Node node = loader.getRoot();
-            if (node instanceof AnchorPane) {
-                AnchorPane anchor = (AnchorPane) node;
-                ObservableList<Node> anchorIn = anchor.getChildren();
-                for (Node anchorNode : anchorIn)
-                    if (anchorNode instanceof HBox) {
-                        HBox hbox = (HBox) anchorNode;
-                        ObservableList<Node> nodeIn = hbox.getChildren();
-                        for (Node label : nodeIn)
-                            if (label instanceof Label) {
-                                String id = label.getId();
-                                if (id != null && id.compareTo("tableJob") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobName());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableOwner") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobOwner());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableStrat") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobStrat());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableReward") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobReward());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableWorkers") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getWorkersSize().toString());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableState") == 0) {
-                                    try {
-                                        if((job.getState().compareTo("Available")==0))
-                                        {
-                                            ((Label) label).setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
-                                        }else if ((job.getState().compareTo("OnGoing")==0)){
-                                            ((Label) label).setStyle("-fx-text-fill: #238f65"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
-
-                                        }else if ((job.getState().compareTo("Paused")==0)){
-                                            ((Label) label).setStyle("-fx-text-fill: #c38700"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
-
-                                        }else if((job.getState().compareTo("Finished")==0)){
-                                            ((Label) label).setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
+                    table.getChildren().clear();
+                    Collection<JobGroupRI> jobsList = jobGroups.values();
+                    for (JobGroupRI job : jobsList) {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
+                        try {
+                            Parent menuParent = loader.load();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ItemController controller = loader.getController();
+                        controller.setClient(this.client);
+                        Node node = loader.getRoot();
+                        if (node instanceof AnchorPane) {
+                            AnchorPane anchor = (AnchorPane) node;
+                            ObservableList<Node> anchorIn = anchor.getChildren();
+                            for (Node anchorNode : anchorIn)
+                                if (anchorNode instanceof HBox) {
+                                    HBox hbox = (HBox) anchorNode;
+                                    ObservableList<Node> nodeIn = hbox.getChildren();
+                                    for (Node label : nodeIn)
+                                        if (label instanceof Label) {
+                                            String id = label.getId();
+                                            if (id != null && id.compareTo("tableJob") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getJobName());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableOwner") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getJobOwner());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableStrat") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getJobStrat());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableReward") == 0) {
+                                                try {
+                                                    if(job.getJobStrat().compareTo("TabuSearch")==0){
+                                                        ((Label) label).setText(job.getJobReward());
+                                                    } else {
+                                                        ((Label) label).setText(" - ");
+                                                    }
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableWorkers") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getWorkersSize().toString());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }  else if (id != null && id.compareTo("tableTimer") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getTimer());
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }else if (id != null && id.compareTo("tableState") == 0) {
+                                                try {
+                                                    if ((job.getState().compareTo("Available") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
+                                                    } else if ((job.getState().compareTo("OnGoing") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #238f65"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
+                                                    } else if ((job.getState().compareTo("Paused") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #c38700"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
+                                                    } else if ((job.getState().compareTo("Finished") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
+                                                    }else if ((job.getState().compareTo("Waiting") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #de7426"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
+                                                    }
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
+                                                try {
+                                                    if(job.getJobStrat().compareTo("TabuSearch")==0){
+                                                        ((Label) label).setText(job.getTotalShares() + "/" + job.getWorkload());
+                                                    } else {
+                                                        ((Label) label).setText(" - ");
+                                                    }
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableBestResult") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getBestResut());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
                                         }
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getTotalShares()+"/"+job.getWorkload());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                }else if (id != null && id.compareTo("tableBestResult") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getBestResut());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
-                            }
+                        }
+                        table.getChildren().add(node);
                     }
-            }
-            table.getChildren().add(node);
-        }
                 });
     }
 
     public void handlerLogout(MouseEvent mouseEvent) throws IOException {
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
-        LoadGUIClient l=new LoadGUIClient();
+        LoadGUIClient l = new LoadGUIClient();
         l.changeScene("layouts/login.fxml");
 
     }
@@ -344,7 +413,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
-        this.client=null;
+        this.client = null;
         this.jobGroups.clear();
         Platform.exit();
         System.exit(0);
@@ -401,7 +470,6 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }
-
                     try {
                         displayCreatedJobs.setText(String.valueOf(userJobsNumber()));
                     } catch (RemoteException e) {
@@ -424,14 +492,15 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                     }
                 });
     }
+
     // Dá para Todas estas funções adicionando variaveis ao User
     private Integer userParticipationNumber() throws RemoteException {
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
-                if(w.getOwner()!=null){
-                    if(w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0){
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()) {
+                if (w.getOwner() != null) {
+                    if (w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername()) == 0) {
                         num++;
                         break;
                     }
@@ -445,10 +514,10 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            if(jobGroupRI.getBestResult()!=null){
-                if (jobGroupRI.getBestResult().getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0
-                && jobGroupRI.getState().compareTo("Finished")==0){
-                    num+=Integer.parseInt(jobGroupRI.getJobReward());
+            if (jobGroupRI.getBestResult() != null) {
+                if (jobGroupRI.getBestResult().getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername()) == 0
+                        && jobGroupRI.getState().compareTo("Finished") == 0) {
+                    num += Integer.parseInt(jobGroupRI.getJobReward());
                 }
             }
         }
@@ -459,9 +528,9 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
-                if(w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0
-                && w.getState().getCurrentState().compareTo("OnGoing")==0){
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()) {
+                if (w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername()) == 0
+                        && w.getState().getCurrentState().compareTo("OnGoing") == 0) {
                     num++;
                 }
             }
@@ -484,8 +553,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
-                if(w.getState().getCurrentState().compareTo("OnGoing")==0){
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()) {
+                if (w.getState().getCurrentState().compareTo("OnGoing") == 0) {
                     num++;
                 }
             }
@@ -498,7 +567,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobState().getCurrentState().compareTo("Finished") == 0) {
-               num+=Integer.parseInt(jobGroupRI.getJobReward());
+                num += Integer.parseInt(jobGroupRI.getJobReward());
             }
         }
         return num;
@@ -540,10 +609,13 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     @Override
     public void updateMenu() throws IOException {
         jobGroups = client.userSessionRI.getJobList();
-        if(!jobGroups.isEmpty()){
+        if (!jobGroups.isEmpty()) {
             insertItemsInTable();
         }
         updateStatistics();
     }
 
+    public void handlerRefresh(ActionEvent actionEvent) throws IOException {
+        updateMenu();
+    }
 }

@@ -26,6 +26,7 @@ public interface JobGroupRI extends Remote {
 
     Integer getTotalShares() throws RemoteException;
 
+    String getTimer()throws RemoteException;
     void uploadFile(byte[] mydata) throws IOException;
     byte[] downloadFileFromServer(String serverpath) throws IOException;
     void updateTotalShares(WorkerRI worker)throws IOException;

@@ -25,6 +25,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private String reward;
     private State state;
     private String workLoad;
+    private String timer;
     private Integer totalShares = 0;
     private String filePath;
     Map<Integer, WorkerRI> jobWorkers = new HashMap<>();
@@ -40,25 +41,51 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\server\\files\\";
     private HashMap<String, JobControllerRI> list = new HashMap<>();
 
-    protected JobGroupImpl(UserSessionRI client, String jobName, String owner, String strat, String reward, String workLoad, String crossStrat) throws RemoteException {
+    protected JobGroupImpl(UserSessionRI client, String jobName, String owner, String strat, String reward, String optional) throws RemoteException {
         this.client = client;
         this.jobName = jobName;
         this.owner = owner;
         this.strat = strat;
         this.reward = reward;
-        this.state = new State("Available", this.jobName);
-        this.workLoad = workLoad;
-        this.crossStrat=crossStrat;
+        if(strat.compareTo("TabuSearch")==0){
+            this.state = new State("Available", this.jobName);
+            this.workLoad = optional;
+        }else {
+            this.state = new State("Waiting", this.jobName);
+            this.timer = optional;
+        }
         Connection connection = null;
         try {
             connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
             assert connection != null;
             this.channel = RabbitUtils.createChannel2Server(connection);
+            /**
+             * Creates a thread Timer, thread will act as a temporizer, will sleep for the specified time
+             * And call start function in the end.
+             */
+            new Thread(new Runnable() {
+                @Override
+                public void run(){
+                    assert timer != null;
+                    try {
+                        Thread.sleep(Integer.parseInt(timer)* 100L);
+                        jobStart();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+            System.out.println("IM MAIN THREAD AND IM RUNNING");
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
     }
-        @Override
+
+    private void jobStart() {
+        System.out.println("MY SLEEP ENDED");
+    }
+
+    @Override
     public synchronized void updateTotalShares(WorkerRI worker) throws IOException {
         if (this.state.getCurrentState().compareTo("OnGoing") == 0 || this.state.getCurrentState().compareTo("Available") == 0) {
             if (worker.getState().getCurrentState().compareTo("Available") == 0) {
@@ -227,6 +254,11 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     @Override
     public Integer getTotalShares() {
         return totalShares;
+    }
+
+    @Override
+    public String getTimer() {
+        return timer;
     }
 
     @Override

@@ -58,9 +58,9 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public MenuController() throws RemoteException {
     }
 
-    public void MenuControllerInit(JobShopClient client,String message) throws IOException{
+    public void MenuControllerInit(JobShopClient client, String message) throws IOException {
         this.client = client;
-        this.client.userSessionRI.addList(this,this.client.userSessionRI.getUsername());
+        this.client.userSessionRI.addList(this, this.client.userSessionRI.getUsername());
         //Set user info
         menuUsername.setText("Username: " + client.userSessionRI.getUsername());
         menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
@@ -129,7 +129,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
-        file= fileChooser.showOpenDialog((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
+        file = fileChooser.showOpenDialog((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
         btnFile.setText(file.getName());
     }
 
@@ -138,29 +138,29 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
             if (containsJustNumbers(createTotalWorkload.getText())) {
                 Integer inputReward = Integer.parseInt(createTotalWorkload.getText());
                 Integer clientCredits = Integer.parseInt(client.userSessionRI.getCredits());
-                if (inputReward+10 <= clientCredits && clientCredits > 0) {
+                if (inputReward + 10 <= clientCredits && clientCredits > 0) {
                     item.put("job", createJobName.getText());
                     if (!client.userSessionRI.isJobUnique(item.get("job"))) {
                         insertDataInItem();
-                        if(file!=null){
+                        if (file != null) {
                             jobGroups = client.userSessionRI.createJob(this.client.userSessionRI, item);
-                            JobGroupRI currentJob= jobGroups.get(item.get("job"));
-                            if(currentJob!=null) {
+                            JobGroupRI currentJob = jobGroups.get(item.get("job"));
+                            if (currentJob != null) {
                                 uploadFileToJob(currentJob);
                                 // decidir se tira o dinheiro so no fim ou no inicio e depois devolve se não encontrar nada
-                                Integer newBalance = -Integer.parseInt(item.get("load"))-10;
-                                client.userSessionRI.setCredits(this.client.userSessionRI.getUser(),newBalance);
+                                Integer newBalance =- Integer.parseInt(item.get("load")) - 10;
+                                client.userSessionRI.setCredits(this.client.userSessionRI.getUser(), newBalance);
                                 menuCredits.setText("Credits: " + client.userSessionRI.getCredits());
                                 insertItemsInTable();
                                 messageMenu.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
                                 messageMenu.setText("Job Created Sucessfully!");
                                 clearSelectionAndVariables();
                                 this.client.userSessionRI.updateMenus();
-                            }else{
+                            } else {
                                 messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
                                 messageMenu.setText("Job Creation Unsuccessful. An Error must have occured. Please try Again");
                             }
-                        }else{
+                        } else {
                             btnFile.setText("Choose file");
                             messageMenu.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
                             messageMenu.setText("Please select job file");
@@ -193,17 +193,17 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
 
     private void insertDataInItem() throws RemoteException {
-        Integer reward= Integer.parseInt(createTotalWorkload.getText())+10;
+        Integer reward = Integer.parseInt(createTotalWorkload.getText()) + 10;
         item.put("reward", String.valueOf(reward));
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
         item.put("state", "Ongoing");
-        item.put("load",createTotalWorkload.getText()); // min shares 10!
+        item.put("load", createTotalWorkload.getText()); // min shares 10!
     }
 
     private void uploadFileToJob(JobGroupRI currentJob) {
-        if(file!=null){
-            byte [] dataToSend= new byte[(int) file.length()];
+        if (file != null) {
+            byte[] dataToSend = new byte[(int) file.length()];
             FileInputStream in;
             try {
                 in = new FileInputStream(file);
@@ -233,104 +233,103 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     private void insertItemsInTable() {
         Platform.runLater(
                 () -> {
-        table.getChildren().clear();
-        Collection<JobGroupRI> jobsList = jobGroups.values();
-        for (JobGroupRI job : jobsList) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
-            try {
-                Parent menuParent = loader.load();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ItemController controller = loader.getController();
-            controller.setClient(this.client);
-            Node node = loader.getRoot();
-            if (node instanceof AnchorPane) {
-                AnchorPane anchor = (AnchorPane) node;
-                ObservableList<Node> anchorIn = anchor.getChildren();
-                for (Node anchorNode : anchorIn)
-                    if (anchorNode instanceof HBox) {
-                        HBox hbox = (HBox) anchorNode;
-                        ObservableList<Node> nodeIn = hbox.getChildren();
-                        for (Node label : nodeIn)
-                            if (label instanceof Label) {
-                                String id = label.getId();
-                                if (id != null && id.compareTo("tableJob") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobName());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableOwner") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobOwner());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableStrat") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobStrat());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableReward") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getJobReward());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableWorkers") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getWorkersSize().toString());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableState") == 0) {
-                                    try {
-                                        if((job.getState().compareTo("Available")==0))
-                                        {
-                                            ((Label) label).setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
-                                        }else if ((job.getState().compareTo("OnGoing")==0)){
-                                            ((Label) label).setStyle("-fx-text-fill: #238f65"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
+                    table.getChildren().clear();
+                    Collection<JobGroupRI> jobsList = jobGroups.values();
+                    for (JobGroupRI job : jobsList) {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("layouts/tableJob.fxml"));
+                        try {
+                            Parent menuParent = loader.load();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ItemController controller = loader.getController();
+                        controller.setClient(this.client);
+                        Node node = loader.getRoot();
+                        if (node instanceof AnchorPane) {
+                            AnchorPane anchor = (AnchorPane) node;
+                            ObservableList<Node> anchorIn = anchor.getChildren();
+                            for (Node anchorNode : anchorIn)
+                                if (anchorNode instanceof HBox) {
+                                    HBox hbox = (HBox) anchorNode;
+                                    ObservableList<Node> nodeIn = hbox.getChildren();
+                                    for (Node label : nodeIn)
+                                        if (label instanceof Label) {
+                                            String id = label.getId();
+                                            if (id != null && id.compareTo("tableJob") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getJobName());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableOwner") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getJobOwner());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableStrat") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getJobStrat());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableReward") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getJobReward());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableWorkers") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getWorkersSize().toString());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableState") == 0) {
+                                                try {
+                                                    if ((job.getState().compareTo("Available") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
+                                                    } else if ((job.getState().compareTo("OnGoing") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #238f65"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
 
-                                        }else if ((job.getState().compareTo("Paused")==0)){
-                                            ((Label) label).setStyle("-fx-text-fill: #c38700"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
+                                                    } else if ((job.getState().compareTo("Paused") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #c38700"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
 
-                                        }else if((job.getState().compareTo("Finished")==0)){
-                                            ((Label) label).setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green  #ff3232 red
-                                            ((Label) label).setText(job.getState());
+                                                    } else if ((job.getState().compareTo("Finished") == 0)) {
+                                                        ((Label) label).setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green  #ff3232 red
+                                                        ((Label) label).setText(job.getState());
+                                                    }
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getTotalShares() + "/" + job.getWorkload());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            } else if (id != null && id.compareTo("tableBestResult") == 0) {
+                                                try {
+                                                    ((Label) label).setText(job.getBestResut());
+                                                } catch (RemoteException e) {
+                                                    e.printStackTrace();
+                                                }
+                                            }
                                         }
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                } else if (id != null && id.compareTo("tableWorkLoad") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getTotalShares()+"/"+job.getWorkload());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
-                                }else if (id != null && id.compareTo("tableBestResult") == 0) {
-                                    try {
-                                        ((Label) label).setText(job.getBestResut());
-                                    } catch (RemoteException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
-                            }
+                        }
+                        table.getChildren().add(node);
                     }
-            }
-            table.getChildren().add(node);
-        }
                 });
     }
 
     public void handlerLogout(MouseEvent mouseEvent) throws IOException {
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
-        LoadGUIClient l=new LoadGUIClient();
+        LoadGUIClient l = new LoadGUIClient();
         l.changeScene("layouts/login.fxml");
 
     }
@@ -341,7 +340,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     public void handlerExit(MouseEvent mouseEvent) throws RemoteException {
         this.client.userSessionRI.removeFromList(this.client.userSessionRI.getUsername());
         this.client.userSessionRI.logout();
-        this.client=null;
+        this.client = null;
         this.jobGroups.clear();
         Platform.exit();
         System.exit(0);
@@ -421,14 +420,15 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                     }
                 });
     }
+
     // Dá para Todas estas funções adicionando variaveis ao User
     private Integer userParticipationNumber() throws RemoteException {
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
-                if(w.getOwner()!=null){
-                    if(w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0){
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()) {
+                if (w.getOwner() != null) {
+                    if (w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername()) == 0) {
                         num++;
                         break;
                     }
@@ -442,10 +442,10 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            if(jobGroupRI.getBestResult()!=null){
-                if (jobGroupRI.getBestResult().getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0
-                && jobGroupRI.getState().compareTo("Finished")==0){
-                    num+=Integer.parseInt(jobGroupRI.getJobReward());
+            if (jobGroupRI.getBestResult() != null) {
+                if (jobGroupRI.getBestResult().getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername()) == 0
+                        && jobGroupRI.getState().compareTo("Finished") == 0) {
+                    num += Integer.parseInt(jobGroupRI.getJobReward());
                 }
             }
         }
@@ -456,9 +456,9 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
-                if(w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername())==0
-                && w.getState().getCurrentState().compareTo("OnGoing")==0){
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()) {
+                if (w.getOwner().getUsername().compareTo(this.client.userSessionRI.getUsername()) == 0
+                        && w.getState().getCurrentState().compareTo("OnGoing") == 0) {
                     num++;
                 }
             }
@@ -481,8 +481,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Integer num = 0;
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
-            for (WorkerRI w : jobGroupRI.getJobWorkers().values()){
-                if(w.getState().getCurrentState().compareTo("OnGoing")==0){
+            for (WorkerRI w : jobGroupRI.getJobWorkers().values()) {
+                if (w.getState().getCurrentState().compareTo("OnGoing") == 0) {
                     num++;
                 }
             }
@@ -495,7 +495,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         Collection<JobGroupRI> jobsList = jobGroups.values();
         for (JobGroupRI jobGroupRI : jobsList) {
             if (jobGroupRI.getJobState().getCurrentState().compareTo("Finished") == 0) {
-               num+=Integer.parseInt(jobGroupRI.getWorkload())+10;
+                num += Integer.parseInt(jobGroupRI.getWorkload()) + 10;
             }
         }
         return num;
@@ -537,7 +537,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     @Override
     public void updateMenu() throws IOException {
         jobGroups = client.userSessionRI.getJobList();
-        if(!jobGroups.isEmpty()){
+        if (!jobGroups.isEmpty()) {
             insertItemsInTable();
         }
         updateStatistics();

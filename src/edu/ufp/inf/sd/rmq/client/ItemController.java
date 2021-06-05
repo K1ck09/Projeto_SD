@@ -21,6 +21,7 @@ public class ItemController {
     public Label tableState;
     public Label tableWorkLoad;
     public Label tableBestResult;
+    public Label tableTimer;
     HashMap<String,String> item =new HashMap<>();
     private JobShopClient client;
     private JobGroupRI thisJob;

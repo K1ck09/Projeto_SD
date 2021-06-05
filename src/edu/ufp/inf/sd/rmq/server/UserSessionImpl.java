@@ -70,7 +70,8 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
     @Override
     public Map<String, JobGroupRI> createJob( UserSessionRI userSessionRI, HashMap<String, String> item) throws IOException {
-        JobGroupRI jobGroup= new JobGroupImpl(userSessionRI,item.get("job"),item.get("owner"),item.get("strat"),item.get("reward"),item.get("load"),item.get("crossStrat"));
+        JobGroupRI jobGroup= new JobGroupImpl(userSessionRI,item.get("job"),item.get("owner"),
+                item.get("strat"),item.get("reward"),item.get("load"));
         db.addJob(jobGroup);
         updateMenus();
         return db.getJobGroups();
