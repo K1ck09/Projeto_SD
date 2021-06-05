@@ -56,13 +56,9 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
             assert connection != null;
             this.channel = RabbitUtils.createChannel2Server(connection);
-            //Mudar para dinamico so entre jobgroups igual para todos os workers
             String exchangeName = JobGroupRI.getJobName();
-
             channel.exchangeDeclare(exchangeName, BuiltinExchangeType.FANOUT);
-
             String queueName = channel.queueDeclare().getQueue();
-
             String routingKey = "";
             channel.queueBind(queueName, exchangeName, routingKey);
 
@@ -72,20 +68,20 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
                 downloadFile(args[0]);
 
-                //inicia o thread GA
-          /*      crossoverStra = setCrossStrat(Integer.parseInt(args[1]));
-                if(crossoverStra!=null){
-                    setGaOperation(String.valueOf(id), crossoverStra);
-                }
-*/
-               /* Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
-                System.out.println(" [x] Received '"+ args[1]+ "'");*/
+                Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
+                System.out.println(" [x] Received '"+ args[1]+ "'");
             };
             CancelCallback cancelCallback = (consumerTag) -> {
                 System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
             };
             channel.basicConsume(queueName, true, downloadFile, cancelCallback);
 
+            //inicia o thread GA
+          /*      crossoverStra = setCrossStrat(Integer.parseInt(args[1]));
+                if(crossoverStra!=null){
+                    setGaOperation(String.valueOf(id), crossoverStra);
+                }
+*/
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
