@@ -37,6 +37,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private static final Integer PORT=5672;
     private static final String ROUTING_KEY="";
     private Channel channel;
+    private String exchangeName;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\server\\files\\";
     private HashMap<String, JobControllerRI> list = new HashMap<>();
@@ -59,6 +60,8 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
             assert connection != null;
             this.channel = RabbitUtils.createChannel2Server(connection);
+            exchangeName = String.valueOf(jobName);
+            channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
             /**
              * Creates a thread Timer, thread will act as a temporizer, will sleep for the specified time
              * And call start function in the end.
@@ -70,7 +73,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                     try {
                         Thread.sleep(Integer.parseInt(timer)* 1000L);
                         jobStart();
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException | IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -81,8 +84,10 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         }
     }
 
-    private void jobStart() {
+    private void jobStart() throws IOException {
         System.out.println("MY SLEEP ENDED");
+        String msg="start";
+        channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
@@ -142,33 +147,38 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
 
         //o nome da queue é o que junta a queue a callback
         channel.basicConsume("", true, deliverCallback, cancelCallback);
+        //é preciso uma função onde se vai declarar a delivery callback
+        //depois de definir o que a função vai fazer na delivery callback
+        //usa se o basicConsume para utilizar a deliveryCallback
+        //é como se fosse um inception de funções
+        //declaramos uma callback numa função e chamamos a callback atraves do consume
+        // e ao chamar a função em si é só para puder fazer tudo o de trás
     }
 
+    /** servidor publica exchange,
+                   worker vai buscar uma queue desse exchange e consume
+                   workercria uma queue para falar com o GA_ e consume da Queue id_results
+                   worker declara outra queue para falar com o servidor
+                   e enviar os resultados
+                */
     @Override
     public boolean attachWorker(WorkerRI worker) throws IOException {
         if (jobWorkers.size() == 0) {
             this.state.setCurrentState("OnGoing");
         }
-        if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0) {
+        if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0
+                || this.state.getCurrentState().compareTo("Waiting") == 0) {
             if (this.strat.compareTo("TabuSearch") == 0) {
                 jobWorkers.put(worker.getId(), worker);
                 idSize++;
                 worker.setFile(filePath);
                 updateList();
             } else if (this.strat.compareTo("Genetic Algorithm") == 0) {
-                String exchangeName = String.valueOf(jobName);
-                /* servidor publica exchange,
-                    worker vai buscar uma queue desse exchange e consume
-                    workercria uma queue para falar com o GA_ e consume da Queue id_results
-                    worker declara outra queue para falar com o servidor
-                    e enviar os resultados
-                 */
-                // Connection
-                channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
                 //file, CrossStrat,
                 String msg = filePath + "," + crossStrat;
                 channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
-                updateTotalShares();
+                jobWorkers.put(worker.getId(), worker);
+                idSize++;
             }
             return true;
         }
