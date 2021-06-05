@@ -224,6 +224,9 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                             } else if (worker.getState().getCurrentState().compareTo("Stopped") == 0) {
                                                 ((Label) label).setStyle("-fx-text-fill: #ff3232");
                                                 ((Label) label).setText(worker.getState().getCurrentState());
+                                            }else if (worker.getState().getCurrentState().compareTo("Waiting") == 0) {
+                                                ((Label) label).setStyle("-fx-text-fill: #de7426");
+                                                ((Label) label).setText(worker.getState().getCurrentState());
                                             }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
@@ -247,19 +250,35 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                         }
                                     } else if (id != null && id.compareTo("tableLastMakeSpan") == 0) {
                                         try {
-                                            ((Label) label).setText(String.valueOf(worker.getCurrentMakespan()));
+                                            if(jobStrat.getText().compareTo("TabuSearch")==0){
+                                                ((Label) label).setText(String.valueOf(worker.getCurrentMakespan()));
+                                            }else{
+                                                ((Label) label).setText("-");
+                                            }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
                                     } else if (id != null && id.compareTo("tableTimesSubmitted") == 0) {
                                         try {
-                                            ((Label) label).setText(worker.getTotalShares() + "/" + jobGroupRI.getWorkload());
+                                            if(jobStrat.getText().compareTo("TabuSearch")==0){
+                                                ((Label) label).setText(worker.getTotalShares() + "/" + jobGroupRI.getWorkload());
+                                            }else{
+                                                if(jobGroupRI.getWorkload()!=null){
+                                                    ((Label) label).setText(worker.getTotalShares() + "/" + jobGroupRI.getWorkload());
+                                                }else{
+                                                    ((Label) label).setText("-");
+                                                }
+                                            }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
                                     } else if (id != null && id.compareTo("tableBestMakeSpan") == 0) {
                                         try {
-                                            ((Label) label).setText(String.valueOf(worker.getBestMakespan()));
+                                            if(worker.getBestMakespan()==Integer.MAX_VALUE){
+                                                ((Label) label).setText("-");
+                                            }else{
+                                                ((Label) label).setText(String.valueOf(worker.getBestMakespan()));
+                                            }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
                                         }
