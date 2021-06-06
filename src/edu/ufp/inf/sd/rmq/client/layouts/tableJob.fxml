@@ -40,7 +40,7 @@
                        textAlignment="CENTER" textFill="#363636"/>
             </children>
         </HBox>
-        <Button mnemonicParsing="false" onAction="#handlerInsideJob" prefHeight="40.0" prefWidth="731.0"
+        <Button mnemonicParsing="false" onAction="#handlerInsideJob" prefHeight="40.0" prefWidth="821.0"
                 style="-fx-background-color: transparent; -fx-background-radius: 0;"/>
     </children>
 </AnchorPane>

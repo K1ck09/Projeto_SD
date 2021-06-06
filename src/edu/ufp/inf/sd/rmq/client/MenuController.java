@@ -254,7 +254,11 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     private void insertDataInItem() throws RemoteException {
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
-        item.put("state", "Ongoing");
+        if(item.get("strat").compareTo("TabuSearch")==0){
+            item.put("state", "Ongoing");
+        }else{
+            item.put("state", "Waiting");
+        }
         item.put("load", createOptional.getText()); // Can be number of shares or Timer
         item.put("job", createJobName.getText());
     }

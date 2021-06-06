@@ -11,6 +11,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
 public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     Integer id;
     private final JobShopClient client;
-    private State state;
+    private final State state;
     private final User owner;
     private final String jobGroupName;
     private int bestMakespan = Integer.MAX_VALUE;
@@ -33,6 +34,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private static final String ROUTING_KEY = "";
     private Channel channel;
     private CrossoverStrategies crossoverStra;
+    private ArrayList<String> resultsGA=new ArrayList<>();
 
 
     protected WorkerImpl(JobShopClient client, Integer id, User jobOwner, State state, String jobGroupName) throws RemoteException {
@@ -62,29 +64,58 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             String routingKey = "";
             channel.queueBind(queueName, exchangeName, routingKey);
 
-            DeliverCallback downloadFile = (consumerTag, delivery) -> {
+            DeliverCallback consumerWork = (consumerTag, delivery) -> {
                 String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
                 String[] args = message.split(",");
+                switch (args[0]) {
+                    case "download" -> downloadFile(args[1]);
+                    case "start" -> {
+                        System.out.println("STARTING WORKING");
+                        receiveResults();
+                        crossoverStra = CrossoverStrategies.ONE;
+                        setGaOperation(String.valueOf(id), crossoverStra);
 
-                downloadFile(args[0]);
+                    }
+                    case "stop" -> sendResultsToServer();
+                    default -> System.out.println("THERE ARE NO CASES FOR ME TO RUN");
+                }
+                System.out.println(" ["+id+"] Received '"+ args[0]+ "'");
 
-                Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
-                System.out.println(" [x] Received '"+ args[1]+ "'");
+                /* Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);*/
             };
             CancelCallback cancelCallback = (consumerTag) -> {
                 System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
             };
-            channel.basicConsume(queueName, true, downloadFile, cancelCallback);
+            channel.basicConsume(queueName, true, consumerWork, cancelCallback);
 
-            //inicia o thread GA
-          /*      crossoverStra = setCrossStrat(Integer.parseInt(args[1]));
-                if(crossoverStra!=null){
-                    setGaOperation(String.valueOf(id), crossoverStra);
-                }
-*/
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
+    }
+
+    private void sendResultsToServer() throws IOException {
+        String msg = "stop";
+        channel.basicPublish("",String.valueOf(id), null, msg.getBytes(StandardCharsets.UTF_8));
+        String workerQueue =jobGroupName+"_serverResults_"+ id +"_"+owner.getUsername();
+        msg = String.join(",",resultsGA);
+        channel.basicPublish("", workerQueue, null, msg.getBytes(StandardCharsets.UTF_8));
+    }
+
+    private void receiveResults() throws IOException {
+        String queueName=id+"_results";
+        channel.queueDeclare(queueName,false,false, false,null );
+
+        DeliverCallback receiveMakespan = (consumerTag, delivery) -> {
+            String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
+            String[] args = message.split("=");
+            System.out.println(" [x] Received '" + message + "'");
+            System.out.println(" [x] Length '" + args.length + "'");
+            if(args.length>1){
+                System.out.println(" [x] Stored '" + args[1] + "'");
+                resultsGA.add(args[1]);
+            }
+        };
+        channel.basicConsume(queueName, true, receiveMakespan, consumerTag -> { });
     }
 
     private CrossoverStrategies setCrossStrat(int num) {

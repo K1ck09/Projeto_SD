@@ -13,7 +13,7 @@ def print_best(best_result, optimum, start_time):
 	# print("[GA] Makespan: %s (opt: %s), t=%f" %(best_result,optimum,time.time() - start_time))
 	print(best_result)
 	# logger.info(best_result)
-	notify_rmq("Makespan = {0}".format(best_result))
+	notify_rmq("Makespan={0}".format(best_result))
 
 
 def printProgress(bestValue, iterations, timeElapsed):

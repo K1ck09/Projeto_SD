@@ -314,11 +314,17 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
      * @throws IOException
      */
     public void handlerAttachWorkers(ActionEvent actionEvent) throws IOException {
-        Integer num = Integer.parseInt(workersNum.getText());
+        int num = Integer.parseInt(workersNum.getText());
+        WorkerRI worker;
         if (num > 0) {
-            for (Integer i = 0; i < num; i++) {
-                WorkerRI worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                        new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
+            for (int i = 0; i < num; i++) {
+                if(jobGroupRI.getJobStrat().compareTo("TabuSearch")==0){
+                    worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                            new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
+                }else{
+                    worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                            new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(),true);
+                }
                 //System.out.println(worker);
                 if (jobGroupRI.attachWorker(worker)) {
                     infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green

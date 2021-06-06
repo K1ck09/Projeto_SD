@@ -38,6 +38,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
     private static final String ROUTING_KEY="";
     private Channel channel;
     private String exchangeName;
+    private final static long JOB_WORK_TIME=10000;
 
     private static final String FILE_PATH = "C:\\Users\\danie\\Documents\\GitHub\\Projeto_SD\\src\\edu\\ufp\\inf\\sd\\rmq\\server\\files\\";
     private HashMap<String, JobControllerRI> list = new HashMap<>();
@@ -60,7 +61,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
             connection = RabbitUtils.newConnection2Server(HOST, PORT, "guest", "guest");
             assert connection != null;
             this.channel = RabbitUtils.createChannel2Server(connection);
-            exchangeName = String.valueOf(jobName);
+            exchangeName = jobName;
             channel.exchangeDeclare(exchangeName,BuiltinExchangeType.FANOUT);
             /**
              * Creates a thread Timer, thread will act as a temporizer, will sleep for the specified time
@@ -78,18 +79,47 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                     }
                 }
             }).start();
-            System.out.println("IM MAIN THREAD AND IM RUNNING");
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
     }
 
     private void jobStart() throws IOException {
-        System.out.println("MY SLEEP ENDED");
         String msg="start";
+        channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
+        new Thread(new Runnable() {
+            @Override
+            public void run(){
+                assert timer != null;
+                try {
+                    Thread.sleep(JOB_WORK_TIME);
+                    jobStop();
+                } catch (InterruptedException | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private void jobStop() throws IOException {
+        String msg="stop";
         channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
     }
 
+    private void receiveResults(WorkerRI worker) throws IOException {
+        String workerQueue =jobName+"_serverResults_"+ worker.getId() +"_"+worker.getOwner().getUsername();
+        channel.queueDeclare(workerQueue,false,false,false,null);
+        DeliverCallback receiveResults=(consumerTag, delivery) -> {
+            String message=new String(delivery.getBody(), StandardCharsets.UTF_8);
+            System.out.println(message);
+        };
+        CancelCallback cancelCallback=(consumerTag) ->{
+            System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
+        };
+
+        //o nome da queue é o que junta a queue a callback
+        channel.basicConsume(workerQueue, true, receiveResults, cancelCallback);
+    }
     @Override
     public synchronized void updateTotalShares(WorkerRI worker) throws IOException {
         if (this.state.getCurrentState().compareTo("OnGoing") == 0 || this.state.getCurrentState().compareTo("Available") == 0) {
@@ -132,29 +162,6 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
         }
     }
 
-    @Override
-    public void updateTotalShares() throws IOException {
-        //deliveryCall back é o nome da função
-        DeliverCallback deliverCallback=(consumerTag, delivery) -> {
-            String message=new String(delivery.getBody(), "UTF-8");
-            System.out.println(message);
-            /*Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);
-            System.out.println(" [x] Received '" + message + "'");*/
-        };
-        CancelCallback cancelCallback=(consumerTag) ->{
-            System.out.println(" [0] Consumer Tag [" + consumerTag + "] - Cancel Callback invoked");
-        };
-
-        //o nome da queue é o que junta a queue a callback
-        channel.basicConsume("", true, deliverCallback, cancelCallback);
-        //é preciso uma função onde se vai declarar a delivery callback
-        //depois de definir o que a função vai fazer na delivery callback
-        //usa se o basicConsume para utilizar a deliveryCallback
-        //é como se fosse um inception de funções
-        //declaramos uma callback numa função e chamamos a callback atraves do consume
-        // e ao chamar a função em si é só para puder fazer tudo o de trás
-    }
-
     /** servidor publica exchange,
                    worker vai buscar uma queue desse exchange e consume
                    workercria uma queue para falar com o GA_ e consume da Queue id_results
@@ -163,7 +170,7 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 */
     @Override
     public boolean attachWorker(WorkerRI worker) throws IOException {
-        if (jobWorkers.size() == 0) {
+        if (jobWorkers.size() == 0 && strat.compareTo("TabuSearch")==0) {
             this.state.setCurrentState("OnGoing");
         }
         if (this.state.getCurrentState().compareTo("Available") == 0 || this.state.getCurrentState().compareTo("OnGoing") == 0
@@ -175,10 +182,12 @@ public class JobGroupImpl extends UnicastRemoteObject implements JobGroupRI {
                 updateList();
             } else if (this.strat.compareTo("Genetic Algorithm") == 0) {
                 //file, CrossStrat,
-                String msg = filePath + "," + crossStrat;
+                worker.setState("Waiting");
+                String msg = "download" + "," +filePath;
                 channel.basicPublish(exchangeName, ROUTING_KEY, null, msg.getBytes(StandardCharsets.UTF_8));
                 jobWorkers.put(worker.getId(), worker);
                 idSize++;
+                receiveResults(worker);
             }
             return true;
         }
