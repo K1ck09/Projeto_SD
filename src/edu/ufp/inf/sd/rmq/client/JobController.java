@@ -164,7 +164,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                         if(jobStrat.getText().compareTo("TabuSearch")==0){
                             jobWorkload.setText(jobGroupRI.getWorkload());
                         } else {
-                            jobWorkload.setText("-");
+                            if(jobGroupRI.getTotalShares()!=null){
+                                jobWorkload.setText(String.valueOf(jobGroupRI.getTotalShares()));
+                            }else {
+                                jobWorkload.setText("-");
+                            }
                         }
 
                     } catch (RemoteException e) {
@@ -267,7 +271,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                             if(jobStrat.getText().compareTo("TabuSearch")==0){
                                                 ((Label) label).setText(worker.getTotalShares() + "/" + jobGroupRI.getWorkload());
                                             }else{
-                                                if(jobGroupRI.getWorkload()!=null){
+                                                if(worker.getTotalShares()!=null){
                                                     ((Label) label).setText(String.valueOf(worker.getTotalShares()));
                                                 }else{
                                                     ((Label) label).setText("-");

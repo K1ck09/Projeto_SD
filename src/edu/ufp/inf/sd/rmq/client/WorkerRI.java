@@ -40,4 +40,6 @@ public interface WorkerRI extends Remote {
     void changeState(String state) throws IOException;
 
     void setState(String state) throws IOException;
+
+    void setBestMakespan(int currentMakespan) throws RemoteException;;
 }

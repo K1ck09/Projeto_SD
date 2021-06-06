@@ -111,12 +111,9 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
             String[] args = message.split("=");
             //o primeiro worker continua sempre a mandar não sei porquê
-            System.out.println(" [x] Received '" + message + "'");
-            if (args.length > 1 && state.getCurrentState().compareTo("Stopped")!=0) {
-                this.currentMakespan= Integer.parseInt(args[1]);
-                if (this.bestMakespan > this.currentMakespan) {
-                    this.bestMakespan = this.currentMakespan;
-                }
+            System.out.println(" [x] Received '" + message  + "'");
+
+            if(args.length>1 && state.getCurrentState().compareTo("Ongoing")==0){
                 String msg = args[1]; //args[1] = Makespan value
                 String workerQueue = jobGroupName + "_serverResults_" + id + "_" + owner.getUsername();
                 channel.basicPublish("", workerQueue, null, msg.getBytes(StandardCharsets.UTF_8));
@@ -161,12 +158,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         JobGroupRI.updateTotalShares(this);
     }
 
-    @Override
-    public void setFile(String filePath) throws IOException {
-        downloadFile(filePath);
-        JobGroupRI.updateTotalShares(this);
-    }
-
 
     private void downloadFile(String filepath) throws IOException {
         byte[] data = JobGroupRI.downloadFileFromServer(filepath);
@@ -175,6 +166,17 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         out.write(data);
         out.flush();
         out.close();
+    }
+
+    @Override
+    public void setFile(String filePath) throws IOException {
+        downloadFile(filePath);
+        JobGroupRI.updateTotalShares(this);
+    }
+
+    @Override
+    public void setBestMakespan(int currentMakespan) {
+        this.bestMakespan=currentMakespan;
     }
 
     public Integer getCurrentMakespan() {
@@ -223,7 +225,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     public Integer getTotalRewarded() {
         return totalRewarded;
     }
-
+    @Override
     public void setTotalRewarded(Integer totalRewarded) {
         this.totalRewarded += totalRewarded;
     }

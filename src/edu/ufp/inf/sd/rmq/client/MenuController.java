@@ -101,20 +101,12 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         createJobStrategy.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number t1) {
-                //NEW VERSION
- /*               if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy") != 0) {
-                    item.put("strat", stratTypes.get(t1.intValue()));
-                    createOptional.promptTextProperty().setValue("Number max of shares");
-                } else if (item.containsKey("strat") && item.get("strat").compareTo(stratTypes.get(t1.intValue())) != 0) {
-                    item.replace("strat", stratTypes.get(t1.intValue()));
-                    createOptional.promptTextProperty().setValue("Waiting time");
-                }*/
                 if (!item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Choose Strategy") != 0) {
                     item.put("strat", stratTypes.get(t1.intValue()));
                     if(stratTypes.get(t1.intValue()).compareTo("TabuSearch") == 0){
                         createOptional.promptTextProperty().setValue("Number max of shares");
                     }else{
-                        createOptional.promptTextProperty().setValue("Waiting time");
+                        createOptional.promptTextProperty().setValue("Job ingress time");
                     }
                 }
                 else if(item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("TabuSearch") == 0){
@@ -122,7 +114,7 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                     createOptional.promptTextProperty().setValue("Number max of shares");
                 }else if (item.containsKey("strat") && stratTypes.get(t1.intValue()).compareTo("Genetic Algorithm") == 0){
                     item.replace("strat", stratTypes.get(t1.intValue()));
-                    createOptional.promptTextProperty().setValue("Waiting time");
+                    createOptional.promptTextProperty().setValue("Job ingress time");
                 }
             }
         });
@@ -346,7 +338,11 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                                                     if(job.getJobStrat().compareTo("TabuSearch")==0){
                                                         ((Label) label).setText(job.getJobReward());
                                                     } else {
-                                                        ((Label) label).setText(" - ");
+                                                        if(job.getJobReward()!=null){
+                                                            ((Label) label).setText(job.getJobReward());
+                                                        }else{
+                                                            ((Label) label).setText("-");
+                                                        }
                                                     }
                                                 } catch (RemoteException e) {
                                                     e.printStackTrace();
@@ -389,7 +385,12 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
                                                     if(job.getJobStrat().compareTo("TabuSearch")==0){
                                                         ((Label) label).setText(job.getTotalShares() + "/" + job.getWorkload());
                                                     } else {
-                                                        ((Label) label).setText(" - ");
+                                                        if(job.getTotalShares()!=null){
+                                                            ((Label) label).setText(String.valueOf(job.getTotalShares()));
+                                                        }else {
+                                                            ((Label) label).setText(" - ");
+                                                        }
+
                                                     }
                                                 } catch (RemoteException e) {
                                                     e.printStackTrace();
