@@ -149,7 +149,11 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
         file = fileChooser.showOpenDialog((Stage) ((Node) actionEvent.getSource()).getScene().getWindow());
-        btnFile.setText(file.getName());
+        if(file != null){
+            btnFile.setText(file.getName());
+        }else{
+            btnFile.setText("Choose file");
+        }
     }
     //NEW VERSION
     public void handlerCreateTask(ActionEvent actionEvent) throws IOException {
@@ -252,6 +256,8 @@ public class MenuController extends UnicastRemoteObject implements MenuControlle
     }
     //NEW VERSION
     private void insertDataInItem() throws RemoteException {
+        Integer reward = Integer.parseInt(createOptional.getText()) + 10;
+        item.put("reward", String.valueOf(reward));
         item.put("owner", client.userSessionRI.getUsername());
         item.put("workers", "0");
         if(item.get("strat").compareTo("TabuSearch")==0){

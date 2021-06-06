@@ -37,6 +37,8 @@ public interface UserSessionRI extends Remote {
 
     void addList(MenuControllerRI controller,String user) throws IOException;
 
+    User findUser(String username) throws RemoteException;
+
     void removeJob(String jobName) throws IOException;
 
     void removeFromList(String username)throws  RemoteException;

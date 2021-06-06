@@ -34,7 +34,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     private static final String ROUTING_KEY = "";
     private Channel channel;
     private CrossoverStrategies crossoverStra;
-    private ArrayList<String> resultsGA=new ArrayList<>();
+    private ArrayList<String> resultsGA = new ArrayList<>();
 
 
     protected WorkerImpl(JobShopClient client, Integer id, User jobOwner, State state, String jobGroupName) throws RemoteException {
@@ -70,6 +70,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                 switch (args[0]) {
                     case "download" -> downloadFile(args[1]);
                     case "start" -> {
+                        state.setCurrentState(args[1]);
                         System.out.println("STARTING WORKING");
                         receiveResults();
                         crossoverStra = CrossoverStrategies.ONE;
@@ -79,7 +80,7 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
                     case "stop" -> sendResultsToServer();
                     default -> System.out.println("THERE ARE NO CASES FOR ME TO RUN");
                 }
-                System.out.println(" ["+id+"] Received '"+ args[0]+ "'");
+                System.out.println(" [" + id + "] Received '" + args[0] + "'");
 
                 /* Logger.getAnonymousLogger().log(Level.INFO, Thread.currentThread().getName()+": Message received " +message);*/
             };
@@ -95,36 +96,34 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
 
     private void sendResultsToServer() throws IOException {
         String msg = "stop";
-        channel.basicPublish("",String.valueOf(id), null, msg.getBytes(StandardCharsets.UTF_8));
-        String workerQueue =jobGroupName+"_serverResults_"+ id +"_"+owner.getUsername();
+        state.setCurrentState("Stopped");
+        channel.basicPublish("", String.valueOf(id), null, msg.getBytes(StandardCharsets.UTF_8));
+        /*String workerQueue =jobGroupName+"_serverResults_"+ id +"_"+owner.getUsername();
         msg = String.join(",",resultsGA);
-        channel.basicPublish("", workerQueue, null, msg.getBytes(StandardCharsets.UTF_8));
+        channel.basicPublish("", workerQueue, null, msg.getBytes(StandardCharsets.UTF_8));*/
     }
 
     private void receiveResults() throws IOException {
-        String queueName=id+"_results";
-        channel.queueDeclare(queueName,false,false, false,null );
+        String queueName = id + "_results";
+        channel.queueDeclare(queueName, false, false, false, null);
 
         DeliverCallback receiveMakespan = (consumerTag, delivery) -> {
             String message = new String(delivery.getBody(), StandardCharsets.UTF_8);
             String[] args = message.split("=");
+            //o primeiro worker continua sempre a mandar não sei porquê
             System.out.println(" [x] Received '" + message + "'");
-            System.out.println(" [x] Length '" + args.length + "'");
-            if(args.length>1){
-                System.out.println(" [x] Stored '" + args[1] + "'");
-                resultsGA.add(args[1]);
+            if (args.length > 1 && state.getCurrentState().compareTo("Stopped")!=0) {
+                this.currentMakespan= Integer.parseInt(args[1]);
+                if (this.bestMakespan > this.currentMakespan) {
+                    this.bestMakespan = this.currentMakespan;
+                }
+                String msg = args[1]; //args[1] = Makespan value
+                String workerQueue = jobGroupName + "_serverResults_" + id + "_" + owner.getUsername();
+                channel.basicPublish("", workerQueue, null, msg.getBytes(StandardCharsets.UTF_8));
             }
         };
-        channel.basicConsume(queueName, true, receiveMakespan, consumerTag -> { });
-    }
-
-    private CrossoverStrategies setCrossStrat(int num) {
-        return switch (num) {
-            case 1 -> CrossoverStrategies.ONE;
-            case 2 -> CrossoverStrategies.TWO;
-            case 3 -> CrossoverStrategies.THREE;
-            default -> null;
-        };
+        channel.basicConsume(queueName, true, receiveMakespan, consumerTag -> {
+        });
     }
 
     public void setGaOperation(String queue, CrossoverStrategies crossoverStrategies) {
@@ -167,7 +166,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
         downloadFile(filePath);
         JobGroupRI.updateTotalShares(this);
     }
-
 
 
     private void downloadFile(String filepath) throws IOException {
@@ -227,6 +225,6 @@ public class WorkerImpl extends UnicastRemoteObject implements WorkerRI {
     }
 
     public void setTotalRewarded(Integer totalRewarded) {
-        this.totalRewarded = totalRewarded;
+        this.totalRewarded += totalRewarded;
     }
 }

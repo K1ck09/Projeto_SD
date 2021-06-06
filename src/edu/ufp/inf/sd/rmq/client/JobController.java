@@ -253,7 +253,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                             if(jobStrat.getText().compareTo("TabuSearch")==0){
                                                 ((Label) label).setText(String.valueOf(worker.getCurrentMakespan()));
                                             }else{
-                                                ((Label) label).setText("-");
+                                                if(worker.getCurrentMakespan()!=null){
+                                                    ((Label) label).setText(String.valueOf(worker.getCurrentMakespan()));
+                                                }else{
+                                                    ((Label) label).setText("-");
+                                                }
                                             }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();
@@ -264,7 +268,7 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                                 ((Label) label).setText(worker.getTotalShares() + "/" + jobGroupRI.getWorkload());
                                             }else{
                                                 if(jobGroupRI.getWorkload()!=null){
-                                                    ((Label) label).setText(worker.getTotalShares() + "/" + jobGroupRI.getWorkload());
+                                                    ((Label) label).setText(String.valueOf(worker.getTotalShares()));
                                                 }else{
                                                     ((Label) label).setText("-");
                                                 }
@@ -277,7 +281,11 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
                                             if(worker.getBestMakespan()==Integer.MAX_VALUE){
                                                 ((Label) label).setText("-");
                                             }else{
-                                                ((Label) label).setText(String.valueOf(worker.getBestMakespan()));
+                                                if(worker.getBestMakespan()!=null){
+                                                    ((Label) label).setText(String.valueOf(worker.getBestMakespan()));
+                                                }else{
+                                                    ((Label) label).setText("-");
+                                                }
                                             }
                                         } catch (RemoteException e) {
                                             e.printStackTrace();

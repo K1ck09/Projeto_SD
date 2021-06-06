@@ -1,6 +1,5 @@
 package edu.ufp.inf.sd.rmq.server;
 
-import edu.ufp.inf.sd.rmq.client.MenuController;
 import edu.ufp.inf.sd.rmq.client.MenuControllerRI;
 import edu.ufp.inf.sd.rmq.client.WorkerRI;
 
@@ -41,8 +40,9 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
 
     @Override
     public void setCredits(User user,Integer credits) {
-        user.addCredits(credits);
-        db.updateUser(user);
+        User u=db.getUser(user.getUsername());
+        u.addCredits(credits);
+        db.updateUser(u);
     }
 
     @Override
@@ -99,6 +99,11 @@ public class UserSessionImpl extends UnicastRemoteObject implements UserSessionR
     @Override
     public void removeFromList(String username) throws RemoteException {
         this.db.removeFromList(username);
+    }
+
+    @Override
+    public User findUser(String username) throws RemoteException {
+        return db.getUser(username);
     }
 
     @Override
