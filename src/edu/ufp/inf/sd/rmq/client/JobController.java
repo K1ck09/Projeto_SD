@@ -326,35 +326,41 @@ public class JobController extends UnicastRemoteObject implements JobControllerR
      * @throws IOException
      */
     public void handlerAttachWorkers(ActionEvent actionEvent) throws IOException {
-        int num = Integer.parseInt(workersNum.getText());
-        WorkerRI worker;
-        if (num > 0) {
-            for (int i = 0; i < num; i++) {
-                if(jobGroupRI.getJobStrat().compareTo("TabuSearch")==0){
-                    worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                            new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
-                }else{
-                    worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
-                            new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(),true);
+        if(workersNum.getText().compareTo("")!=0){
+            int num = Integer.parseInt(workersNum.getText());
+            WorkerRI worker;
+            if (num > 0) {
+                for (int i = 0; i < num; i++) {
+                    if(jobGroupRI.getJobStrat().compareTo("TabuSearch")==0){
+                        worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                                new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName());
+                    }else{
+                        worker = new WorkerImpl(client, jobGroupRI.getIdsSize(), client.userSessionRI.getUser(),
+                                new State("Available", String.valueOf(jobGroupRI.getIdsSize())), jobGroupRI.getJobName(),true);
+                    }
+                    //System.out.println(worker);
+                    if (jobGroupRI.attachWorker(worker)) {
+                        infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
+                        infoMessage.setText("Workers were attached to job successfully!");
+                        workersNum.clear();
+                        updateJobWorkers();
+                        insertWorkersInTable();
+                        updateJobItem();
+                    } else {
+                        workersNum.clear();
+                        infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                        infoMessage.setText("Not possible to attach worker!");
+                    }
                 }
-                //System.out.println(worker);
-                if (jobGroupRI.attachWorker(worker)) {
-                    infoMessage.setStyle("-fx-text-fill: #0dbc00"); //#0dbc00 green
-                    infoMessage.setText("Workers were attached to job successfully!");
-                    workersNum.clear();
-                    updateJobWorkers();
-                    insertWorkersInTable();
-                    updateJobItem();
-                } else {
-                    workersNum.clear();
-                    infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-                    infoMessage.setText("Not possible to attach worker!");
-                }
+            } else {
+                workersNum.clear();
+                infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
+                infoMessage.setText("Number of workers can't be 0!");
             }
-        } else {
+        }else {
             workersNum.clear();
             infoMessage.setStyle("-fx-text-fill: #ff3232"); //#0dbc00 green
-            infoMessage.setText("Number of workers can't be 0!");
+            infoMessage.setText("Enter a number higher than 0");
         }
     }
 
